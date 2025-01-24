@@ -9,12 +9,12 @@ using Microsoft.Identity.Client;
 
 namespace GameHive.Models
 {
-    internal class Game
+    public class Game
     {
         [Key]
-        int GameId { get; set; }
+        public int GameId { get; set; }
         [Required]
-        string Name { get; set; }
+        public string Name { get; set; }
         public byte[] Image { get; set; }
         public ICollection<UserGame> UserGames= new List<UserGame>();
         public ICollection<GameTag> GameTags= new List<GameTag>();

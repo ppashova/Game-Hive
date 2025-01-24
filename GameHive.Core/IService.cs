@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameHive.Models
+namespace GameHive.Core
 {
-    internal class User
+    internal interface IService
     {
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameHive.Models
 {
-    internal class Tag
+    public class Tag
     {
         [Key]
         public int Id { get; set; }
