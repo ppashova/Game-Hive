@@ -10,38 +10,37 @@ using System.Threading.Tasks;
 
 namespace GameHive.Core.Services
 {
-    internal class TagService : ITagService
-
-
+    public class TagService : ITagService
+    {
         private readonly IRepository<Tag> _repo;
         public void Add(Tag tag)
         {
-            
+            this._repo.Add(tag);
         }
 
-        public void Delete(Tag tag)
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _repo.Delete(id);
         }
 
-        public List<Tag> Find(Expression<Func<Game, bool>> filter)
+        public List<Tag> Find(Expression<Func<Tag, bool>> filter)
         {
-            throw new NotImplementedException();
+            return _repo.Find(filter);
         }
 
         public List<Tag> GetAll()
         {
-            throw new NotImplementedException();
+            return _repo.GetAll();
         }
 
-        public Game GetById(int id)
+        public Tag GetById(int id)
         {
-            throw new NotImplementedException();
+            return _repo.Get(id);
         }
 
-        public void Update(Game game)
+        public void Update(Tag tag)
         {
-            throw new NotImplementedException();
+            _repo.Update(tag);
         }
     }
 }

@@ -15,6 +15,6 @@ namespace GameHive.Core.IServices
         void Update(Tag tag);
         public void Delete(int id);
         List<Tag> GetAll();
-        List<Tag> Find(Expression<Func<Game, bool>> filter);
+        List<Tag> Find(Expression<Func<Tag, bool>> filter);
     }
 }

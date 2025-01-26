@@ -10,7 +10,7 @@ using GameHive.Models;
 
 namespace GameHive.Core.Services
 {
-    internal class GameService : IGameService
+    public class GameService : IGameService
     {
         private readonly IRepository<Game> _repo;
         public void Add(Game game)
