@@ -10,11 +10,11 @@ namespace GameHive.Core.IServices
 {
     public interface ITagService
     {
-        Tag GetById(int id);
-        void Add(Tag tag);
-        void Update(Tag tag);
-        public void Delete(int id);
-        List<Tag> GetAll();
-        List<Tag> Find(Expression<Func<Tag, bool>> filter);
+        Task<Tag> GetByIdAsync(int id);
+        Task AddAsync(Tag tag);
+        Task UpdateAsync(Tag tag);
+        Task DeleteAsync(int id);
+        Task<List<Tag>> GetAllAsync();
+        Task<List<Tag>> FindAsync(Expression<Func<Tag, bool>> filter);
     }
 }

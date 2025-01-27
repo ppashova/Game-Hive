@@ -11,12 +11,10 @@ namespace GameHive.Core.IServices
 {
     public interface IGameService
     {
-        Game GetById(int id);
-        void Add(Game game);
-        void Update(Game game);
-        public void Delete(int id);
-        List<Game> GetAll();
-        List<Game> Find(Expression<Func<Game, bool>> filter);
-
+        Task<IEnumerable<Game>> GetAllGames();
+        Task<Game> GetGameById(int id);
+        Task AddGame(Game game);
+        Task DeleteGame(int id);
+        Task UpdateGame(Game game);
     }
 }

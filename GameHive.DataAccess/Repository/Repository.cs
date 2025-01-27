@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using GameHive.DataAccess.Migrations;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameHive.DataAccess.Repository
@@ -13,41 +14,47 @@ namespace GameHive.DataAccess.Repository
     {
         private readonly ApplicationDbContext _context;
         internal Microsoft.EntityFrameworkCore.DbSet<T> dbSet;
+
         public Repository(ApplicationDbContext context)
         {
             _context = context;
-            this.dbSet = _context.Set<T>();
         }
-        public void Add(T entity)
+        public async Task AddAsync(T entity)
         {
-            dbSet.Add(entity);
+            await dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            T obj = dbSet.Find(id);
-            dbSet.Remove(obj);
+            var entity = await GetAsync(id);
+            if(entity != null)
+            {
+                dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public List<T> Find(Expression<Func<T, bool>> filter)
+        public async Task<List<T>> FindAsync(Expression<Func<T, bool>> filter)
         {
-            return dbSet.Where(filter).ToList();
+            return await dbSet.Where(filter).ToListAsync();
         }
 
-        public T Get(int id)
+        public async Task<List<T>> GetAllAsync()
         {
-            T obj = dbSet.Find(id);
-            return obj;
+            return await dbSet.ToListAsync();
         }
 
-        public List<T> GetAll()
+        public async Task<T> GetAsync(int id)
         {
-            return dbSet.ToList();
+            return await dbSet.FindAsync(id);
+
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }
