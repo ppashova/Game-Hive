@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,34 +14,40 @@ namespace GameHive.Core.Services
     public class TagService : ITagService
     {
         private readonly IRepository<Tag> _repo;
-        public void Add(Tag tag)
+
+        public TagService(IRepository<Tag> repo)
         {
-            this._repo.Add(tag);
+            _repo = repo;
         }
 
-        public void Delete(int id)
+        public async Task AddAsync(Tag tag) 
         {
-            _repo.Delete(id);
+            await _repo.AddAsync(tag); 
         }
 
-        public List<Tag> Find(Expression<Func<Tag, bool>> filter)
+        public async Task DeleteAsync(int id) 
         {
-            return _repo.Find(filter);
+            await _repo.DeleteAsync(id); 
         }
 
-        public List<Tag> GetAll()
+        public async Task<List<Tag>> FindAsync(Expression<Func<Tag, bool>> filter) 
         {
-            return _repo.GetAll();
+            return await _repo.FindAsync(filter); 
         }
 
-        public Tag GetById(int id)
+        public async Task<List<Tag>> GetAllAsync() 
         {
-            return _repo.Get(id);
+            return await _repo.GetAllAsync(); 
         }
 
-        public void Update(Tag tag)
+        public async Task<Tag> GetByIdAsync(int id) 
         {
-            _repo.Update(tag);
+            return await _repo.GetAsync(id); 
+        }
+
+        public async Task UpdateAsync(Tag tag) 
+        {
+            await _repo.UpdateAsync(tag); 
         }
     }
 }

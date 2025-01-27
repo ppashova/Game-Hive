@@ -3,6 +3,7 @@ using GameHive.DataAccess;
 using GameHive.DataAccess.Repository;
 using GameHive.Core.IServices;
 using GameHive.Core.Services;
+using NuGet.Protocol.Core.Types;
 namespace GameHive
 {
     public class Program
@@ -11,10 +12,10 @@ namespace GameHive
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddScoped<IGameRepository, GameRepository>();
+            builder.Services.AddScoped<IGameTagRepository, GameTagRepository>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            builder.Services.AddScoped(typeof(IGameService), typeof(GameService));
-            builder.Services.AddScoped(typeof(ITagService), typeof(TagService));
+            builder.Services.AddScoped<IGameService, GameService>();
 
 
             // Add services to the container.

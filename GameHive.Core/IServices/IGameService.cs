@@ -13,7 +13,7 @@ namespace GameHive.Core.IServices
     {
         Task<IEnumerable<Game>> GetAllGames();
         Task<Game> GetGameById(int id);
-        Task AddGame(Game game);
+        Task AddGame(Game game, int Tagid);
         Task DeleteGame(int id);
         Task UpdateGame(Game game);
     }

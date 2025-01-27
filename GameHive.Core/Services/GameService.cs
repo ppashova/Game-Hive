@@ -12,35 +12,36 @@ namespace GameHive.Core.Services
 {
     public class GameService : IGameService
     {
-        private readonly IRepository<Game> _repo;
-        public void Add(Game game)
+        private readonly IGameRepository _repo;
+        private readonly IGameTagRepository _gtrepo;
+        public async Task AddGame(Game game, int TagId)
         {
-            this._repo.Add(game);
+            var GameTag = new GameTag()
+            {
+                GameId = game.GameId,
+                TagId = TagId
+            };
+            await _gtrepo.AddAsync(GameTag);
         }
 
-        public void Delete(int id)
+        public async Task DeleteGame(int id)
         {
-            _repo.Delete(id);
+            await _repo.DeleteAsync(id);
         }
 
-        public List<Game> Find(Expression<Func<Game, bool>> filter)
+        public async Task<IEnumerable<Game>> GetAllGames()
         {
-            return _repo.Find(filter);
+            return await _repo.GetAllAsync();
         }
 
-        public List<Game> GetAll()
+        public async Task<Game> GetGameById(int id)
         {
-            return _repo.GetAll();
+            return await _repo.GetByIdAsync(id);
         }
 
-        public Game GetById(int id)
+        public async Task UpdateGame(Game game)
         {
-            return _repo.Get(id);
-        }
-
-        public void Update(Game game)
-        {
-            _repo.Update(game);
+            await _repo.UpdateAsync(game);
         }
     }
 }

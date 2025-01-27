@@ -9,12 +9,12 @@ namespace GameHive.DataAccess.Repository
 {
     public interface IRepository<T> where T : class
     {
-        void Add(T entity);
-        void Update(T entity);
-        void Delete(int id);
-        T Get(int id);
-        List<T> GetAll();
-        List<T> Find(Expression<Func<T, bool>> filter);
+        Task AddAsync(T entity);
+        Task UpdateAsync(T entity); 
+        Task DeleteAsync(int id);
+        Task<T> GetAsync(int id); 
+        Task<List<T>> GetAllAsync();
+        Task<List<T>> FindAsync(Expression<Func<T, bool>> filter);
 
     }
 }

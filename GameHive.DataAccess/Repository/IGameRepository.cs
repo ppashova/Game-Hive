@@ -10,7 +10,9 @@ namespace GameHive.DataAccess.Repository
     public interface IGameRepository
     {
         Task AddAsync(Game game);
+        Task DeleteAsync(int id);
         Task<IEnumerable<Game>> GetAllAsync();
         Task<Game> GetByIdAsync(int id);
+        Task UpdateAsync(Game game);
     }
 }
