@@ -29,10 +29,6 @@ namespace GameHive.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(Tag tag)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(tag);
-            //}
 
             await _tagService.AddAsync(tag);
             return RedirectToAction("Index");
@@ -49,12 +45,8 @@ namespace GameHive.Controllers
         public async Task<IActionResult> Edit(int id, Tag tag)
         {
             if (id != tag.Id) return BadRequest();
-            if(ModelState.IsValid)
-            {
-                await _tagService.UpdateAsync(tag);
-                return RedirectToAction("Index");
-            }
-            return View(tag);
+            await _tagService.UpdateAsync(tag);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

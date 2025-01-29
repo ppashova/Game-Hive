@@ -11,6 +11,10 @@ namespace GameHive.DataAccess.Repository
     public class GameTagRepository : IGameTagRepository
     {
         private readonly ApplicationDbContext _context;
+        public GameTagRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task AddAsync(GameTag gameTag)
         {

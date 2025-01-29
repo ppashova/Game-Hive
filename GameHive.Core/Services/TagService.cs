@@ -36,14 +36,14 @@ namespace GameHive.Core.Services
             return await _tagRepository.GetAllAsync();
         }
 
-        public Task<Tag> GetByIdAsync(int id)
+        public async Task<Tag> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _tagRepository.GetByIdAsync(id);
         }
 
-        public Task UpdateAsync(Tag tag)
+        public async Task UpdateAsync(Tag tag)
         {
-            throw new NotImplementedException();
+            await _tagRepository.UpdateAsync(tag);
         }
     }
 }
