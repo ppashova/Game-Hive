@@ -16,6 +16,8 @@ namespace GameHive
             builder.Services.AddScoped<IGameTagRepository, GameTagRepository>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IGameService, GameService>();
+            builder.Services.AddScoped<ITagService, TagService>();
+            builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 
             // Add services to the container.

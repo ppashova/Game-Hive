@@ -1,16 +1,15 @@
-﻿using GameHive.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using GameHive.Models;
 
-namespace GameHive.Core.IServices
+namespace GameHive.DataAccess.Repository
 {
-    public interface ITagService
+    public interface ITagRepository
     {
-        Task<IEnumerable<Tag>> GetAllAsync();
+        Task<List<Tag>> GetAllAsync();
         Task<Tag> GetByIdAsync(int id);
         Task AddAsync(Tag tag);
         Task UpdateAsync(Tag tag);

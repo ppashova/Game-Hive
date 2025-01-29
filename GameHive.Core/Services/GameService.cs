@@ -13,7 +13,7 @@ namespace GameHive.Core.Services
     public class GameService : IGameService
     {
         private readonly IGameRepository _repo;
-        private readonly IGameTagRepository _gtrepo;
+        private readonly GameHive.DataAccess.Repository.IGameTagRepository _gtrepo;
         public async Task AddGame(Game game, int TagId)
         {
             var GameTag = new GameTag()

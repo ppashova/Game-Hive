@@ -13,41 +13,37 @@ namespace GameHive.Core.Services
 {
     public class TagService : ITagService
     {
-        private readonly IRepository<Tag> _repo;
-
-        public TagService(IRepository<Tag> repo)
+        private readonly ITagRepository _tagRepository;
+        private readonly IGameTagRepository _gameTagRepository;
+        public TagService(ITagRepository tagRepository, IGameTagRepository gameTagRepository)
         {
-            _repo = repo;
+            _tagRepository = tagRepository;
+            _gameTagRepository = gameTagRepository;
+        }
+        public async Task AddAsync(Tag tag)
+        {
+            await _tagRepository.AddAsync(tag);
         }
 
-        public async Task AddAsync(Tag tag) 
+        public async Task DeleteAsync(int id)
         {
-            await _repo.AddAsync(tag); 
+            await _gameTagRepository.DeleteByTagIdAsync(id);
+            await _tagRepository.DeleteAsync(id);
         }
 
-        public async Task DeleteAsync(int id) 
+        public async Task<IEnumerable<Tag>> GetAllAsync()
         {
-            await _repo.DeleteAsync(id); 
+            return await _tagRepository.GetAllAsync();
         }
 
-        public async Task<List<Tag>> FindAsync(Expression<Func<Tag, bool>> filter) 
+        public Task<Tag> GetByIdAsync(int id)
         {
-            return await _repo.FindAsync(filter); 
+            throw new NotImplementedException();
         }
 
-        public async Task<List<Tag>> GetAllAsync() 
+        public Task UpdateAsync(Tag tag)
         {
-            return await _repo.GetAllAsync(); 
-        }
-
-        public async Task<Tag> GetByIdAsync(int id) 
-        {
-            return await _repo.GetAsync(id); 
-        }
-
-        public async Task UpdateAsync(Tag tag) 
-        {
-            await _repo.UpdateAsync(tag); 
+            throw new NotImplementedException();
         }
     }
 }
