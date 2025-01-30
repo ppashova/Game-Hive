@@ -11,7 +11,8 @@ namespace GameHive.DataAccess.Repository
     {
         Task AddAsync(GameTag gameTag);
         Task<IEnumerable<GameTag>> GetAllAsync();
-        Task DeleteAsync(int gameId);
+        Task DeleteAsync(int gameId,int TagId);
         Task DeleteByTagIdAsync(int id);
+        Task<List<Tag>> GetTagsByGameIdAsync(int gameId);
     }
 }

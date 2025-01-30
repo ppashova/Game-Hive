@@ -11,10 +11,11 @@ namespace GameHive.Core.IServices
 {
     public interface IGameService
     {
-        Task<IEnumerable<Game>> GetAllGames();
-        Task<Game> GetGameById(int id);
-        Task AddGame(Game game, int Tagid);
-        Task DeleteGame(int id);
-        Task UpdateGame(Game game);
+        Task<IEnumerable<Game>> GetAllGamesAsync();
+        Task<Game> GetGameByIdAsync(int id);
+        Task AddGameAsync(Game game, List<int> tagIds);
+        Task DeleteGameAsync(int id);
+        Task DeleteGameTagAsync(int gameId, int tagId);
+        Task UpdateGameAsync(Game game);
     }
 }

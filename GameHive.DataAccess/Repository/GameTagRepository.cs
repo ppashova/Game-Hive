@@ -22,9 +22,9 @@ namespace GameHive.DataAccess.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int gameId)
+        public async Task DeleteAsync(int gameId, int tagId)
         {
-            var gameTags = _context.GameTags.Where(gt => gt.GameId == gameId).ToList();
+            var gameTags = _context.GameTags.Where(gt => gt.GameId == gameId && gt.TagId == tagId).ToList();
             _context.GameTags.RemoveRange(gameTags);
             await _context.SaveChangesAsync();
         }
@@ -39,6 +39,11 @@ namespace GameHive.DataAccess.Repository
         public async Task<IEnumerable<GameTag>> GetAllAsync()
         {
             return await _context.GameTags.Include(gt => gt.Game).Include(gt => gt.Tag).ToListAsync();
+        }
+
+        public async Task<List<Tag>> GetTagsByGameIdAsync(int gameId)
+        {
+            return await _context.GameTags.Where(gt=> gameId == gt.GameId).Select(gt => gt.Tag).ToListAsync();
         }
     }
 }

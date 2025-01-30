@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Azure;
 
 namespace GameHive.DataAccess.Repository
 {
@@ -15,30 +16,25 @@ namespace GameHive.DataAccess.Repository
         {
             _context = context;
         }
-        public async Task Add(Game game)
+        public async Task AddAsync(Game game)
         {
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
         }
 
-        public Task AddAsync(Game game)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var game = await _context.Games.FindAsync(id);
+            if (game != null)
+            {
+                _context.Games.Remove(game);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Game>> GetAll()
+        public async Task<IEnumerable<Game>> GetAllAsync()
         {
             return await _context.Games.Include(g => g.GameTags).ThenInclude(gt => gt.Tag).ToListAsync();
-        }
-
-        public Task<IEnumerable<Game>> GetAllAsync()
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<Game> GetById(int id)
@@ -46,14 +42,15 @@ namespace GameHive.DataAccess.Repository
             return await _context.Games.Include(g => g.GameTags).ThenInclude(gt => gt.Tag).FirstOrDefaultAsync(g => g.GameId == id);
         }
 
-        public Task<Game> GetByIdAsync(int id)
+        public async Task<Game> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Games.FindAsync(id);
         }
 
-        public Task UpdateAsync(Game game)
+        public async Task UpdateAsync(Game game)
         {
-            throw new NotImplementedException();
+            _context.Games.Update(game);
+            await _context.SaveChangesAsync();
         }
     }
 }

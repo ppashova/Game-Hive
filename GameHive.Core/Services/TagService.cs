@@ -31,9 +31,10 @@ namespace GameHive.Core.Services
             await _tagRepository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<Tag>> GetAllAsync()
+        public async Task<List<Tag>> GetAllAsync()
         {
-            return await _tagRepository.GetAllAsync();
+            var tags = await _tagRepository.GetAllAsync();
+            return tags ?? new List<Tag>();
         }
 
         public async Task<Tag> GetByIdAsync(int id)
@@ -44,6 +45,10 @@ namespace GameHive.Core.Services
         public async Task UpdateAsync(Tag tag)
         {
             await _tagRepository.UpdateAsync(tag);
+        }
+        public async Task<List<Tag>> GetTagsByGameIdAsync(int id)
+        {
+            return await _gameTagRepository.GetTagsByGameIdAsync(id);
         }
     }
 }

@@ -14,32 +14,47 @@ namespace GameHive.Core.Services
     {
         private readonly IGameRepository _repo;
         private readonly GameHive.DataAccess.Repository.IGameTagRepository _gtrepo;
-        public async Task AddGame(Game game, int TagId)
+        public GameService(IGameRepository repo, IGameTagRepository gtrepo)
         {
-            var GameTag = new GameTag()
-            {
-                GameId = game.GameId,
-                TagId = TagId
-            };
-            await _gtrepo.AddAsync(GameTag);
+            _repo = repo;
+            _gtrepo = gtrepo;
         }
 
-        public async Task DeleteGame(int id)
+        public async Task AddGameAsync(Game game, List<int> TagId)
+        {
+            await _repo.AddAsync(game);
+            foreach(var tag in TagId)
+            {
+                var gameTag = new GameTag
+                {
+                    GameId = game.GameId,
+                    TagId = tag
+                };
+                await _gtrepo.AddAsync(gameTag);
+            }
+        }
+
+        public async Task DeleteGameAsync(int id)
         {
             await _repo.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<Game>> GetAllGames()
+        public async Task DeleteGameTagAsync(int gameId,int tagId)
+        {
+            await _gtrepo.DeleteAsync(gameId, tagId);
+        }
+
+        public async Task<IEnumerable<Game>> GetAllGamesAsync()
         {
             return await _repo.GetAllAsync();
         }
 
-        public async Task<Game> GetGameById(int id)
+        public async Task<Game> GetGameByIdAsync(int id)
         {
             return await _repo.GetByIdAsync(id);
         }
 
-        public async Task UpdateGame(Game game)
+        public async Task UpdateGameAsync(Game game)
         {
             await _repo.UpdateAsync(game);
         }

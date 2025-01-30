@@ -1,0 +1,18 @@
+﻿@model GameDetailsViewModel
+
+<h2>@Model.Game.Name</h2>
+
+<h3>Tags</h3>
+<ul>
+    @if (Model.Tags != null && Model.Tags.Any())
+    {
+        foreach (var tag in Model.Tags)
+        {
+            <li>@tag.Name</li>
+        }
+    }
+    else
+    {
+        <li>This game has no tags.</li>
+    }
+</ul>

@@ -1,0 +1,29 @@
+﻿@model IEnumerable<GameHive.Models.Game>
+<h2>Games</h2>
+<a asp-action="Add" class="btn btn-primary">Add New Game</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Tags</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model)
+        {
+            <tr>
+                <td>@game.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@game.GameId" class="btn btn-warning">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@game.GameId" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <form asp-action="Details" asp-route-id="@game.GameId" method="get" style="display:inline;">
+                        <button type="submit" class="btn btn-info">Details</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
