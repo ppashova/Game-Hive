@@ -16,6 +16,7 @@ namespace GameHive.Core.IServices
         Task AddGameAsync(Game game, List<int> tagIds);
         Task DeleteGameAsync(int id);
         Task DeleteGameTagAsync(int gameId, int tagId);
-        Task UpdateGameAsync(Game game);
+        Task UpdateGameAsync(Game game, List<int> tagIds);
+        Task<Game> GetGameWithTagsById(int id);
     }
 }

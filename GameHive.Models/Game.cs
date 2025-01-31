@@ -15,10 +15,8 @@ namespace GameHive.Models
         public int GameId { get; set; }
         [Required]
         public string Name { get; set; }
-        public ICollection<UserGame> UserGames= new List<UserGame>();
-        public ICollection<GameTag> GameTags= new List<GameTag>();
-
-
-
+        public ICollection<UserGame> UserGames { get; set; }
+        public ICollection<GameTag> GameTags { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

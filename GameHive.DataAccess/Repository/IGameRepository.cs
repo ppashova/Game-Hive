@@ -12,6 +12,7 @@ namespace GameHive.DataAccess.Repository
         Task AddAsync(Game game);
         Task DeleteAsync(int id);
         Task<IEnumerable<Game>> GetAllAsync();
+        Task<Game> GetGameWithTagsById(int id);
         Task<Game> GetByIdAsync(int id);
         Task UpdateAsync(Game game);
     }

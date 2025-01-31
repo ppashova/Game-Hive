@@ -37,7 +37,7 @@ namespace GameHive.DataAccess.Repository
             return await _context.Games.Include(g => g.GameTags).ThenInclude(gt => gt.Tag).ToListAsync();
         }
 
-        public async Task<Game> GetById(int id)
+        public async Task<Game> GetGameWithTagsById(int id)
         {
             return await _context.Games.Include(g => g.GameTags).ThenInclude(gt => gt.Tag).FirstOrDefaultAsync(g => g.GameId == id);
         }

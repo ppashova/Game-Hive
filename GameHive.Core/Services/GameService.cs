@@ -49,14 +49,29 @@ namespace GameHive.Core.Services
             return await _repo.GetAllAsync();
         }
 
+        public async Task<Game> GetGameWithTagsById(int id)
+        {
+            return await _repo.GetGameWithTagsById(id);
+        }
+
         public async Task<Game> GetGameByIdAsync(int id)
         {
             return await _repo.GetByIdAsync(id);
         }
 
-        public async Task UpdateGameAsync(Game game)
+        public async Task UpdateGameAsync(Game game, List<int> Tags)
         {
             await _repo.UpdateAsync(game);
+            await _gtrepo.DeleteByGameIdAsync(game.GameId);
+            foreach (var tag in Tags)
+            {
+                var gameTag = new GameTag
+                {
+                    GameId = game.GameId,
+                    TagId = tag
+                };
+                await _gtrepo.AddAsync(gameTag);
+            }
         }
     }
 }

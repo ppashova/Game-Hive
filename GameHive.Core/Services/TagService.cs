@@ -50,5 +50,7 @@ namespace GameHive.Core.Services
         {
             return await _gameTagRepository.GetTagsByGameIdAsync(id);
         }
+
+        
     }
 }

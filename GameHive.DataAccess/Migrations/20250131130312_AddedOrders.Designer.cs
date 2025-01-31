@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250124120832_AddedUsers")]
-    partial class AddedUsers
+    [Migration("20250131130312_AddedOrders")]
+    partial class AddedOrders
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,10 +32,6 @@ namespace GameHive.DataAccess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameId"));
-
-                    b.Property<byte[]>("Image")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -59,6 +55,76 @@ namespace GameHive.DataAccess.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("GameTags");
+                });
+
+            modelBuilder.Entity("GameHive.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("money");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("GameHive.Models.OrderDetail", b =>
+                {
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderDetailGameId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderDetailOrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GameId", "OrderId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("OrderDetailGameId", "OrderDetailOrderId");
+
+                    b.ToTable("OrderDetail");
+                });
+
+            modelBuilder.Entity("GameHive.Models.OrderStatus", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("OrderStatus");
                 });
 
             modelBuilder.Entity("GameHive.Models.Tag", b =>
@@ -310,6 +376,48 @@ namespace GameHive.DataAccess.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("GameHive.Models.Order", b =>
+                {
+                    b.HasOne("GameHive.Models.OrderStatus", "Status")
+                        .WithMany("Orders")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Status");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GameHive.Models.OrderDetail", b =>
+                {
+                    b.HasOne("GameHive.Models.Game", "Game")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameHive.Models.Order", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameHive.Models.OrderDetail", null)
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderDetailGameId", "OrderDetailOrderId");
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("GameHive.Models.UserGame", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
@@ -384,7 +492,24 @@ namespace GameHive.DataAccess.Migrations
                 {
                     b.Navigation("GameTags");
 
+                    b.Navigation("OrderDetails");
+
                     b.Navigation("UserGames");
+                });
+
+            modelBuilder.Entity("GameHive.Models.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("GameHive.Models.OrderDetail", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("GameHive.Models.OrderStatus", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("GameHive.Models.Tag", b =>

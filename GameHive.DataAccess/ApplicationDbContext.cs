@@ -45,6 +45,19 @@ namespace GameHive.DataAccess
              .HasOne(ug => ug.Game)
              .WithMany(g => g.UserGames)
              .HasForeignKey(ug => ug.GameId);
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasKey(od => new { od.GameId, od.OrderId });
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(od => od.Game)
+                .WithMany(g => g.OrderDetails)
+                .HasForeignKey(od => od.GameId);
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(od => od.Order)
+                .WithMany(o => o.OrderDetails)
+                .HasForeignKey(od => od.OrderId);
         }
     }
 }

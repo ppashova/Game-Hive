@@ -2,6 +2,7 @@
 using GameHive.Core.Services;
 using GameHive.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace GameHive.Controllers
 {
@@ -9,10 +10,12 @@ namespace GameHive.Controllers
     {
         private readonly IGameService _gameService;
         private readonly ITagService _tagService;
-        public GamesController(IGameService gameService, ITagService tagService)
+        private readonly IGameTagService _gameTagService;
+        public GamesController(IGameService gameService, ITagService tagService, IGameTagService gameTagService)
         {
             _gameService = gameService;
             _tagService = tagService;
+            _gameTagService = gameTagService;
         }
         public async Task<IActionResult> Add()
         {
@@ -55,10 +58,10 @@ namespace GameHive.Controllers
         [HttpGet]
 
         public async Task<IActionResult> Edit(int id)
-        { 
+        {
             var game = await _gameService.GetGameByIdAsync(id);
             if (game == null)
-            { 
+            {
                 return NotFound();
             }
             var tags = await _tagService.GetAllAsync();
@@ -81,9 +84,17 @@ namespace GameHive.Controllers
         {
             var game = await _gameService.GetGameByIdAsync(model.GameId);
             if (game == null)
+            {
                 return NotFound();
+            }
             game.Name = model.Name;
-            await _gameService.UpdateGameAsync(game);
+            await _gameService.UpdateGameAsync(game, model.SelectedTagIds);
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _gameService.DeleteGameAsync(id);
             return RedirectToAction("Index");
         }
 
