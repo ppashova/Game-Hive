@@ -34,6 +34,9 @@ namespace GameHive.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
+
                     b.HasKey("GameId");
 
                     b.ToTable("Games");

@@ -5,7 +5,7 @@
 namespace GameHive.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class FixedOrders4 : Migration
+    public partial class AddFiltration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

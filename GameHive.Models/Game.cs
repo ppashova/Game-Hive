@@ -15,6 +15,8 @@ namespace GameHive.Models
         public int GameId { get; set; }
         [Required]
         public string Name { get; set; }
+        [Column(TypeName = "money")]
+        public decimal Price { get; set; }
         public ICollection<UserGame> UserGames { get; set; }
         public ICollection<GameTag> GameTags { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
