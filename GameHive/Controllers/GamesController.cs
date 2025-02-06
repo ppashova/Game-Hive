@@ -2,7 +2,9 @@
 using GameHive.Core.Services;
 using GameHive.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
+using System.Data.Entity;
 
 namespace GameHive.Controllers
 {
@@ -16,6 +18,11 @@ namespace GameHive.Controllers
             _gameService = gameService;
             _tagService = tagService;
             _gameTagService = gameTagService;
+        }
+        public async Task<IActionResult> Index()
+        {
+            var games = await _gameService.GetAllGamesAsync();
+            return View(games);
         }
         public async Task<IActionResult> Add()
         {
@@ -35,10 +42,34 @@ namespace GameHive.Controllers
             await _gameService.AddGameAsync(game, model.SelectedTagIds);
             return RedirectToAction("Index");
         }
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Filter(GameFilterViewModel? filter)
         {
             var games = await _gameService.GetAllGamesAsync();
-            return View(games);
+            var query = games.AsQueryable();
+
+            if (filter.Tag != null)
+            {
+                query = query.Where(game => game.GameTags.Any(gt => gt.TagId == filter.Tag.Value));
+            }
+            if (filter.MinPrice != null)
+            {
+                query = query.Where(game => game.Price >= filter.MinPrice.Value);
+            }
+            if(filter.MaxPrice != null)
+            {
+                query = query.Where(p => p.Price <= filter.MaxPrice.Value);
+            }
+
+            var model = new GameFilterViewModel
+            {
+                Tag = filter.Tag,
+                MinPrice = filter.MinPrice,
+                MaxPrice = filter.MaxPrice,
+                Tags = new SelectList(_tagService.GetAllAsync().Result, "Id", "Name"),
+                Games = query.Include(game => game.GameTags).ToList()
+            };
+            return View(model);
         }
         
         public async Task<IActionResult> Details(int id)
@@ -71,6 +102,7 @@ namespace GameHive.Controllers
             {
                 GameId = game.GameId,
                 Name = game.Name,
+                Price = game.Price,
                 AvailableTags = tags,
                 SelectedTagIds = selectedTagsId
             };
@@ -88,7 +120,9 @@ namespace GameHive.Controllers
                 return NotFound();
             }
             game.Name = model.Name;
+            game.Price = model.Price;
             await _gameService.UpdateGameAsync(game, model.SelectedTagIds);
+
             return RedirectToAction("Index");
         }
         [HttpPost]

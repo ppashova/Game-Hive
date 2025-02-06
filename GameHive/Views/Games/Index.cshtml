@@ -1,11 +1,12 @@
 ﻿@model IEnumerable<GameHive.Models.Game>
 <h2>Games</h2>
 <a asp-action="Add" class="btn btn-primary">Add New Game</a>
+<a asp-action="Filter" class="btn btn-primary">Filter Games</a>
 <table class="table">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Tags</th>
+            <th>Price</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -14,6 +15,7 @@
         {
             <tr>
                 <td>@game.Name</td>
+                <td>@game.Price</td>
                 <td>
                     <a asp-controller="Games"asp-action="Edit" asp-route-id="@game.GameId" class="btn btn-warning">Edit</a>
                     <form asp-action="Delete" asp-route-id="@game.GameId" method="post" style="display:inline;">

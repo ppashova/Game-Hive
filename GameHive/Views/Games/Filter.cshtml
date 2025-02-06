@@ -1,0 +1,40 @@
+﻿@model GameFilterViewModel
+<h2>Filter Games</h2>
+
+<form asp-action="Filter" method="get" class="mb-4">
+    <div class="form-group">
+        <label for="Tag">Категория</label>
+        <select asp-for="Tag" asp-items="Model.Tags" class="form-control">
+            <option value="">Всички категории</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="MinPrice">Минимална цена</label>
+        <input type="number" asp-for="MinPrice" class="form-control" step="0.01"/>
+    </div>
+
+    <div class="form-group">
+        <label for="MaxPrice">Максимална цена</label>
+        <input type="number" asp-for="MaxPrice" class="form-control" step="0.01" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Покажи</button>
+</form>
+
+<h2>Игри</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model.Games)
+        {
+            <tr>
+                <td>@game.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
