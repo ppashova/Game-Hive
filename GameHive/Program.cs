@@ -4,6 +4,7 @@ using GameHive.DataAccess.Repository;
 using GameHive.Core.IServices;
 using GameHive.Core.Services;
 using NuGet.Protocol.Core.Types;
+using Microsoft.AspNetCore.Identity;
 namespace GameHive
 {
     public class Program
@@ -12,6 +13,7 @@ namespace GameHive
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
             builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<ITagRepository, TagRepository>();
             builder.Services.AddScoped<IGameTagRepository, GameTagRepository>();
@@ -20,10 +22,11 @@ namespace GameHive
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IGameTagService, GameTagService>();
 
-
-            // Add services to the container.
+            builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("GameHive.DataAccess")));
+
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -38,7 +41,8 @@ namespace GameHive
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.MapRazorPages();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

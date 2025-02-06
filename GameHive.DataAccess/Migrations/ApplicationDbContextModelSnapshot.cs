@@ -36,7 +36,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasKey("GameId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("GameHive.Models.GameTag", b =>
@@ -51,7 +51,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("GameTags");
+                    b.ToTable("GameTags", (string)null);
                 });
 
             modelBuilder.Entity("GameHive.Models.Order", b =>
@@ -78,7 +78,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("GameHive.Models.OrderDetail", b =>
@@ -93,7 +93,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetail");
+                    b.ToTable("OrderDetail", (string)null);
                 });
 
             modelBuilder.Entity("GameHive.Models.OrderStatus", b =>
@@ -110,7 +110,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("OrderStatus");
+                    b.ToTable("OrderStatus", (string)null);
                 });
 
             modelBuilder.Entity("GameHive.Models.Tag", b =>
@@ -127,7 +127,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("GameHive.Models.UserGame", b =>
@@ -142,7 +142,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserGame");
+                    b.ToTable("UserGame", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

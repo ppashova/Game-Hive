@@ -15,6 +15,10 @@ namespace GameHive.DataAccess
         public DbSet<Game> Games { get; set; }
         public DbSet<GameTag> GameTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<UserGame> UserGames { get; set; }
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
