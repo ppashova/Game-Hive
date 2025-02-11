@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 
 namespace GameHive.Areas.Identity.Pages.Account.Manage
@@ -75,6 +76,8 @@ namespace GameHive.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Confirm new password")]
             [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public IEnumerable<SelectListItem> RoleList { get; set; } = new List<SelectListItem>();
         }
 
         public async Task<IActionResult> OnGetAsync()
