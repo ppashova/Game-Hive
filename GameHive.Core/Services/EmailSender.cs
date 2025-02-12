@@ -8,38 +8,37 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
+using Microsoft.Extensions.Configuration;
 
 namespace GameHive.Core.Services
 {
     public class EmailSender : IEmailSender
     {
-        private readonly EmailSettings _emailSettings;
-        public EmailSender(IOptions<EmailSettings> emailSettings)
+        private readonly SmtpClient _smtpClient;
+        private readonly string _fromEmail;
+        public EmailSender(IConfiguration configuration)
         {
-            _emailSettings = emailSettings.Value;
-        }
-        //private readonly string smtpServer = "smtp.gmail.com";
-        //private readonly int smtpPort = 456;
-        //private readonly string smtpUser = "your-email@gmail.com"; 
-        //private readonly string smtpPass = "your-email-password";
-        public async Task SendEmailAsync(string email, string subject, string message)
-        {
-            using (var client = new System.Net.Mail.SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort))
+            _fromEmail = configuration["EmailSettings:FromEmail"];
+            _smtpClient = new SmtpClient
             {
-                client.Credentials = new NetworkCredential(_emailSettings.SmtpUser, _emailSettings.SmtpPass);
-                client.EnableSsl = _emailSettings.EnableSSL;
-
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress(_emailSettings.SmtpUser),
-                    Subject = subject,
-                    Body = message,
-                    IsBodyHtml = true
-                };
-                mailMessage.To.Add(email);
-
-                await client.SendMailAsync(mailMessage);
-            }
+                Host = configuration["EmailSettings:SmtpServer"],
+                Port = int.Parse(configuration["EmailSettings:SmtpPort"] ?? "587"),
+                Credentials = new NetworkCredential(
+                    configuration["EmailSettings:SmtpUser"],
+                    configuration["EmailSettings:SmtpPass"]
+                ),
+                EnableSsl =true
+            };
+        }
+        public async Task SendConfirmationEmailAsync(string email, string ConfirmationLink)
+        {
+            string subject = "Confirm Your Email";
+            string message = $"<p>Please confirm your account by <a href=\"{ConfirmationLink}\">clicking here</a>.</p>";
+            var mailMessage = new MailMessage(_fromEmail, email, subject, message)
+            {
+                IsBodyHtml = true
+            };
+            await _smtpClient.SendMailAsync(mailMessage);
         }
     }
 }

@@ -8,6 +8,6 @@ namespace GameHive.Core.IServices
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(string email, string subject, string message);
+        Task SendConfirmationEmailAsync(string email, string ConfirmationLink);
     }
 }
