@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameHive.DataAccess.Repository
+namespace GameHive.DataAccess.Repository.IRepositories
 {
     public interface IGameRepository
     {

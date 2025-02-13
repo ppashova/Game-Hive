@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using GameHive.DataAccess;
-using GameHive.DataAccess.Repository;
 using GameHive.Core.IServices;
 using GameHive.Core.Services;
 using NuGet.Protocol.Core.Types;
 using Microsoft.AspNetCore.Identity;
+using GameHive.DataAccess.Repository.Repositories;
+using GameHive.DataAccess.Repository.IRepositories;
 namespace GameHive
 {
     public class Program

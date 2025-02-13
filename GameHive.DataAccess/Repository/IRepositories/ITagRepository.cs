@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GameHive.Models;
 
-namespace GameHive.DataAccess.Repository
+namespace GameHive.DataAccess.Repository.IRepositories
 {
     public interface ITagRepository
     {

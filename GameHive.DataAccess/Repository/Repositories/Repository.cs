@@ -5,14 +5,15 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using GameHive.DataAccess.Migrations;
+using GameHive.DataAccess.Repository.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameHive.DataAccess.Repository
+namespace GameHive.DataAccess.Repository.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _context;
-        internal Microsoft.EntityFrameworkCore.DbSet<T> dbSet;
+        internal DbSet<T> dbSet;
 
         public Repository(ApplicationDbContext context)
         {
@@ -27,7 +28,7 @@ namespace GameHive.DataAccess.Repository
         public async Task DeleteAsync(int id)
         {
             var entity = await GetAsync(id);
-            if(entity != null)
+            if (entity != null)
             {
                 dbSet.Remove(entity);
                 await _context.SaveChangesAsync();

@@ -1,4 +1,5 @@
-﻿using GameHive.Models;
+﻿using GameHive.DataAccess.Repository.IRepositories;
+using GameHive.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameHive.DataAccess.Repository
+namespace GameHive.DataAccess.Repository.Repositories
 {
     public class GameTagRepository : IGameTagRepository
     {
@@ -49,7 +50,7 @@ namespace GameHive.DataAccess.Repository
 
         public async Task<List<Tag>> GetTagsByGameIdAsync(int gameId)
         {
-            return await _context.GameTags.Where(gt=> gameId == gt.GameId).Select(gt => gt.Tag).ToListAsync();
+            return await _context.GameTags.Where(gt => gameId == gt.GameId).Select(gt => gt.Tag).ToListAsync();
         }
         public async Task UpdateGameTagAsync(GameTag tag)
         {

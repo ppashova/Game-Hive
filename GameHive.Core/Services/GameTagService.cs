@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameHive.Core.IServices;
-using GameHive.DataAccess.Repository;
+using GameHive.DataAccess.Repository.IRepositories;
 using GameHive.Models;
 
 namespace GameHive.Core.Services
 {
     public class GameTagService : IGameTagService
     {
-        private readonly GameHive.DataAccess.Repository.IGameTagRepository _gtrepo;
+        private readonly IGameTagRepository _gtrepo;
         public GameTagService(IGameTagRepository gtrepo)
         {
             _gtrepo = gtrepo;

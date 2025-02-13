@@ -39,7 +39,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasKey("GameId");
 
-                    b.ToTable("Games", (string)null);
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("GameHive.Models.GameTag", b =>
@@ -54,7 +54,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("GameTags", (string)null);
+                    b.ToTable("GameTags");
                 });
 
             modelBuilder.Entity("GameHive.Models.Order", b =>
@@ -81,7 +81,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("GameHive.Models.OrderDetail", b =>
@@ -96,7 +96,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetail", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("GameHive.Models.OrderStatus", b =>
@@ -113,7 +113,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("OrderStatus", (string)null);
+                    b.ToTable("OrderStatuses");
                 });
 
             modelBuilder.Entity("GameHive.Models.Tag", b =>
@@ -130,7 +130,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("GameHive.Models.UserGame", b =>
@@ -145,7 +145,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserGame", (string)null);
+                    b.ToTable("UserGames");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -293,10 +293,12 @@ namespace GameHive.DataAccess.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -333,10 +335,12 @@ namespace GameHive.DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");

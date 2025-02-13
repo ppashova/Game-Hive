@@ -22,11 +22,13 @@
     <button type="submit" class="btn btn-primary">Покажи</button>
 </form>
 
-<h2>Игри</h2>
-<table class="table">
+<p>Игри:</p>
+<table class="table mt-3">
     <thead>
         <tr>
             <th>Name</th>
+            <th>Tags</th>
+            <th>Price</th>
         </tr>
     </thead>
     <tbody>
@@ -34,6 +36,17 @@
         {
             <tr>
                 <td>@game.Name</td>
+                <td>
+                    @if (game.GameTags != null && game.GameTags.Any())
+                    {
+                        @string.Join(", ", game.GameTags.Select(gt => gt.Tag.Name))
+                    }
+                    else
+                    {
+                        <span>No tags</span>
+                    }
+                </td>
+                <td>@game.Price.ToString("C")</td>
             </tr>
         }
     </tbody>

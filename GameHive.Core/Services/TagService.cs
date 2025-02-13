@@ -1,5 +1,5 @@
 ﻿using GameHive.Core.IServices;
-using GameHive.DataAccess.Repository;
+using GameHive.DataAccess.Repository.IRepositories;
 using GameHive.Models;
 using System;
 using System.Collections.Generic;

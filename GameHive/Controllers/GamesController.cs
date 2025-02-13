@@ -37,7 +37,8 @@ namespace GameHive.Controllers
         { 
             var game = new Game
             {
-                Name = model.Name
+                Name = model.Name,
+                Price = model.Price
             };
             await _gameService.AddGameAsync(game, model.SelectedTagIds);
             return RedirectToAction("Index");

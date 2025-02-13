@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Azure;
+using GameHive.DataAccess.Repository.IRepositories;
 
-namespace GameHive.DataAccess.Repository
+namespace GameHive.DataAccess.Repository.Repositories
 {
     public class GameRepository : IGameRepository
     {
         private readonly ApplicationDbContext _context;
-        public GameRepository(ApplicationDbContext context) 
+        public GameRepository(ApplicationDbContext context)
         {
             _context = context;
         }

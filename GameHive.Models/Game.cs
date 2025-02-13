@@ -17,6 +17,9 @@ namespace GameHive.Models
         public string Name { get; set; }
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
+        [MaxLength(150, ErrorMessage = "You've reached the brief description limit")]
+        public string BriefDescription { get; set; }
+        public string FullDescription { get; set; }
         public ICollection<UserGame> UserGames { get; set; }
         public ICollection<GameTag> GameTags { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
