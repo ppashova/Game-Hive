@@ -1,16 +1,16 @@
 ﻿@model GameHive.Models.Tag
 
-<h2>Add Tag</h2>
+<h2>Добави етикет</h2>
 
 <form method="post">
     @Html.AntiForgeryToken()
 
     <div class="form-group">
-        <label asp-for="Name">Tag Name</label>
+        <label asp-for="Name">Име на етикета</label>
         <input asp-for="Name" class="form-control" required />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <button type="submit" asp-action="Add" asp-controller="Tags" class="btn btn-primary">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <button type="submit" asp-action="Add" asp-controller="Tags" class="btn btn-primary">Запази</button>
+    <a asp-action="Index" class="btn btn-secondary">Откажи</a>
 </form>

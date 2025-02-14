@@ -1,22 +1,25 @@
 ﻿@model GameHive.Models.GameViewModel
-<h2>Edit Game</h2>
+<h2>Редактирай</h2>
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="GameId" />
     <div class="form-group">
-        <label asp-for="Name">Game Name</label>
+        <label asp-for="Name">Име на играта</label>
         <input asp-for="Name" class="form-control" required />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Price">Price</label>
+        <label asp-for="Price">Цена</label>
         <input asp-for="Price" class="form-control" type="number" step="0.01" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label>Tags</label>
+        <label>Етикети</label>
         <select asp-for="SelectedTagIds" asp-items="@(new SelectList(Model.AvailableTags, "Id", "Name", Model.SelectedTagIds))" multiple="multiple" class="form-control"></select>
         <span asp-validation-for="SelectedTagIds" class="text-danger"></span>
     </div>
-    <button type="submit" asp-action="Edit" asp-controller="Games" class="btn btn-primary">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <div class="form-group">
+        <label>Кратко описание</label>
+    </div>
+    <button type="submit" asp-action="Edit" asp-controller="Games" class="btn btn-primary">Запази</button>
+    <a asp-action="Index" class="btn btn-secondary">Отказ</a>
 </form>

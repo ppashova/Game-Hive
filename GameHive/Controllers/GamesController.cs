@@ -38,7 +38,9 @@ namespace GameHive.Controllers
             var game = new Game
             {
                 Name = model.Name,
-                Price = model.Price
+                Price = model.Price,
+                BriefDescription = model.BriefDescription,
+                FullDescription = model.FullDescription
             };
             await _gameService.AddGameAsync(game, model.SelectedTagIds);
             return RedirectToAction("Index");
@@ -105,7 +107,9 @@ namespace GameHive.Controllers
                 Name = game.Name,
                 Price = game.Price,
                 AvailableTags = tags,
-                SelectedTagIds = selectedTagsId
+                SelectedTagIds = selectedTagsId,
+                BriefDescription = game.BriefDescription,
+                FullDescription = game.FullDescription
             };
 
 
@@ -122,6 +126,8 @@ namespace GameHive.Controllers
             }
             game.Name = model.Name;
             game.Price = model.Price;
+            game.BriefDescription = model.BriefDescription;
+            game.FullDescription = model.FullDescription;
             await _gameService.UpdateGameAsync(game, model.SelectedTagIds);
 
             return RedirectToAction("Index");
