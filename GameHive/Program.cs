@@ -6,6 +6,7 @@ using NuGet.Protocol.Core.Types;
 using Microsoft.AspNetCore.Identity;
 using GameHive.DataAccess.Repository.Repositories;
 using GameHive.DataAccess.Repository.IRepositories;
+using Microsoft.AspNetCore.Identity.UI.Services;
 namespace GameHive
 {
     public class Program
@@ -27,10 +28,23 @@ namespace GameHive
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("GameHive.DataAccess")));
 
-            //builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-            builder.Services.AddScoped<IEmailSender, EmailSender>();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+            builder.Services.ConfigureApplicationCookie(o => {
+                o.ExpireTimeSpan = TimeSpan.FromDays(5);
+                o.SlidingExpiration = true;
+            });
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddDefaultIdentity<IdentityUser>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+                config.Tokens.ProviderMap.Add("CustomEmailConfirmation",
+                    new TokenProviderDescriptor(
+                        typeof(CustomEmailConfirmationTokenProvider<IdentityUser>)));
+                config.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
             builder.Services.ConfigureApplicationCookie(options => { options.LoginPath = "/Identity/Account/Login"; options.AccessDeniedPath = "/Identity/Account/AccessDenied"; });
 
             var app = builder.Build();

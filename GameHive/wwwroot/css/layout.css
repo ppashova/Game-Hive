@@ -100,10 +100,10 @@ a,a:hover{
 }
 
 .navbar-nav {
-    display: flex; /* Use flexbox for the nav items */
-    justify-content: center; /* Centers the nav items */
-    flex-grow: 1; /* Allows the nav items to grow and fill available space */
-    gap: 10px; /* Adds space between buttons */
+    display: flex;
+    justify-content: center; 
+    flex-grow: 1; 
+    gap: 10px; 
     flex-direction:row;
 }
 

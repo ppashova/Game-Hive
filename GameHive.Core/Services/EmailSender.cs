@@ -1,44 +1,54 @@
 ﻿using GameHive.Core.IServices;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Options;
-using System.Net;
-using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
 
 namespace GameHive.Core.Services
 {
     public class EmailSender : IEmailSender
     {
-        private readonly SmtpClient _smtpClient;
-        private readonly string _fromEmail;
-        public EmailSender(IConfiguration configuration)
+        private readonly ILogger _logger;
+
+        public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor,
+                           ILogger<EmailSender> logger)
         {
-            _fromEmail = configuration["EmailSettings:FromEmail"];
-            _smtpClient = new SmtpClient
-            {
-                Host = configuration["EmailSettings:SmtpServer"],
-                Port = int.Parse(configuration["EmailSettings:SmtpPort"] ?? "587"),
-                Credentials = new NetworkCredential(
-                    configuration["EmailSettings:SmtpUser"],
-                    configuration["EmailSettings:SmtpPass"]
-                ),
-                EnableSsl =true
-            };
+            Options = optionsAccessor.Value;
+            _logger = logger;
         }
-        public async Task SendConfirmationEmailAsync(string email, string ConfirmationLink)
+        public AuthMessageSenderOptions Options { get; }
+        public async Task SendEmailAsync(string toEmail, string subject, string message)
         {
-            string subject = "Confirm Your Email";
-            string message = $"<p>Please confirm your account by <a href=\"{ConfirmationLink}\">clicking here</a>.</p>";
-            var mailMessage = new MailMessage(_fromEmail, email, subject, message)
+            if (string.IsNullOrEmpty(Options.SendGridKey))
             {
-                IsBodyHtml = true
-            };
-            await _smtpClient.SendMailAsync(mailMessage);
+                throw new Exception("Null SendGridKey");
+            }
+            await Execute(Options.SendGridKey, subject, message, toEmail);
         }
+        public async Task Execute(string apiKey, string subject, string message, string toEmail)
+        {
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress("GameHiveSupport@gmail.com", "Password Recovery"),
+                Subject = subject,
+                PlainTextContent = message,
+                HtmlContent = message
+            };
+            msg.AddTo(new EmailAddress(toEmail));
+            msg.SetClickTracking(false, false);
+            var response = await client.SendEmailAsync(msg);
+            _logger.LogInformation(response.IsSuccessStatusCode
+                                   ? $"Email to {toEmail} queued successfully!"
+                                   : $"Failure Email to {toEmail}");
+        }
+
     }
 }
