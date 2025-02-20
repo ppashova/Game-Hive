@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using GameHive.DataAccess.Repository.Repositories;
 using GameHive.DataAccess.Repository.IRepositories;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using GameHive.DataAccess.Repository;
 namespace GameHive
 {
     public class Program
@@ -19,10 +20,12 @@ namespace GameHive
             builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<ITagRepository, TagRepository>();
             builder.Services.AddScoped<IGameTagRepository, GameTagRepository>();
+            builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IGameService, GameService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IGameTagService, GameTagService>();
+            builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
@@ -47,6 +50,14 @@ namespace GameHive
             builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
             builder.Services.ConfigureApplicationCookie(options => { options.LoginPath = "/Identity/Account/Login"; options.AccessDeniedPath = "/Identity/Account/AccessDenied"; });
 
+            // Add session services
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+                options.Cookie.HttpOnly = true; // Make the cookie HttpOnly for security
+                options.Cookie.IsEssential = true; // Make it essential for session tracking
+            });
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var app = builder.Build();
             using(var scope = app.Services.CreateScope())
             {
@@ -64,7 +75,7 @@ namespace GameHive
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
             app.MapRazorPages();
             app.UseAuthentication();

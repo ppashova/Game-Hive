@@ -1,0 +1,46 @@
+﻿
+@model List<GameHive.Models.Cart>
+
+<h2>Shopping Cart</h2>
+
+@if (Model.Count == 0)
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Game.Name</td>
+                    <td>@item.Game.Price.ToString("C")</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Game.Price * item.Quantity).ToString("C")</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post">
+                            <input type="hidden" name="GameId" value="@item.GameId" />
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Total: @ViewBag.CartTotal.ToString("C")</h3>
+
+    <form asp-action="ClearCart" method="post">
+        <button type="submit" class="btn btn-warning">Clear Cart</button>
+    </form>
+}

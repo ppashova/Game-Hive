@@ -17,6 +17,23 @@ namespace GameHive.Models
         public string UserId { get; set; }
         public IdentityUser User { get; set; }
         [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string Address { get; set; }
+        [Required]
+        public string City { get; set; }
+        [Required]
+        public string Area { get; set; }
+        [Required]
+        public string PostalCode { get; set; }
+        [Required]
+        public string PhoneNumber { get; set; }
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
         [Column(TypeName = "money")]
         public decimal TotalPrice { get; set; }
         [Required]
