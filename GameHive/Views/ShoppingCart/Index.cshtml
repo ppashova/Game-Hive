@@ -26,7 +26,7 @@ else
                     <td>@item.Game.Name</td>
                     <td>@item.Game.Price.ToString("C")</td>
                     <td>@item.Quantity</td>
-                    <td>@(item.Game.Price * item.Quantity).ToString("C")</td>
+                    <td>@((item.Game.Price * item.Quantity).ToString("C"))</td>
                     <td>
                         <form asp-action="RemoveFromCart" method="post">
                             <input type="hidden" name="GameId" value="@item.GameId" />
@@ -38,7 +38,7 @@ else
         </tbody>
     </table>
 
-    <h3>Total: @ViewBag.CartTotal.ToString("C")</h3>
+    <h3>Total: @($"{ViewBag.CartTotal:F2}")</h3>
 
     <form asp-action="ClearCart" method="post">
         <button type="submit" class="btn btn-warning">Clear Cart</button>

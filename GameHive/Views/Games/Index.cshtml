@@ -5,6 +5,8 @@
     <a asp-action="Add" class="btn" style="background-color: #C5BDA5; color: white;">Добави нова игра</a>
     <a asp-action="Filter" class="btn" style="background-color: #C5BDA5; color: white;">Филтрирай игри</a>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</script>
 <div class="row">
     @foreach (var game in Model)
     {
@@ -14,7 +16,7 @@
                 <div class="card-body" style="padding: 15px;">
                     <h5 class="card-title" style="min-height: 40px;">@game.Name</h5>
                     <p class="card-text" style="font-size: 0.9em;">@game.BriefDescription</p>
-                    <p class="text-dark" style="font-size: 1.2em;">&#9733;&#9733;&#9733;&#9734;&#9734; (3/5)</p> <!-- Example star rating -->
+                    <p class="text-dark" style="font-size: 1.2em;">&#9733;&#9733;&#9733;&#9734;&#9734; (3/5)</p>
                 </div>
                 <div class="d-grid gap-2">
                     <a asp-controller="Games" asp-action="Edit" asp-route-id="@game.GameId" class="btn" style="background-color: #AFA78D; color: white;">Редактирай</a>
@@ -43,15 +45,13 @@
         transform: scale(1.05);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
-
     .d-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Two columns */
-        gap: 5px; /* Space between buttons */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
         justify-content: center;
     }
-
     button {
-        margin: 0; /* Remove default margin */
+        margin: 0;
     }
 </style>
