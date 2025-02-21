@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using GameHive.Core.IServices
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -40,12 +41,23 @@
                         </li>
                     </ul>
                 </div>
-                <div class="cart-icon">
-                    <a href="/ShoppingCart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cart-count" class="badge">0</span> 
+                @inject IShoppingCartService ShoppingCartService
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="ShoppingCart" asp-action="Index">
+                        🛒 Cart <span id="cartCount" class="badge bg-danger">@ShoppingCartService.GetCartItemCount()</span>
                     </a>
-                </div>
+                    <script>
+                        function updateCartCount() {
+                            fetch('/ShoppingCart/GetCartCount')
+                                .then(response => response.json())
+                                .then(data => {
+                                    document.getElementById("cartCount").textContent = data.count;
+                                });
+                        }
+                        document.addEventListener("DOMContentLoaded", updateCartCount);
+                    </script>
+                </li>
                 <div class="auth-links">
                     <partial name="_LoginPartial" />
                 </div>

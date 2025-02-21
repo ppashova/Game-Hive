@@ -2,37 +2,43 @@
 
 <h2 class="text-2xl font-bold mb-4">Игри</h2>
 <div class="mb-4">
-    <a asp-action="Add" class="btn" style="background-color: #C5BDA5; color: white;">Добави нова игра</a>
-    <a asp-action="Filter" class="btn" style="background-color: #C5BDA5; color: white;">Филтрирай игри</a>
+    <a asp-action="Add" class="btn" style="background-color: #C5BDA5; color: white; padding: 8px 16px;">Добави нова игра</a>
+    <a asp-action="Filter" class="btn" style="background-color: #C5BDA5; color: white; padding: 8px 16px; margin-left: 8px;">Филтрирай игри</a>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</script>
+
 <div class="row">
     @foreach (var game in Model)
     {
         <div class="col-md-3 mb-4">
-            <div class="card" style="background-color: #D7C6B4; border: 1px solid #BFAE8D; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); height: 350px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="card" style="background-color: #D7C6B4; border: 1px solid #BFAE8D; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); height: 350px; display: flex; flex-direction: column;">
                 <div style="height: 150px; background: linear-gradient(135deg, #E4D8B3, #D7B4A0);"></div>
-                <div class="card-body" style="padding: 15px;">
+                <div class="card-body" style="padding: 15px; flex-grow: 1;">
                     <h5 class="card-title" style="min-height: 40px;">@game.Name</h5>
                     <p class="card-text" style="font-size: 0.9em;">@game.BriefDescription</p>
                     <p class="text-dark" style="font-size: 1.2em;">&#9733;&#9733;&#9733;&#9734;&#9734; (3/5)</p>
                 </div>
-                <div class="d-grid gap-2">
-                    <a asp-controller="Games" asp-action="Edit" asp-route-id="@game.GameId" class="btn" style="background-color: #AFA78D; color: white;">Редактирай</a>
+                <div class="card-footer" style="background-color: #D7C6B4; border-top: none; padding: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 8px;">
+                        <a asp-controller="Games" asp-action="Edit" asp-route-id="@game.GameId" class="action-btn">Редактирай</a>
+                        <a href="javascript:void(0);" onclick="document.getElementById('deleteForm-@game.GameId').submit();"
+                           class="action-btn w-100">
+                            Изтрии
+                        </a>
 
-                    <form asp-action="Delete" asp-route-id="@game.GameId" method="post" style="margin: 0;">
-                        <button type="submit" class="btn" style="background-color: #AFA78D; color: white;">Изтрии</button>
-                    </form>
+                        <form id="deleteForm-@game.GameId" method="post" asp-action="Delete" asp-route-id="@game.GameId" style="display: none;">
+                            @Html.AntiForgeryToken()
+                        </form>
+                        <a asp-action="Details" asp-route-id="@game.GameId" class="action-btn">Детайли</a>
+                    </div>
+                    <a href="javascript:void(0);" onclick="document.getElementById('addToCartForm-@game.GameId').submit();"
+                       class="cart-btn">
+                        Добави в количката
+                    </a>
 
-                    <form asp-action="Details" asp-route-id="@game.GameId" method="get" style="margin: 0;">
-                        <button type="submit" class="btn" style="background-color: #AFA78D; color: white;">Детайли</button>
-                    </form>
-
-                    <form asp-controller="ShoppingCart" asp-action="AddToCart" method="post" style="margin: 0;">
+                    <form id="addToCartForm-@game.GameId" method="post" asp-controller="ShoppingCart" asp-action="AddToCart" style="display: none;">
+                        @Html.AntiForgeryToken()
                         <input type="hidden" name="productId" value="@game.GameId" />
                         <input type="hidden" name="quantity" value="1" />
-                        <button type="submit" class="btn" style="background-color: #AFA78D; color: white;">Добави в количката</button>
                     </form>
                 </div>
             </div>
@@ -43,15 +49,43 @@
 <style>
     .card:hover {
         transform: scale(1.05);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
     }
-    .d-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 5px;
-        justify-content: center;
+
+    .action-btn {
+        background-color: #C5BDA5;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        cursor: pointer;
+        display: block;
+        width: 100%;
     }
-    button {
-        margin: 0;
+
+    .cart-btn {
+        display: inline-block;
+        background-color: #C5BDA5;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
     }
+
+
+        .action-btn:hover, .cart-btn:hover {
+            opacity: 0.9;
+        }
 </style>
+

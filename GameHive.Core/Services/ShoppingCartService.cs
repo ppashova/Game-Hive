@@ -79,5 +79,20 @@ namespace GameHive.Core.Services
             string cartId = await GetCartIdAsync();
             await _shoppingCartRepository.ClearCartAsync(cartId);
         }
+
+        public int GetCartItemCount()
+        {
+            var session = _httpContextAccessor.HttpContext?.Session;
+            if (session == null) return 0;
+
+            int count = session.GetInt32("CartItemCount") ?? 0;
+            return count;
+        }
+
+        public void UpdateCartItemCount(int count)
+        {
+            var session = _httpContextAccessor.HttpContext?.Session;
+            session?.SetInt32("CartItemCount", count);
+        }
     }
 }
