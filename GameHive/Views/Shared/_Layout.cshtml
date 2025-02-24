@@ -45,19 +45,19 @@
 
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="ShoppingCart" asp-action="Index">
-                        🛒 Cart <span id="cartCount" class="badge bg-danger">@ShoppingCartService.GetCartItemCount()</span>
+                        🛒@* <span id="cartCount" class="badge bg-danger">@ShoppingCartService.GetCartItemCount()</span> *@
                     </a>
-                    <script>
-                        function updateCartCount() {
-                            fetch('/ShoppingCart/GetCartCount')
-                                .then(response => response.json())
-                                .then(data => {
-                                    document.getElementById("cartCount").textContent = data.count;
-                                });
-                        }
-                        document.addEventListener("DOMContentLoaded", updateCartCount);
-                    </script>
-                </li>
+                     @*< script>
+                         function updateCartCount() {
+                             fetch('/ShoppingCart/GetCartCount')
+                                 .then(response => response.json())
+                                 .then(data => {
+                                     document.getElementById("cartCount").textContent = data.count;
+                                 });
+                         }
+                         document.addEventListener("DOMContentLoaded", updateCartCount);
+                     </script>
+                 </li> *@
                 <div class="auth-links">
                     <partial name="_LoginPartial" />
                 </div>
