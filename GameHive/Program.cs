@@ -8,6 +8,7 @@ using GameHive.DataAccess.Repository.Repositories;
 using GameHive.DataAccess.Repository.IRepositories;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using GameHive.DataAccess.Repository;
+using GameHive.DataAccess.Seeders;
 namespace GameHive
 {
     public class Program
@@ -71,6 +72,15 @@ namespace GameHive
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationDbContext>();
+
+                context.Database.Migrate();
+                DbInitializer.Seed(context);
             }
 
             app.UseHttpsRedirection();
