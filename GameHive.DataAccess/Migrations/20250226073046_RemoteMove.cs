@@ -59,7 +59,8 @@ namespace GameHive.DataAccess.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "money", nullable: false),
                     BriefDescription = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GameIconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

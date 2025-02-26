@@ -74,20 +74,20 @@ namespace GameHive.Controllers
             };
             return View(model);
         }
-        
+
         public async Task<IActionResult> Details(int id)
         {
             var game = await _gameService.GetGameByIdAsync(id);
-            //if(game == null)
-            //    return NotFound();
             var Tags = await _tagService.GetTagsByGameIdAsync(id);
             var viewModel = new GameDetailsViewModel
             {
-                 Game = game,
-                 Tags = Tags
+                Game = game,
+                Tags = Tags
             };
+
             return View(viewModel);
         }
+
 
         [HttpGet]
 

@@ -27,31 +27,45 @@ namespace GameHive.DataAccess.Seeders
             var HorrorTag = context.Tags.Where(t => t.Name == "Horror").Select(t => t.Id).FirstOrDefault(); 
             var PuzzleTag = context.Tags.Where(t => t.Name == "Puzzle").Select(t => t.Id).FirstOrDefault(); 
             var AdventureTag = context.Tags.Where(t => t.Name == "Adventure").Select(t => t.Id).FirstOrDefault(); 
-            var OpenWorldTag = context.Tags.Where(t => t.Name == "Open-World").Select(t => t.Id).FirstOrDefault(); 
+            var OpenWorldTag = context.Tags.Where(t => t.Name == "Open-World").Select(t => t.Id).FirstOrDefault();
 
-            context.GameTags.AddRange(new List<GameTag>
-            {
-                new GameTag{GameId = TBOI, TagId = RogueLikeTag},
-                new GameTag{GameId = TBOI, TagId = ShooterTag},
-                new GameTag{GameId = TBOI, TagId = Action_AdventureTag},
-                new GameTag{GameId = TBOI, TagId = HorrorTag},
+            if (TBOI != 0 && RogueLikeTag != 0)
+                context.Add(new GameTag { GameId = TBOI, TagId = RogueLikeTag });
+            if(TBOI != 0 && ShooterTag != 0)
+                context.Add(new GameTag { GameId = TBOI, TagId = ShooterTag });
+            if (TBOI != 0 && Action_AdventureTag != 0)
+                context.Add(new GameTag { GameId = TBOI, TagId = Action_AdventureTag });
+            if (TBOI != 0 && HorrorTag != 0)
+                context.Add(new GameTag { GameId = TBOI, TagId = HorrorTag });
 
-                new GameTag{ GameId = Hades, TagId = RogueLikeTag },
-                new GameTag{ GameId = Hades, TagId = ShooterTag },
-                new GameTag{ GameId = Hades, TagId = ActionRPGTag },
-                new GameTag{ GameId = Hades, TagId = FighterTag },
+            if (Hades != 0 && RogueLikeTag != 0)
+                context.Add(new GameTag { GameId = Hades, TagId = RogueLikeTag });
+            if (Hades != 0 && ShooterTag != 0)
+                context.Add(new GameTag { GameId = Hades, TagId = ShooterTag });
+            if (Hades != 0 && ActionRPGTag != 0)
+                context.Add(new GameTag { GameId = Hades, TagId = ActionRPGTag });
+            if (Hades != 0 && FighterTag != 0)
+                context.Add(new GameTag { GameId = Hades, TagId = FighterTag });
 
-                new GameTag{ GameId = RDR2, TagId = OpenWorldTag },
-                new GameTag{ GameId = RDR2, TagId = ShooterTag },
-                new GameTag{ GameId = RDR2, TagId = Action_AdventureTag },
-                new GameTag{ GameId = RDR2, TagId = AdventureTag },
-
-                new GameTag{ GameId = RE8, TagId = SurvivalHorrorTag },
-                new GameTag{ GameId = RE8, TagId = HorrorTag },
-                new GameTag{ GameId = RE8, TagId = ShooterTag },
-                new GameTag{ GameId = RE8, TagId = AdventureTag },
-                new GameTag{ GameId = RE8, TagId = PuzzleTag }
-            });
+            if(RDR2 != 0 && OpenWorldTag != 0)
+                context.Add(new GameTag { GameId = RDR2, TagId = OpenWorldTag });
+            if (RDR2 != 0 && ShooterTag != 0)
+                context.Add(new GameTag { GameId = RDR2, TagId = ShooterTag });
+            if (RDR2 != 0 && Action_AdventureTag != 0)
+                context.Add(new GameTag { GameId = RDR2, TagId = Action_AdventureTag });
+            if (RDR2 != 0 && AdventureTag != 0)
+                context.Add(new GameTag { GameId = RDR2, TagId = AdventureTag });
+            
+            if(RE8 != 0 && SurvivalHorrorTag != 0)
+                context.Add(new GameTag { GameId = RE8, TagId = SurvivalHorrorTag });
+            if(RE8 != 0 && HorrorTag != 0)
+                context.Add(new GameTag { GameId = RE8, TagId = HorrorTag });
+            if (RE8 != 0 && ShooterTag != 0)
+                context.Add(new GameTag { GameId = RE8, TagId = ShooterTag });
+            if (RE8 != 0 && AdventureTag != 0)
+                context.Add(new GameTag { GameId = RE8, TagId = AdventureTag });
+            if (RE8 != 0 && PuzzleTag != 0)
+                context.Add(new GameTag { GameId = RE8, TagId = PuzzleTag });
             context.SaveChanges();
         }
     }

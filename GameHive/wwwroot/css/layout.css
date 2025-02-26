@@ -2,12 +2,12 @@
     position: relative;
     padding: 10px 20px;
     border-radius: 7px;
-    border: 1px solid #E2DED2);
+    border: 1px solid #273349;
+    background: #273349;
     font-size: 14px;
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 2px;
-    background: transparent;
     color: #fff;
     overflow: hidden;
     box-shadow: 0 0 0 0 transparent;
@@ -17,8 +17,8 @@
 }
 
     .navbar-button:hover {
-        background: rgb(227, 202, 188);
-        box-shadow: 0 0 30px 5px rgba(242, 230, 224, 0.815);
+        background: rgba(39, 51, 73, 1);
+        box-shadow: 0 0 30px 5px rgba(39, 55, 82, 0.85);
         -webkit-transition: all 0.2s ease-out;
         -moz-transition: all 0.2s ease-out;
         transition: all 0.2s ease-out;

@@ -130,7 +130,8 @@ namespace GameHive.DataAccess.Seeders
                     new Tag {Name = "NSFW"},
                     new Tag {Name = "Violent"},
                     new Tag {Name = "Gore"},
-                    new Tag {Name = "Funny"}
+                    new Tag {Name = "Funny"},
+                    new Tag {Name = "Puzzle"}
                 });
 
                 context.SaveChanges();

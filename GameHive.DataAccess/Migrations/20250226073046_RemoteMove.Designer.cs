@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250225114527_AddedSeeding2")]
-    partial class AddedSeeding2
+    [Migration("20250226073046_RemoteMove")]
+    partial class RemoteMove
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -4,6 +4,5 @@
     {
         public Game Game { get; set; }
         public List<Tag> Tags { get; set; }
-        public string Description { get; set; }
     }
 }
