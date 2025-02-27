@@ -1,12 +1,12 @@
 ﻿
 body {
-    background-color: #EAE1D2;
+    background-color: #214c78;
     color: #333;
     font-family: Arial, sans-serif;
 }
 
 .game-container {
-    background: #D7B4A0;
+    background: #0c1c2c;
     padding: 20px;
     border-radius: 8px;
     max-width: 600px;
@@ -15,15 +15,15 @@ body {
 }
 
 h2, h3 {
-    color: #5B4B3A; 
+    color: #405c6a;
     text-align: center;
 }
 
 .description {
-    background: #EAE1D2;
+    background: #163350;
     padding: 10px;
     border-radius: 6px;
-    color: #333;
+    color: white;
     font-size: 16px;
     margin-top: 10px;
     text-align: justify;
@@ -39,10 +39,10 @@ h2, h3 {
 }
 
 .tag-item {
-    background: #EAE1D2;
+    background: #163350;
     padding: 8px 12px;
     border-radius: 4px;
-    color: #333;
+    color: white;
     font-size: 14px;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.2s;
@@ -58,4 +58,12 @@ h2, h3 {
     text-align: center;
     font-style: italic;
 }
+/*#0c1c2c - card Background color
 
+#0b1928 - Navbar color
+#273349 - Navbar button colors
+#163350 
+#214c78 - whole bg color
+#2c66a0
+#405c6a
+#5c7c7c*/
