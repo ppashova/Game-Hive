@@ -40,7 +40,8 @@ namespace GameHive.Controllers
                 Name = model.Name,
                 Price = model.Price,
                 BriefDescription = model.BriefDescription,
-                FullDescription = model.FullDescription
+                FullDescription = model.FullDescription,
+                GameIconUrl = model.GameIconUrl
             };
             await _gameService.AddGameAsync(game, model.SelectedTagIds);
             return RedirectToAction("Index");
