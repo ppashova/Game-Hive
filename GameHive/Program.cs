@@ -33,7 +33,7 @@ namespace GameHive
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("GameHive.DataAccess")));
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
-            builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+            builder.Services.Configure<SmtpOptions>(builder.Configuration);
             builder.Services.ConfigureApplicationCookie(o => {
                 o.ExpireTimeSpan = TimeSpan.FromDays(5);
                 o.SlidingExpiration = true;
@@ -49,6 +49,7 @@ namespace GameHive
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
+            builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("SmtpOptions"));
             builder.Services.ConfigureApplicationCookie(options => { options.LoginPath = "/Identity/Account/Login"; options.AccessDeniedPath = "/Identity/Account/AccessDenied"; });
 
             // Add session services

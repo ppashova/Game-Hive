@@ -3,52 +3,38 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SendGrid.Helpers.Mail;
-using SendGrid;
+using MimeKit;
+using MimeKit.Text;
+using MailKit.Net.Smtp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity.Core.Metadata.Edm;
+using Microsoft.AspNetCore.Builder.Extensions;
 
 namespace GameHive.Core.Services
 {
-    public class EmailSender : IEmailSender
+    public class EmailSender(IOptions<SmtpOptions> options) : IEmailSender
     {
-        private readonly ILogger _logger;
+        private readonly SmtpOptions _options = options.Value;
 
-        public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor,
-                           ILogger<EmailSender> logger)
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            Options = optionsAccessor.Value;
-            _logger = logger;
-        }
-        public AuthMessageSenderOptions Options { get; }
-        public async Task SendEmailAsync(string toEmail, string subject, string message)
-        {
-            if (string.IsNullOrEmpty(Options.SendGridKey))
-            {
-                throw new Exception("Null SendGridKey");
-            }
-            await Execute(Options.SendGridKey, subject, message, toEmail);
-        }
-        public async Task Execute(string apiKey, string subject, string message, string toEmail)
-        {
-            var client = new SendGridClient(apiKey);
-            var msg = new SendGridMessage()
-            {
-                From = new EmailAddress("GameHiveSupport@gmail.com", "Password Recovery"),
-                Subject = subject,
-                PlainTextContent = message,
-                HtmlContent = message
-            };
-            msg.AddTo(new EmailAddress(toEmail));
-            msg.SetClickTracking(false, false);
-            var response = await client.SendEmailAsync(msg);
-            _logger.LogInformation(response.IsSuccessStatusCode
-                                   ? $"Email to {toEmail} queued successfully!"
-                                   : $"Failure Email to {toEmail}");
-        }
+            using var body = new TextPart(TextFormat.Html);
+            body.Text = htmlMessage;
 
+            using var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(null, "gamehive@yahoo.com"));
+            message.To.Add(new MailboxAddress(null, email));
+            message.Subject = subject;
+            message.Body = body;
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(_options.Host, _options.Port);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
     }
 }

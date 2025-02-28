@@ -51,18 +51,6 @@
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="#273349"></path> <!-- Stroke color remains the same -->
                         </svg>
                     </a>
-                </li>
-                     @*< script>
-                         function updateCartCount() {
-                             fetch('/ShoppingCart/GetCartCount')
-                                 .then(response => response.json())
-                                 .then(data => {
-                                     document.getElementById("cartCount").textContent = data.count;
-                                 });
-                         }
-                         document.addEventListener("DOMContentLoaded", updateCartCount);
-                     </script>
-                 </li> *@
                 <div class="auth-links">
                     <partial name="_LoginPartial" />
                 </div>
@@ -77,7 +65,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted" style="background-color:#0b1928;">
         <div class="container">
             &copy; 2025 - GameHive - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

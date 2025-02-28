@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using GameHive.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameHive.Controllers
@@ -7,13 +8,16 @@ namespace GameHive.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IEmailSender _emailSender;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IEmailSender emailSender)
         {
             _logger = logger;
+            _emailSender = emailSender;
         }
 
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
             return View();
         }
@@ -28,5 +32,6 @@ namespace GameHive.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

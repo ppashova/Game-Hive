@@ -1,97 +1,29 @@
 ﻿@model IEnumerable<GameHive.Models.Game>
 
+<link rel="stylesheet" href="~/css/Games.css">
 <h2 class="text-2xl font-bold mb-4" style="color:white;">Игри</h2>
 <div class="mb-4">
-    <a asp-action="Add" class="btn" style="background-color: #273349; color: white; padding: 8px 16px;">Добави нова игра</a>
-    <a asp-action="Filter" class="btn" style="background-color: #273349; color: white; padding: 8px 16px; margin-left: 8px;">Филтрирай игри</a>
+    <a asp-action="Add" class="btn">Добави нова игра</a>
+    <a asp-action="Filter" class="btn">Филтрирай игри</a>
 </div>
 
 <div class="row">
     @foreach (var game in Model)
     {
+        
         <div class="col-md-3 mb-4">
-            <div class="card" style="background-color: #0c1c2c; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); height: 350px; display: flex; flex-direction: column;">
-                <div style="height: 150px; background: linear-gradient(135deg, #405c6a, #5c7c7c);"></div>
-                <div class="card-body" style="padding: 15px; flex-grow: 1;">
-                    <h5 class="card-title" style="min-height: 40px;">@game.Name</h5>
-                    <p class="card-text" style="font-size: 0.9em;">@game.BriefDescription</p>
-                    <p style="font-size: 1.2em; color:white;">&#9733;&#9733;&#9733;&#9734;&#9734; (3/5)</p>
+            <div class="card game-card">
+                <a asp-action="Details" asp-route-id="@game.GameId">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h5 class="card-title">@game.Name</h5>
+                    <p class="card-text">@game.BriefDescription</p>
+                    <p class="rating">&#9733;&#9733;&#9733;&#9734;&#9734; (3/5)</p>
                 </div>
-                <div class="card-footer" style="background-color: #0c1c2c; border-top: none; padding: 10px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 8px;">
-                        <a asp-controller="Games" asp-action="Edit" asp-route-id="@game.GameId" class="action-btn">Редактирай</a>
-                        <a href="javascript:void(0);" onclick="document.getElementById('deleteForm-@game.GameId').submit();"
-                           class="action-btn w-100">
-                            Изтрии
-                        </a>
-
-                        <form id="deleteForm-@game.GameId" method="post" asp-action="Delete" asp-route-id="@game.GameId" style="display: none;">
-                            @Html.AntiForgeryToken()
-                        </form>
-                        <a asp-action="Details" asp-route-id="@game.GameId" class="action-btn">Детайли</a>
-                    </div>
-                    <a href="javascript:void(0);" onclick="document.getElementById('addToCartForm-@game.GameId').submit();"
-                       class="cart-btn">
-                        Добави в количката
-                    </a>
-
-                    <form id="addToCartForm-@game.GameId" method="post" asp-controller="ShoppingCart" asp-action="AddToCart" style="display: none;">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="productId" value="@game.GameId" />
-                        <input type="hidden" name="quantity" value="1" />
-                    </form>
-                </div>
+                </a>
             </div>
         </div>
     }
 </div>
 
-<style>
-    body{
-        background-color: #214c78;
-    }
-    .card{
-        color: white;
-    }
-    .card:hover {
-        transform: scale(1.05);
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .action-btn {
-        background-color: #273349;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 4px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 0.875rem;
-        line-height: 1.5;
-        cursor: pointer;
-        display: block;
-        width: 100%;
-    }
-
-    .cart-btn {
-        display: inline-block;
-        background-color: #273349;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 4px;
-        width: 100%;
-        text-align: center;
-        font-size: 0.875rem;
-        line-height: 1.5;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background-color 0.2s ease-in-out;
-    }
-
-
-        .action-btn:hover, .cart-btn:hover {
-            opacity: 0.9;
-        }
-</style>
 

@@ -16,6 +16,34 @@
             <p class="description">
                 @(string.IsNullOrEmpty(Model.Game.FullDescription) ? "Няма налично описание за тази игра." : Model.Game.FullDescription)
             </p>
+
+            <!-- Buttons moved from Games view -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 8px;">
+                <a asp-controller="Games" asp-action="Edit" asp-route-id="@Model.Game.GameId" class="action-btn"><span>Редактирай</span></a>
+
+                <a href="javascript:void(0);" onclick="document.getElementById('deleteForm-@Model.Game.GameId').submit();"
+                   class="action-btn w-100">
+                    <span>Изтрии</span>
+                </a>
+
+                <form id="deleteForm-@Model.Game.GameId" method="post" asp-action="Delete" asp-route-id="@Model.Game.GameId" style="display: none;">
+                    @Html.AntiForgeryToken()
+                </form>
+
+                <a asp-action="Details" asp-route-id="@Model.Game.GameId" class="action-btn"><span>Детайли</span></a>
+            </div>
+
+            <a href="javascript:void(0);" onclick="document.getElementById('addToCartForm-@Model.Game.GameId').submit();"
+               class="cart-btn">
+                <span>Добави в количката</span>
+            </a>
+
+            <form id="addToCartForm-@Model.Game.GameId" method="post" asp-controller="ShoppingCart" asp-action="AddToCart" style="display: none;">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="productId" value="@Model.Game.GameId" />
+                <input type="hidden" name="quantity" value="1" />
+            </form>
+
             <h3>Етикети</h3>
             <ul class="tag-list">
                 @if (Model.Tags != null && Model.Tags.Any())
