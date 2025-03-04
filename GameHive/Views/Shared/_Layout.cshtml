@@ -20,7 +20,7 @@
                 <div class="navbar-collapse collapse d-flex justify-content-center flex-grow-1">
                     <ul class="navbar-nav d-flex flex-row">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
                                 <button class="navbar-button">Home</button>
                             </a>
                         </li>
@@ -34,11 +34,11 @@
                                 <button class="navbar-button">Tags</button>
                             </a>
                         </li>
-                        @* <li class="nav-item"> *@
-                        @*     <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index"> *@
-                        @*         <button class="navbar-button">Games</button> *@
-                        @*     </a> *@
-                        @* </li> *@
+                        <li>
+                            <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index">
+                                <button class="navbar-button">Games</button>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 @inject IShoppingCartService ShoppingCartService

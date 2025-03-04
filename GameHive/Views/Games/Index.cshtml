@@ -14,7 +14,7 @@
         <div class="col-md-3 mb-4">
             <div class="card game-card">
                 <a asp-action="Details" asp-route-id="@game.GameId">
-                <div class="card-header"></div>
+                    <div class ="card-header"style="background-image: url('@game.GameIconUrl'); background-size:cover;"></div>
                 <div class="card-body">
                     <h5 class="card-title">@game.Name</h5>
                     <p class="card-text">@game.BriefDescription</p>

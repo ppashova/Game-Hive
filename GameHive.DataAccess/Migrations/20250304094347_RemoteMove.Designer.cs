@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250226073046_RemoteMove")]
+    [Migration("20250304094347_RemoteMove")]
     partial class RemoteMove
     {
         /// <inheritdoc />

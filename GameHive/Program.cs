@@ -9,6 +9,7 @@ using GameHive.DataAccess.Repository.IRepositories;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using GameHive.DataAccess.Repository;
 using GameHive.DataAccess.Seeders;
+using SendGrid.Helpers.Mail;
 namespace GameHive
 {
     public class Program
@@ -50,6 +51,7 @@ namespace GameHive
 
             builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
             builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("SmtpOptions"));
+            builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
             builder.Services.ConfigureApplicationCookie(options => { options.LoginPath = "/Identity/Account/Login"; options.AccessDeniedPath = "/Identity/Account/AccessDenied"; });
 
             // Add session services
