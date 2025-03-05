@@ -13,11 +13,13 @@ namespace GameHive.Controllers
         private readonly IGameService _gameService;
         private readonly ITagService _tagService;
         private readonly IGameTagService _gameTagService;
-        public GamesController(IGameService gameService, ITagService tagService, IGameTagService gameTagService)
+        private readonly CloudinaryService _cloudinaryService;
+        public GamesController(IGameService gameService, ITagService tagService, IGameTagService gameTagService, CloudinaryService cloudinaryService)
         {
             _gameService = gameService;
             _tagService = tagService;
             _gameTagService = gameTagService;
+            _cloudinaryService = cloudinaryService;
         }
         public async Task<IActionResult> Index()
         {
@@ -34,16 +36,16 @@ namespace GameHive.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Add(GameViewModel model)
-        { 
+        {
+            
             var game = new Game
             {
                 Name = model.Name,
                 Price = model.Price,
                 BriefDescription = model.BriefDescription,
-                FullDescription = model.FullDescription,
-                GameIconUrl = model.GameIconUrl
+                FullDescription = model.FullDescription
             };
-            await _gameService.AddGameAsync(game, model.SelectedTagIds);
+            await _gameService.AddGameAsync(game,model.ImageFile, model.SelectedTagIds);
             return RedirectToAction("Index");
         }
 

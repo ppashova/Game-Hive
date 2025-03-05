@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GameHive.Core.IServices;
 using GameHive.DataAccess.Repository.IRepositories;
 using GameHive.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace GameHive.Core.Services
 {
@@ -14,16 +15,23 @@ namespace GameHive.Core.Services
     {
         private readonly IGameRepository _repo;
         private readonly IGameTagRepository _gtrepo;
-        public GameService(IGameRepository repo, IGameTagRepository gtrepo)
+        private readonly CloudinaryService _cloudinaryService;
+        public GameService(IGameRepository repo, IGameTagRepository gtrepo, CloudinaryService cloudinaryService)
         {
             _repo = repo;
             _gtrepo = gtrepo;
+            _cloudinaryService = cloudinaryService;
         }
 
-        public async Task AddGameAsync(Game game, List<int> TagId)
+        public async Task AddGameAsync(Game game,IFormFile ImageFile, List<int> TagId)
         {
+            if (ImageFile != null)
+            {
+                game.GameIconUrl = await _cloudinaryService.UploadImageAsync(ImageFile);
+            }
+
             await _repo.AddAsync(game);
-            foreach(var tag in TagId)
+            foreach (var tag in TagId)
             {
                 var gameTag = new GameTag
                 {
