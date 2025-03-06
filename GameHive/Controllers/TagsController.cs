@@ -1,12 +1,14 @@
 ﻿using GameHive.Core.IServices;
 using GameHive.Core.Services;
 using GameHive.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 //using GameHive.Core.IServices;
 //using GameHive.Core.Services;
 
 namespace GameHive.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TagsController : Controller
     {
         private readonly ITagService _tagService;

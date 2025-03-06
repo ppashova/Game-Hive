@@ -17,7 +17,7 @@ namespace GameHive
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -47,18 +47,22 @@ namespace GameHive
             builder.Services.AddScoped<CloudinaryService>();
 
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(config =>
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>(config =>
             {
                 config.SignIn.RequireConfirmedEmail = true;
                 config.Tokens.ProviderMap.Add("CustomEmailConfirmation",
                     new TokenProviderDescriptor(
                         typeof(CustomEmailConfirmationTokenProvider<IdentityUser>)));
                 config.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
-            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
+              .AddDefaultTokenProviders();
+
 
             builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<IdentityUser>>();
             builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
             builder.Services.ConfigureApplicationCookie(options => { options.LoginPath = "/Identity/Account/Login"; options.AccessDeniedPath = "/Identity/Account/AccessDenied"; });
+
+
 
             // Add session services
             builder.Services.AddSession(options =>
@@ -69,7 +73,15 @@ namespace GameHive
             });
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var app = builder.Build();
-            using(var scope = app.Services.CreateScope())
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+                await RoleSeeder.SeedAsync(roleManager);
+                await AdminSeeder.SeedAdminAsync(userManager);
+            }
+            using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 CreateRoles(services);
