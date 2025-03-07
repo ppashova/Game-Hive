@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using GameHive.Models.enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Client;
 
@@ -23,6 +24,9 @@ namespace GameHive.Models
         public string? BriefDescription { get; set; }
         public string FullDescription { get; set; }
         public string GameIconUrl { get; set; }
+        public string SteamLink { get; set; }
+        public DateTime RequestTime { get; set; } = DateTime.Now;
+        public RequestEnums RequestStatus { get; set; } = RequestEnums.Pending;
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
         public ICollection<UserGame> UserGames { get; set; }

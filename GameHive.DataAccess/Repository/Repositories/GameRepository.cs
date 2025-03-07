@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Azure;
 using GameHive.DataAccess.Repository.IRepositories;
+using GameHive.Models.enums;
 
 namespace GameHive.DataAccess.Repository.Repositories
 {
@@ -21,6 +22,14 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
+        }
+        public async Task<List<Game>> GetPendingGamesAsync()
+        {
+            return await _context.Games
+                .Include(g => g.GameTags)
+                    .ThenInclude(gt => gt.Tag)
+                .Where(g => g.RequestStatus == RequestEnums.Pending)
+                .ToListAsync();
         }
 
         public async Task DeleteAsync(int id)

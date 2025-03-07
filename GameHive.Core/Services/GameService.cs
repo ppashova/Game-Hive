@@ -56,6 +56,10 @@ namespace GameHive.Core.Services
         {
             return await _repo.GetAllAsync();
         }
+        public async Task<List<Game>> GetPendingGamesAsync()
+        {
+            return await _repo.GetPendingGamesAsync();
+        }
 
         public async Task<Game> GetGameWithTagsById(int id)
         {

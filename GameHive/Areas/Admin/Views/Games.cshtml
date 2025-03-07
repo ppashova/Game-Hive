@@ -1,0 +1,34 @@
+﻿@using GameHive.Models
+@model IEnumerable<Game>
+
+<h2>Game Upload Requests</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Brief Description</th>
+            <th>Submitted On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model)
+        {
+            <tr>
+                <td>@game.Name</td>
+                <td>@game.BriefDescription</td>
+                <td>@game.RequestTime.ToShortDateString()</td>
+                <td>
+                    <form asp-action="ApproveRequest" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@game.GameId" />
+                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                    <form asp-action="RejectRequest" method="post" style="display:inline; margin-left:5px;">
+                        <input type="hidden" name="id" value="@game.GameId" />
+                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

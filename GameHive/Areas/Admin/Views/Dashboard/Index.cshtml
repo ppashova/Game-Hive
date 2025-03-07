@@ -1,0 +1,51 @@
+﻿@model GameHive.Areas.Admin.Models.DashboardViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">Dashboard</h2>
+<div class="row">
+    <!-- Game Upload Requests Card -->
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Game Upload Requests</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.GameUploadRequestsCount</h5>
+                <p class="card-text">Pending uploads waiting for approval.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publisher Requests Card -->
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Publisher Requests</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.PublisherRequestsCount</h5>
+                <p class="card-text">New publisher applications to review.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Other Requests Card -->
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Other Requests</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.OtherRequestsCount</h5>
+                <p class="card-text">Miscellaneous items that need attention.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Requests Card -->
+    <div class="col-md-3">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-header">Total Requests</div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.TotalRequests</h5>
+                <p class="card-text">Overall count of pending requests.</p>
+            </div>
+        </div>
+    </div>
+</div>

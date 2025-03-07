@@ -2,5 +2,6 @@
 {
     public class MultipleImageUploadViewModel
     {
+        public List<IFormFile> Images { get; set; }
     }
 }

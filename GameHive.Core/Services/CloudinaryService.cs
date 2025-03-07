@@ -37,9 +37,32 @@ namespace GameHive.Core.Services
                 Transformation = new Transformation().Width(300).Height(300).Crop("fill").Gravity("face")
             };
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            if(uploadResult == null || uploadResult.SecureUrl == null) return null;
+            if (uploadResult == null || uploadResult.SecureUrl == null) return null;
             return uploadResult.SecureUrl.AbsoluteUri;
 
+        }
+
+        public async Task<List<string>> MultipleImageUploadAsync(List<IFormFile> images)
+        {
+            List<string> imageUrls = new List<string>();
+            foreach (var image in images)
+            {
+                if (image.Length > 0)
+                {
+                    using var stream = image.OpenReadStream();
+                    var uploadParams = new ImageUploadParams
+                    {
+                        File = new FileDescription(image.FileName, stream),
+                        Transformation = new Transformation().Width(300).Height(300).Crop("fill").Gravity("face")
+                    };
+                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                    if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        imageUrls.Add(uploadResult.SecureUrl.AbsoluteUri);
+                    }
+                }
+            }
+            return imageUrls;
         }
     }
 }

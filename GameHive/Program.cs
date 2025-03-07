@@ -37,7 +37,8 @@ namespace GameHive
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("GameHive.DataAccess")));
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
-            builder.Services.ConfigureApplicationCookie(o => {
+            builder.Services.ConfigureApplicationCookie(o =>
+            {
                 o.ExpireTimeSpan = TimeSpan.FromDays(5);
                 o.SlidingExpiration = true;
             });
@@ -108,9 +109,14 @@ namespace GameHive
             app.UseStaticFiles();
             app.UseSession();
             app.UseRouting();
-            app.MapRazorPages();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+            app.MapDefaultControllerRoute();
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
@@ -131,5 +137,6 @@ namespace GameHive
                 }
             }
         }
+
     }
 }

@@ -54,6 +54,14 @@
                 <div class="auth-links">
                     <partial name="_LoginPartial" />
                 </div>
+                    @if (User.IsInRole("Admin"))
+                    {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                            Admin
+                        </a>
+                    </li>
+                    })
 
 
             </div>

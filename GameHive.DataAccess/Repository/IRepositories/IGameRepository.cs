@@ -16,5 +16,6 @@ namespace GameHive.DataAccess.Repository.IRepositories
         Task<Game> GetGameWithTagsById(int id);
         Task<Game> GetByIdAsync(int id);
         Task UpdateAsync(Game game);
+        Task<List<Game>> GetPendingGamesAsync();
     }
 }

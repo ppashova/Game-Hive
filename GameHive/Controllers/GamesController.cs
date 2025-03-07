@@ -43,7 +43,8 @@ namespace GameHive.Controllers
                 Name = model.Name,
                 Price = model.Price,
                 BriefDescription = model.BriefDescription,
-                FullDescription = model.FullDescription
+                FullDescription = model.FullDescription,
+                SteamLink = model.SteamLink
             };
             await _gameService.AddGameAsync(game,model.ImageFile, model.SelectedTagIds);
             return RedirectToAction("Index");
