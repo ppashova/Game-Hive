@@ -1,4 +1,6 @@
-﻿namespace GameHive.Models
+﻿using GameHive.Models.enums;
+
+namespace GameHive.Models
 {
     public class GameViewModel
     {
@@ -12,5 +14,6 @@
         public IFormFile? ImageFile { get; set; }
         public string BriefDescription { get; set; }
         public string FullDescription { get; set; }
+        public RequestEnums RequestStatus { get; set; }
     }
 }

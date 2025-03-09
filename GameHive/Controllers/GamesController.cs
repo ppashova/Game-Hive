@@ -113,7 +113,8 @@ namespace GameHive.Controllers
                 AvailableTags = tags,
                 SelectedTagIds = selectedTagsId,
                 BriefDescription = game.BriefDescription,
-                FullDescription = game.FullDescription
+                FullDescription = game.FullDescription,
+                RequestStatus = game.RequestStatus
             };
 
 

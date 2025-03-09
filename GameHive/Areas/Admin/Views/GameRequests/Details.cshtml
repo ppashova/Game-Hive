@@ -1,0 +1,54 @@
+﻿@model GameHive.Models.GameDetailsViewModel
+
+
+<div class="container mt-4">
+    <h2 class="mb-4">Game Details</h2>
+
+    <dl class="row">
+        <dt class="col-sm-2">Name</dt>
+        <dd class="col-sm-10">@Model.Game.Name</dd>
+
+        <dt class="col-sm-2">Price</dt>
+        <dd class="col-sm-10">$@Model.Game.Price</dd>
+
+        <dt class="col-sm-2">Brief Description</dt>
+        <dd class="col-sm-10">@Model.Game.BriefDescription</dd>
+
+        <dt class="col-sm-2">Full Description</dt>
+        <dd class="col-sm-10">@Model.Game.FullDescription</dd>
+
+        <dt class="col-sm-2">Game Icon URL</dt>
+        <dd class="col-sm-10">@Model.Game.GameIconUrl</dd>
+
+        <dt class="col-sm-2">Steam Link</dt>
+        <dd class="col-sm-10">@Model.Game.SteamLink</dd>
+
+        <dt class="col-sm-2">Request Time</dt>
+        <dd class="col-sm-10">@Model.Game.RequestTime</dd>
+
+        <dt class="col-sm-2">Request Status</dt>
+        <dd class="col-sm-10">@Model.Game.RequestStatus</dd>
+    </dl>
+
+    <div class="mt-3">
+        <a asp-area="Admin"
+           asp-controller="GameRequests"
+           asp-action="Index"
+           class="btn btn-secondary">
+            Върни се към заявките
+        </a>
+    </div>
+    <div class="mt-3">
+        <form asp-area="Admin" asp-controller="GameRequests" asp-action="ApproveRequest" method="post">
+            <input type="hidden" name="id" value="@Model.Game.GameId" />
+            <button type="submit" class="btn btn-primary">Приеми заявката</button>
+        </form>
+    </div>
+    <div class="mt-3">
+        <form asp-area="Admin" asp-controller="GameRequests" asp-action="RejectRequest" method="post">
+            <input type="hidden" name="id" value="@Model.Game.GameId" />
+            <button type="submit" class="btn btn-danger">Откажи заявката</button>
+        </form>
+    </div>
+
+</div>
