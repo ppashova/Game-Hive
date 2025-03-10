@@ -29,11 +29,23 @@
                                 <button class="navbar-button">Privacy</button>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Tags" asp-action="Index">
-                                <button class="navbar-button">Tags</button>
-                            </a>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                    <button class="navbar-button">Tags</button>
+                                </a>
+                            </li>
+                        }
+                        else if(User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Publisher">
+                                    <button class="navbar-button">Become a publisher</button>
+                                </a>
+                            </li>
+                        }
+
                         <li>
                             <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index">
                                 <button class="navbar-button">Games</button>
@@ -54,16 +66,6 @@
                 <div class="auth-links">
                     <partial name="_LoginPartial" />
                 </div>
-                    @if (User.IsInRole("Admin"))
-                    {
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                            Admin
-                        </a>
-                    </li>
-                    }
-
-
             </div>
         </nav>
     </header>

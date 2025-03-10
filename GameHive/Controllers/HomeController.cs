@@ -26,6 +26,10 @@ namespace GameHive.Controllers
         {
             return View();
         }
+        public IActionResult Publisher()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

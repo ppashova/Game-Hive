@@ -51,18 +51,7 @@ namespace GameHive.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> RejectRequest(int id)
         {
-            var game = await _gameService.GetGameByIdAsync(id);
-            if (game == null)
-            {
-                return NotFound();
-            }
-
-            game.RequestStatus = RequestEnums.Rejected;
-
-            var tags = await _tagService.GetTagsByGameIdAsync(id);
-            var selectedTagsIds = tags.Select(t => t.Id).ToList();
-
-            await _gameService.UpdateGameAsync(game, selectedTagsIds);
+            await _gameService.DeleteGameAsync(id);
 
             return RedirectToAction(nameof(Index));
         }
