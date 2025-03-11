@@ -88,8 +88,7 @@ namespace GameHive.Core.Services
 
         public async Task<int> GetRequestCountAsync()
         {
-            var games = await _repo.GetRequestedAsync();
-            return games.Count();
+            return await _repo.GetRequestCountAsync();
         }
     }
 }

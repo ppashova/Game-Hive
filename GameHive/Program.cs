@@ -31,6 +31,7 @@ namespace GameHive
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IGameTagService, GameTagService>();
             builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+            builder.Services.AddScoped<IPublisherRequestService, PublisherRequestService>();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();

@@ -1,0 +1,29 @@
+﻿@model GameHive.Models.PublisherRequest
+
+@{
+    ViewData["Title"] = "Submit Publisher Request";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Index" method="post">
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" required />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" required />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Birthdate" class="form-label"></label>
+        <input asp-for="Birthdate" type="date" class="form-control" required />
+        <span asp-validation-for="Birthdate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Request</button>
+</form>

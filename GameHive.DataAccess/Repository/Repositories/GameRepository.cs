@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Azure;
 using GameHive.DataAccess.Repository.IRepositories;
 using GameHive.Models.enums;
+using Microsoft.Identity.Client;
 
 namespace GameHive.DataAccess.Repository.Repositories
 {
@@ -56,15 +57,17 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             return await _context.Games.FindAsync(id);
         }
-        public async Task<List<Game>> GetRequestedAsync()
-        {
-            return await _context.Games.Where(g => g.RequestStatus == RequestEnums.Pending).ToListAsync();
-        }
 
         public async Task UpdateAsync(Game game)
         {
             _context.Games.Update(game);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> GetRequestCountAsync()
+        {
+            var requests = await _context.Games.Where(r => r.RequestStatus == RequestEnums.Pending).ToListAsync();
+            return requests.Count;
         }
     }
 }

@@ -12,15 +12,16 @@ namespace GameHive.DataAccess.Repository.Repositories
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _context;
-        internal DbSet<T> dbSet;
+        internal DbSet<T> _dbSet;
 
         public Repository(ApplicationDbContext context)
         {
             _context = context;
+            _dbSet = _context.Set<T>();
         }
         public async Task AddAsync(T entity)
         {
-            await dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
@@ -29,30 +30,30 @@ namespace GameHive.DataAccess.Repository.Repositories
             var entity = await GetAsync(id);
             if (entity != null)
             {
-                dbSet.Remove(entity);
+                _dbSet.Remove(entity);
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task<List<T>> FindAsync(Expression<Func<T, bool>> filter)
         {
-            return await dbSet.Where(filter).ToListAsync();
+            return await _dbSet.Where(filter).ToListAsync();
         }
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await dbSet.ToListAsync();
+            return await _dbSet.ToListAsync();
         }
 
         public async Task<T> GetAsync(int id)
         {
-            return await dbSet.FindAsync(id);
+            return await _dbSet.FindAsync(id);
 
         }
 
         public async Task UpdateAsync(T entity)
         {
-            dbSet.Update(entity);
+            _dbSet.Update(entity);
             await _context.SaveChangesAsync();
         }
     }
