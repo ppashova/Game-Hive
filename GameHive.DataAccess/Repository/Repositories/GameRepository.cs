@@ -56,6 +56,10 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             return await _context.Games.FindAsync(id);
         }
+        public async Task<List<Game>> GetRequestedAsync()
+        {
+            return await _context.Games.Where(g => g.RequestStatus == RequestEnums.Pending).ToListAsync();
+        }
 
         public async Task UpdateAsync(Game game)
         {

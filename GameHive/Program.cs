@@ -81,6 +81,7 @@ namespace GameHive
 
                 await RoleSeeder.SeedAsync(roleManager);
                 await AdminSeeder.SeedAdminAsync(userManager);
+                await AdminSeeder.SeedCompanyAsync(userManager);
             }
             using (var scope = app.Services.CreateScope())
             {

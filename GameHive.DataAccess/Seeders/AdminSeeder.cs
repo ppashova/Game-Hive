@@ -11,11 +11,9 @@ namespace GameHive.DataAccess.Seeders
     {
         public static async Task SeedAdminAsync(UserManager<IdentityUser> userManager)
         {
-            // Define the admin's email and a strong password.
             var adminEmail = "admin@example.com";
-            var adminPassword = "Admin123!"; // Make sure this meets your password policy
+            var adminPassword = "Admin123!";
 
-            // Check if the admin already exists
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
@@ -30,6 +28,27 @@ namespace GameHive.DataAccess.Seeders
                 if (createResult.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
+            }
+        }
+        public static async Task SeedCompanyAsync(UserManager<IdentityUser> userManager)
+        {
+            var companyEmail = "company@example.com";
+            var companyPassword = "Company123!";
+
+            var companyUser = await userManager.FindByEmailAsync(companyEmail);
+            if (companyUser == null)
+            {
+                companyUser = new IdentityUser
+                {
+                    UserName = companyEmail,
+                    Email = companyEmail,
+                    EmailConfirmed = true
+                };
+                var createResult = await userManager.CreateAsync(companyUser, companyPassword);
+                if (createResult.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(companyUser, "Company");
                 }
             }
         }

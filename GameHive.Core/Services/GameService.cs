@@ -85,5 +85,11 @@ namespace GameHive.Core.Services
                 await _gtrepo.AddAsync(gameTag);
             }
         }
+
+        public async Task<int> GetRequestCountAsync()
+        {
+            var games = await _repo.GetRequestedAsync();
+            return games.Count();
+        }
     }
 }

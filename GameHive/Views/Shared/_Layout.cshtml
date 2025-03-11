@@ -33,7 +33,7 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                                    <button class="navbar-button">Tags</button>
+                                    <button class="navbar-button">Admin</button>
                                 </a>
                             </li>
                         }
@@ -42,6 +42,14 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Publisher">
                                     <button class="navbar-button">Become a publisher</button>
+                                </a>
+                            </li>
+                        }
+                        else if(User.IsInRole("Company"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Add">
+                                    <button class="navbar-button">Upload a game</button>
                                 </a>
                             </li>
                         }
@@ -57,10 +65,9 @@
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="ShoppingCart" asp-action="Index" aria-label="Shopping Cart">
                         <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24" stroke-width="3" fill="none" stroke="#273349" class="icon">
-                            <!-- Increased width, height, and stroke-width -->
-                            <circle r="1.5" cy="21" cx="9" fill="#273349"></circle> <!-- Increased radius for circles -->
-                            <circle r="1.5" cy="21" cx="20" fill="#273349"></circle> <!-- Increased radius for circles -->
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="#273349"></path> <!-- Stroke color remains the same -->
+                            <circle r="1.5" cy="21" cx="9" fill="#273349"></circle> 
+                            <circle r="1.5" cy="21" cx="20" fill="#273349"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="#273349"></path>
                         </svg>
                     </a>
                 <div class="auth-links">

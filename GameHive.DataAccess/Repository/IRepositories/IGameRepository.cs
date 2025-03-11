@@ -17,5 +17,6 @@ namespace GameHive.DataAccess.Repository.IRepositories
         Task<Game> GetByIdAsync(int id);
         Task UpdateAsync(Game game);
         Task<List<Game>> GetPendingGamesAsync();
+        Task<List<Game>> GetRequestedAsync();
     }
 }

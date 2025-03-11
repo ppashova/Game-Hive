@@ -1,6 +1,8 @@
-﻿using GameHive.Core.IServices;
+﻿using CloudinaryDotNet.Actions;
+using GameHive.Core.IServices;
 using GameHive.Core.Services;
 using GameHive.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
@@ -26,6 +28,7 @@ namespace GameHive.Controllers
             var games = await _gameService.GetAllGamesAsync();
             return View(games);
         }
+        [Authorize(Roles = "Company")]
         public async Task<IActionResult> Add()
         {
             var model = new GameViewModel
@@ -35,6 +38,7 @@ namespace GameHive.Controllers
             return View(model);
         }
         [HttpPost]
+        [Authorize(Roles = "Company")]
         public async Task<IActionResult> Add(GameViewModel model)
         {
             

@@ -20,5 +20,6 @@ namespace GameHive.Core.IServices
         Task UpdateGameAsync(Game game, List<int> tagIds);
         Task<Game> GetGameWithTagsById(int id);
         Task<List<Game>> GetPendingGamesAsync();
+        Task<int> GetRequestCountAsync();
     }
 }
