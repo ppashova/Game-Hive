@@ -1,7 +1,10 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using GameHive.DataAccess.Repository.IRepositories;
+using GameHive.Models;
 using GameHive.Utilities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System;
@@ -15,8 +18,9 @@ namespace GameHive.Core.Services
     public class CloudinaryService
     {
         private readonly Cloudinary _cloudinary;
+        private readonly IRepository<GameImage> _repo;
 
-        public CloudinaryService(IOptions<CloudinarySettings> config)
+        public CloudinaryService(IOptions<CloudinarySettings> config, IRepository<GameImage> repository)
         {
             var account = new Account(
                 config.Value.CloudName,
@@ -25,6 +29,7 @@ namespace GameHive.Core.Services
             );
 
             _cloudinary = new Cloudinary(account);
+            _repo = repository;
         }
 
         public async Task<string> UploadImageAsync(IFormFile file)
@@ -53,7 +58,7 @@ namespace GameHive.Core.Services
                     var uploadParams = new ImageUploadParams
                     {
                         File = new FileDescription(image.FileName, stream),
-                        Transformation = new Transformation().Width(300).Height(300).Crop("fill").Gravity("face")
+                        Transformation = new Transformation().Width(600).Height(337).Crop("fill").Gravity("face")
                     };
                     var uploadResult = await _cloudinary.UploadAsync(uploadParams);
                     if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
@@ -63,6 +68,25 @@ namespace GameHive.Core.Services
                 }
             }
             return imageUrls;
+        }
+
+        public async Task AddMultipleImagesAsync(int id, List<string> imageURLs)
+        {
+            foreach(var x in imageURLs)
+            {
+                await _repo.AddAsync(
+                    new GameImage
+                    {
+                        GameId = id,
+                        imageURL = x
+                    });
+                
+            }
+
+        }
+        public async Task AddSingleImageAsync(int id,string ImageURL)
+        {
+            await _repo.AddAsync(new GameImage { GameId = id, imageURL = ImageURL });
         }
     }
 }

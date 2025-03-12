@@ -1,0 +1,33 @@
+﻿@model IEnumerable<GameHive.Models.PublisherRequest>
+
+@{
+    ViewData["Title"] = "Publisher Requests";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Request ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Birthdate</th>
+            <th>Date Created</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.RequestId</td>
+                <td>@request.FirstName</td>
+                <td>@request.LastName</td>
+                <td>@request.Birthdate</td>
+                <td>@request.DateCreated</td>
+                <td>@request.RequestEnums</td>
+            </tr>
+        }
+    </tbody>
+</table>

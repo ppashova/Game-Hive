@@ -21,6 +21,7 @@ namespace GameHive.DataAccess
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<PublisherRequest> PublisherRequests { get; set; }
+        public DbSet<GameImage> GameImages { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,6 +65,8 @@ namespace GameHive.DataAccess
                 .HasOne(od => od.Order)
                 .WithMany(o => o.OrderDetails)
                 .HasForeignKey(od => od.OrderId);
+            modelBuilder.Entity<GameImage>()
+                .HasNoKey();
         }
     }
 }

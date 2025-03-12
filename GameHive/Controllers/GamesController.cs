@@ -39,7 +39,7 @@ namespace GameHive.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Company")]
-        public async Task<IActionResult> Add(GameViewModel model)
+        public async Task<IActionResult> Add(GameViewModel model, List<IFormFile> images)
         {
             
             var game = new Game
@@ -51,9 +51,16 @@ namespace GameHive.Controllers
                 SteamLink = model.SteamLink
             };
             await _gameService.AddGameAsync(game,model.ImageFile, model.SelectedTagIds);
+            return RedirectToAction("MultipleImageUpload");
+        }
+        [HttpPost]
+        public async Task<IActionResult> MultipleImageUpload(List<IFormFile> images)
+        {
+            
+            var ImageUrls = await _cloudinaryService.MultipleImageUploadAsync(images);
+            //await _cloudinaryService.AddMultipleImagesAsync(ImageUrls);
             return RedirectToAction("Index");
         }
-
         public async Task<IActionResult> Filter(GameFilterViewModel? filter)
         {
             var games = await _gameService.GetAllGamesAsync();
