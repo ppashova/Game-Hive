@@ -9,6 +9,7 @@ using Azure;
 using GameHive.DataAccess.Repository.IRepositories;
 using GameHive.Models.enums;
 using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Http;
 
 namespace GameHive.DataAccess.Repository.Repositories
 {
@@ -68,6 +69,15 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             var requests = await _context.Games.Where(r => r.RequestStatus == RequestEnums.Pending).ToListAsync();
             return requests.Count;
+        }
+        public async Task AddGameImagesAsync(GameImage gameImage)
+        {
+            await _context.GameImages.AddAsync(gameImage);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<string>> GetGameImagesAsync(int id)
+        {
+            return await _context.GameImages.Where(g => id == g.GameId).Select(g => g.imageURL).ToListAsync();
         }
     }
 }

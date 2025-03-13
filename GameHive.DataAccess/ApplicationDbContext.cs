@@ -66,7 +66,7 @@ namespace GameHive.DataAccess
                 .WithMany(o => o.OrderDetails)
                 .HasForeignKey(od => od.OrderId);
             modelBuilder.Entity<GameImage>()
-                .HasNoKey();
+                .HasKey(g => new { g.GameId, g.imageURL });
         }
     }
 }

@@ -23,11 +23,16 @@ namespace GameHive.Core.Services
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task AddGameAsync(Game game,IFormFile ImageFile, List<int> TagId)
+        public async Task AddGameAsync(Game game,IFormFile ImageFile, List<int> TagId, List<IFormFile> images)
         {
+            List<string> imageUrls = new List<string>();
             if (ImageFile != null)
             {
                 game.GameIconUrl = await _cloudinaryService.UploadImageAsync(ImageFile);
+            }
+            if(images.Count > 0)
+            {
+                imageUrls = await _cloudinaryService.MultipleImageUploadAsync(images);
             }
 
             await _repo.AddAsync(game);
@@ -40,6 +45,17 @@ namespace GameHive.Core.Services
                 };
                 await _gtrepo.AddAsync(gameTag);
             }
+            foreach (var image in imageUrls)
+            {
+                var gameImage = new GameImage
+                {
+                    GameId = game.GameId,
+                    imageURL = image
+                };
+                await _repo.AddGameImagesAsync(gameImage);
+            }
+            
+            
         }
 
         public async Task DeleteGameAsync(int id)
@@ -89,6 +105,10 @@ namespace GameHive.Core.Services
         public async Task<int> GetRequestCountAsync()
         {
             return await _repo.GetRequestCountAsync();
+        }
+        public async Task<List<string>> GetGameImagesAsync(int id)
+        {
+            return await _repo.GetGameImagesAsync(id);
         }
     }
 }

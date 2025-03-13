@@ -16,6 +16,7 @@ namespace GameHive.DataAccess.Seeders
             TagSeeder.Seed(context);
             GameSeeder.Seed(context);
             GameTagSeeder.Seed(context);
+            GameImageSeeder.Seed(context);
         }
     }
 }

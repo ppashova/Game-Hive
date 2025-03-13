@@ -1,5 +1,5 @@
-﻿
-@import url('layout.css');
+﻿@import url('layout.css');
+
 body {
     background-color: #2a6a9a;
     color: #333;
@@ -10,7 +10,7 @@ body {
     background: #0c1c2c;
     padding: 20px;
     border-radius: 8px;
-    max-width: 600px;
+    max-width: 1000px;
     margin: auto;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -50,15 +50,16 @@ h2, h3 {
 }
 
     .tag-item:hover {
-        background: #D1C6B4; 
+        background: #D1C6B4;
         transform: scale(1.1);
     }
 
 .no-tags {
-    color: #C74B3A; 
+    color: #C74B3A;
     text-align: center;
     font-style: italic;
 }
+
 .action-btn {
     background-color: #273349;
     color: white;
@@ -101,7 +102,7 @@ h2, h3 {
         -webkit-transition: all 0.2s ease-out;
         -moz-transition: all 0.2s ease-out;
         transition: all 0.2s ease-out;
-        color:white;
+        color: white;
     }
 
         .action-btn:hover::before, .cart-btn:hover::before {
@@ -129,6 +130,56 @@ h2, h3 {
         transform: skewX(-20deg);
     }
 
+/* Carousel styling */
+.image-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.carousel {
+    background: #163350;
+    border-radius: 6px;
+    padding: 10px;
+    margin-top: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: visible; /* Ensures content isn't cut off */
+}
+
+.carousel-inner {
+    border-radius: 4px;
+    overflow: hidden;
+    height: auto;
+}
+
+.carousel-image {
+    object-fit: cover; 
+    width: 100%; 
+    height: 100%;
+    max-height: 357px; 
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 10px;
+}
+
+.carousel-indicators {
+    margin-bottom: 0;
+}
+
+.no-images {
+    background: #163350;
+    padding: 10px;
+    border-radius: 6px;
+    color: #C74B3A;
+    font-style: italic;
+    text-align: center;
+}
+
 @keyframes sh02 {
     from {
         opacity: 0;
@@ -144,12 +195,27 @@ h2, h3 {
         left: 100%;
     }
 }
-/*#0c1c2c - card Background color
+.admin-dropdown {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
 
-#0b1928 - Navbar color
-#273349 - Navbar button colors
-#163350 
-#2a6a9a - whole bg color
-#2c66a0
-#405c6a
-#5c7c7c*/
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .game-container {
+        padding: 15px;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .image-section {
+        margin-bottom: 20px;
+    }
+
+    .carousel-image {
+        height: 300px;
+    }
+}

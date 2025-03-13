@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
+using System.Collections.Generic;
 using System.Data.Entity;
 
 namespace GameHive.Controllers
@@ -41,7 +42,15 @@ namespace GameHive.Controllers
         [Authorize(Roles = "Company")]
         public async Task<IActionResult> Add(GameViewModel model, List<IFormFile> images)
         {
-            
+            if (model.IconFile == null)
+            {
+                return BadRequest("Icon file is required.");
+            }
+            if (model.SelectedTagIds == null || !model.SelectedTagIds.Any())
+            {
+                return BadRequest("At least one tag must be selected.");
+            }
+
             var game = new Game
             {
                 Name = model.Name,
@@ -50,17 +59,10 @@ namespace GameHive.Controllers
                 FullDescription = model.FullDescription,
                 SteamLink = model.SteamLink
             };
-            await _gameService.AddGameAsync(game,model.ImageFile, model.SelectedTagIds);
-            return RedirectToAction("MultipleImageUpload");
-        }
-        [HttpPost]
-        public async Task<IActionResult> MultipleImageUpload(List<IFormFile> images)
-        {
-            
-            var ImageUrls = await _cloudinaryService.MultipleImageUploadAsync(images);
-            //await _cloudinaryService.AddMultipleImagesAsync(ImageUrls);
+            await _gameService.AddGameAsync(game, model.IconFile, model.SelectedTagIds, model.GameImages);
             return RedirectToAction("Index");
         }
+
         public async Task<IActionResult> Filter(GameFilterViewModel? filter)
         {
             var games = await _gameService.GetAllGamesAsync();
@@ -94,10 +96,12 @@ namespace GameHive.Controllers
         {
             var game = await _gameService.GetGameByIdAsync(id);
             var Tags = await _tagService.GetTagsByGameIdAsync(id);
+            var ImageUrls = await _gameService.GetGameImagesAsync(id);
             var viewModel = new GameDetailsViewModel
             {
                 Game = game,
-                Tags = Tags
+                Tags = Tags,
+                Images = ImageUrls
             };
 
             return View(viewModel);

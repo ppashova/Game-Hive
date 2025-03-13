@@ -8,58 +8,95 @@
     <title>@Model.Game.Name</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/GameDetails.css">
+    <!-- Add Bootstrap Icons for carousel controls -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
 <body>
     <div class="container mt-5">
-        <div class="game-container">
-            <h2>@Model.Game.Name</h2>
-            <p class="description">
-                @(string.IsNullOrEmpty(Model.Game.FullDescription) ? "Няма налично описание за тази игра." : Model.Game.FullDescription)
-            </p>
+        <div class="game-container" style="max-width: 1200px;">
+            <div class="row">
+                <!-- Left column: Image carousel -->
+                <div class="col-md-7 image-section">
+                    @if (Model.Images != null && Model.Images.Any())
+                    {
+                        <div id="gameImagesCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <!-- Carousel indicators -->
+                            <div class="carousel-indicators">
+                                @for (int i = 0; i < Model.Images.Count; i++)
+                                {
+                                    <button type="button" data-bs-target="#gameImagesCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"
+                                            aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i+1)"></button>
+                                }
+                            </div>
 
-            @if(User.IsInRole("Admin"))
-            {
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 8px;">
-                    <a asp-controller="Games" asp-action="Edit" asp-route-id="@Model.Game.GameId" class="action-btn"><span>Редактирай</span></a>
+                            <!-- Carousel items -->
+                            <div class="carousel-inner">
+                                @for (int i = 0; i < Model.Images.Count; i++)
+                                {
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@Model.Images[i]" class="d-block w-100 carousel-image" alt="Game Image @(i+1)">
+                                    </div>
 
-                    <a href="javascript:void(0);" onclick="document.getElementById('deleteForm-@Model.Game.GameId').submit();"
-                       class="action-btn w-100">
-                        <span>Изтрии</span>
+                                }
+                            </div>
+
+                            <!-- Carousel controls -->
+                            <button class="carousel-control-prev" type="button" data-bs-target="#gameImagesCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#gameImagesCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="no-images">Няма изображения за тази игра.</p>
+                    }
+                </div>
+
+                <!-- Right column: Game information -->
+                <div class="col-md-5 game-info">
+                    <h2>@Model.Game.Name</h2>
+                    <p class="description">
+                        @(string.IsNullOrEmpty(Model.Game.FullDescription) ? "Няма налично описание за тази игра." : Model.Game.FullDescription)
+                    </p>
+
+                    <a href="javascript:void(0);" onclick="document.getElementById('addToCartForm-@Model.Game.GameId').submit();"
+                       class="cart-btn">
+                        <span>Добави в количката</span>
                     </a>
 
-                    <form id="deleteForm-@Model.Game.GameId" method="post" asp-action="Delete" asp-route-id="@Model.Game.GameId" style="display: none;">
+                    <form id="addToCartForm-@Model.Game.GameId" method="post" asp-controller="ShoppingCart" asp-action="AddToCart" style="display: none;">
                         @Html.AntiForgeryToken()
+                        <input type="hidden" name="productId" value="@Model.Game.GameId" />
+                        <input type="hidden" name="quantity" value="1" />
                     </form>
 
-                    <a asp-action="Details" asp-route-id="@Model.Game.GameId" class="action-btn"><span>Детайли</span></a>
+                    <h3>Етикети</h3>
+                    <ul class="tag-list">
+                        @if (Model.Tags != null && Model.Tags.Any())
+                        {
+                            foreach (var tag in Model.Tags)
+                            {
+                                <li class="tag-item">@tag.Name</li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="no-tags">Тази игра няма етикети.</li>
+                        }
+                    </ul>
                 </div>
-            }
-            <a href="javascript:void(0);" onclick="document.getElementById('addToCartForm-@Model.Game.GameId').submit();"
-               class="cart-btn">
-                <span>Добави в количката</span>
-            </a>
 
-            <form id="addToCartForm-@Model.Game.GameId" method="post" asp-controller="ShoppingCart" asp-action="AddToCart" style="display: none;">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="productId" value="@Model.Game.GameId" />
-                <input type="hidden" name="quantity" value="1" />
-            </form>
 
-            <h3>Етикети</h3>
-            <ul class="tag-list">
-                @if (Model.Tags != null && Model.Tags.Any())
-                {
-                    foreach (var tag in Model.Tags)
-                    {
-                        <li class="tag-item">@tag.Name</li>
-                    }
-                }
-                else
-                {
-                    <li class="no-tags">Тази игра няма етикети.</li>
-                }
-            </ul>
+            </div>
         </div>
     </div>
+
+    <!-- Bootstrap JS for carousel functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

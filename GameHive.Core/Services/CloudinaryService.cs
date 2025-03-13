@@ -18,9 +18,9 @@ namespace GameHive.Core.Services
     public class CloudinaryService
     {
         private readonly Cloudinary _cloudinary;
-        private readonly IRepository<GameImage> _repo;
+        private readonly IGameRepository _gameRepository;
 
-        public CloudinaryService(IOptions<CloudinarySettings> config, IRepository<GameImage> repository)
+        public CloudinaryService(IOptions<CloudinarySettings> config)
         {
             var account = new Account(
                 config.Value.CloudName,
@@ -29,7 +29,6 @@ namespace GameHive.Core.Services
             );
 
             _cloudinary = new Cloudinary(account);
-            _repo = repository;
         }
 
         public async Task<string> UploadImageAsync(IFormFile file)
@@ -69,24 +68,18 @@ namespace GameHive.Core.Services
             }
             return imageUrls;
         }
-
-        public async Task AddMultipleImagesAsync(int id, List<string> imageURLs)
+        public async Task<bool> AddGameImagesAsync(int gameId, List<IFormFile> images)
         {
-            foreach(var x in imageURLs)
+            var imageUrls = await MultipleImageUploadAsync(images);
+            if(imageUrls.Count == 0) return false;
+            var gameImages = imageUrls.Select(url => new GameImage
             {
-                await _repo.AddAsync(
-                    new GameImage
-                    {
-                        GameId = id,
-                        imageURL = x
-                    });
-                
-            }
-
-        }
-        public async Task AddSingleImageAsync(int id,string ImageURL)
-        {
-            await _repo.AddAsync(new GameImage { GameId = id, imageURL = ImageURL });
+                GameId = gameId,
+                imageURL = url
+            });
+            foreach (var image in gameImages)
+                await _gameRepository.AddGameImagesAsync(image);
+            return true;
         }
     }
 }
