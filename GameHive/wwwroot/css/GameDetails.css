@@ -9,8 +9,8 @@ body {
 .game-container {
     background: #0c1c2c;
     padding: 20px;
-    border-radius: 8px;
-    max-width: 1000px;
+    border-radius: 0 0 8px 8px;
+    max-width: 1200px;
     margin: auto;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -21,9 +21,7 @@ h2, h3 {
 }
 
 .description {
-    background: #163350;
     padding: 10px;
-    border-radius: 6px;
     color: white;
     font-size: 16px;
     margin-top: 10px;
@@ -60,30 +58,11 @@ h2, h3 {
     font-style: italic;
 }
 
-.action-btn {
-    background-color: #273349;
-    color: white;
-    padding: 6px 12px;
-    border: 1px solid #273349;
-    border-radius: 4px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    width: 100%;
-    overflow: auto;
-    position: relative;
-    -webkit-transition: all 0.2s ease-in;
-    -moz-transition: all 0.2s ease-in;
-    transition: all 0.2s ease-in;
-    box-shadow: 0 0 0 0 transparent;
-}
-
 .cart-btn {
-    display: inline-block;
+    display: block;
     background-color: #273349;
     color: white;
-    padding: 6px 12px;
+    padding: 10px 15px;
     border: 1px solid #273349;
     width: 100%;
     text-align: center;
@@ -91,27 +70,24 @@ h2, h3 {
     line-height: 1.5;
     cursor: pointer;
     text-decoration: none;
+    border-radius: 4px;
     overflow: hidden;
     position: relative;
     transition: all 0.2s ease-in-out;
 }
 
-    .action-btn:hover, .cart-btn:hover {
+    .cart-btn:hover {
         background: rgba(39, 51, 73, 1);
         box-shadow: 0 0 30px 5px rgba(39, 55, 82, 0.85);
-        -webkit-transition: all 0.2s ease-out;
-        -moz-transition: all 0.2s ease-out;
         transition: all 0.2s ease-out;
         color: white;
     }
 
-        .action-btn:hover::before, .cart-btn:hover::before {
-            -webkit-animation: sh02 0.5s 0s linear;
-            -moz-animation: sh02 0.5s 0s linear;
+        .cart-btn:hover::before {
             animation: sh02 0.5s 0s linear;
         }
 
-    .action-btn::before, .cart-btn::before {
+    .cart-btn::before {
         content: '';
         display: block;
         width: 0px;
@@ -123,42 +99,33 @@ h2, h3 {
         color: white;
         background: #fff;
         box-shadow: 0 0 50px 30px #fff;
-        -webkit-transform: skewX(-20deg);
-        -moz-transform: skewX(-20deg);
-        -ms-transform: skewX(-20deg);
-        -o-transform: skewX(-20deg);
         transform: skewX(-20deg);
     }
 
 /* Carousel styling */
-.image-section {
-    display: flex;
-    flex-direction: column;
-}
-
-.carousel {
+.game-carousel {
     background: #163350;
-    border-radius: 6px;
+    border-radius: 8px 0 0 0;
     padding: 10px;
-    margin-top: 10px;
     height: 100%;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow: visible; /* Ensures content isn't cut off */
 }
 
 .carousel-inner {
     border-radius: 4px;
     overflow: hidden;
-    height: auto;
+    height: 100%;
 }
 
 .carousel-image {
-    object-fit: cover; 
-    width: 100%; 
+    object-fit: cover;
+    width: 100%;
     height: 100%;
-    max-height: 357px; 
+    min-height: 350px;
+    max-height: 500px;
 }
 
 .carousel-control-prev-icon, .carousel-control-next-icon {
@@ -180,6 +147,28 @@ h2, h3 {
     text-align: center;
 }
 
+.header-container {
+    background: #163350;
+    border-radius: 0 8px 0 0;
+    padding: 10px;
+    text-align: center;
+}
+
+.header-image {
+    width: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.info-container {
+    background: #163350;
+    border-radius: 0;
+    padding: 15px;
+    margin-top: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 @keyframes sh02 {
     from {
         opacity: 0;
@@ -195,27 +184,23 @@ h2, h3 {
         left: 100%;
     }
 }
-.admin-dropdown {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
 
 /* Responsive adjustments */
 @media (max-width: 767px) {
-    .game-container {
-        padding: 15px;
-    }
-
     .row {
         flex-direction: column;
     }
 
-    .image-section {
-        margin-bottom: 20px;
+    .col-md-8, .col-md-4 {
+        width: 100%;
+    }
+
+    .header-container {
+        margin-top: 20px;
     }
 
     .carousel-image {
-        height: 300px;
+        min-height: 250px;
     }
 }
+

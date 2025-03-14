@@ -23,13 +23,18 @@ namespace GameHive.Core.Services
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task AddGameAsync(Game game,IFormFile ImageFile, List<int> TagId, List<IFormFile> images)
+        public async Task AddGameAsync(Game game,IFormFile ImageFile, List<int> TagId, List<IFormFile> images, IFormFile gameHeader)
         {
             List<string> imageUrls = new List<string>();
+            if(gameHeader != null)
+            {
+                game.GameHeaderUrl = await _cloudinaryService.UploadHeaderAsync(gameHeader);
+            }
             if (ImageFile != null)
             {
                 game.GameIconUrl = await _cloudinaryService.UploadImageAsync(ImageFile);
             }
+            
             if(images.Count > 0)
             {
                 imageUrls = await _cloudinaryService.MultipleImageUploadAsync(images);

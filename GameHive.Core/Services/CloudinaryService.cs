@@ -71,7 +71,7 @@ namespace GameHive.Core.Services
         public async Task<bool> AddGameImagesAsync(int gameId, List<IFormFile> images)
         {
             var imageUrls = await MultipleImageUploadAsync(images);
-            if(imageUrls.Count == 0) return false;
+            if (imageUrls.Count == 0) return false;
             var gameImages = imageUrls.Select(url => new GameImage
             {
                 GameId = gameId,
@@ -80,6 +80,20 @@ namespace GameHive.Core.Services
             foreach (var image in gameImages)
                 await _gameRepository.AddGameImagesAsync(image);
             return true;
+        }
+
+        public async Task<string> UploadHeaderAsync(IFormFile header)
+        {
+            if (header == null || header.Length == 0) return null;
+            using var stream = header.OpenReadStream();
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(header.FileName, stream),
+                Transformation = new Transformation().Width(324).Height(151).Crop("fill").Gravity("face")
+            };
+            var uploadresult = await _cloudinary.UploadAsync(uploadParams);
+            if (uploadresult == null || uploadresult.SecureUrl == null) return null;
+            return uploadresult.SecureUrl.AbsoluteUri;
         }
     }
 }

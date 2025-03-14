@@ -59,7 +59,7 @@ namespace GameHive.Controllers
                 FullDescription = model.FullDescription,
                 SteamLink = model.SteamLink
             };
-            await _gameService.AddGameAsync(game, model.IconFile, model.SelectedTagIds, model.GameImages);
+            await _gameService.AddGameAsync(game, model.IconFile, model.SelectedTagIds, model.GameImages, model.GameHeader);
             return RedirectToAction("Index");
         }
 

@@ -14,6 +14,7 @@ namespace GameHive.Models
         public IFormFile? IconFile { get; set; }
         public string BriefDescription { get; set; }
         public string FullDescription { get; set; }
+        public IFormFile GameHeader { get; set; }
         public List<IFormFile> GameImages { get; set; } = new List<IFormFile>();
         public RequestEnums RequestStatus { get; set; }
     }

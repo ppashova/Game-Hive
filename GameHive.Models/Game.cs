@@ -24,9 +24,12 @@ namespace GameHive.Models
         public string? BriefDescription { get; set; }
         public string FullDescription { get; set; }
         public string GameIconUrl { get; set; }
+        public string GameHeaderUrl { get; set; }
         public string SteamLink { get; set; }
         public DateTime RequestTime { get; set; } = DateTime.Now;
         public RequestEnums RequestStatus { get; set; } = RequestEnums.Pending;
+        [NotMapped]
+        public IFormFile? GameHeader { get; set; }
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
         public ICollection<UserGame> UserGames { get; set; }

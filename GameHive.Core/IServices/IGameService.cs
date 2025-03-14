@@ -14,7 +14,7 @@ namespace GameHive.Core.IServices
     {
         Task<IEnumerable<Game>> GetAllGamesAsync();
         Task<Game> GetGameByIdAsync(int id);
-        Task AddGameAsync(Game game,IFormFile ImageFile, List<int> tagIds, List<IFormFile> images);
+        Task AddGameAsync(Game game,IFormFile ImageFile, List<int> tagIds, List<IFormFile> images, IFormFile gameHeader);
         Task DeleteGameAsync(int id);
         Task DeleteGameTagAsync(int gameId, int tagId);
         Task UpdateGameAsync(Game game, List<int> tagIds);
