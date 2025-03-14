@@ -1,4 +1,9 @@
-﻿@import url('layout.css');
+﻿/* Import layout.css if needed */
+@import url('layout.css');
+
+* {
+    box-sizing: border-box; /* Include padding and borders in height/width calculations */
+}
 
 body {
     background-color: #2a6a9a;
@@ -6,6 +11,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Game Container */
 .game-container {
     background: #0c1c2c;
     padding: 20px;
@@ -13,11 +19,61 @@ body {
     max-width: 1200px;
     margin: auto;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
 
-h2, h3 {
-    color: #405c6a;
+/* Game Header (Title Only) */
+.game-header {
+    padding: 10px 20px;
+    background: #0c1c2c;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0; /* Remove margin-bottom to eliminate gap */
+}
+
+.game-title {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Small Header in Details Pane */
+.small-header {
+    background: #163350;
+    padding: 5px;
+    border-radius: 4px;
+    overflow: hidden;
     text-align: center;
+    height: 151px; /* Fixed height to match image */
+}
+
+.small-header-image {
+    width: 324px;
+    height: 151px;
+    object-fit: contain; /* Fit the image without cropping */
+}
+
+/* Details Pane */
+.details-pane {
+    background: #163350;
+    border-radius: 0 8px 0 0;
+    padding: 10px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 0; /* Ensure no additional spacing */
+}
+
+.info-container {
+    background: #163350;
+    padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-grow: 1; /* Take remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; /* Prevent overflow within container */
 }
 
 .description {
@@ -26,38 +82,51 @@ h2, h3 {
     font-size: 16px;
     margin-top: 10px;
     text-align: justify;
+    max-height: calc(100% - 70px); /* Adjust for padding and cart button */
+    overflow-y: auto; /* Scroll if content exceeds */
 }
 
-.tag-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-}
-
-.tag-item {
+/* Carousel */
+.game-carousel {
     background: #163350;
-    padding: 8px 12px;
+    border-radius: 8px 0 0 0;
+    padding: 10px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Start from the top to avoid space */
+    margin-bottom: 0; /* Add this to ensure no extra space below */
+}
+
+/* Ensure carousel images fit properly */
+.carousel-inner {
     border-radius: 4px;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s;
+    overflow: hidden;
+    height: 100%;
 }
 
-    .tag-item:hover {
-        background: #D1C6B4;
-        transform: scale(1.1);
-    }
-
-.no-tags {
-    color: #C74B3A;
-    text-align: center;
-    font-style: italic;
+.carousel-image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    max-height: 400px;
 }
 
+.carousel-indicators {
+    margin-bottom: 0;
+    position: absolute;
+    bottom: 20px;
+    padding: 0;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 10px;
+}
+
+/* Cart Button */
 .cart-btn {
     display: block;
     background-color: #273349;
@@ -96,46 +165,52 @@ h2, h3 {
         top: 7%;
         left: 0%;
         opacity: 0;
-        color: white;
         background: #fff;
         box-shadow: 0 0 50px 30px #fff;
         transform: skewX(-20deg);
     }
 
-/* Carousel styling */
-.game-carousel {
+/* Tag Section */
+.tag-section {
     background: #163350;
-    border-radius: 8px 0 0 0;
-    padding: 10px;
-    height: 100%;
-    min-height: 400px;
+    padding: 15px 10px;
+    margin-top: 30px; /* Maintain separation */
+    border-radius: 0 0 8px 8px;
+}
+
+h3 {
+    color: #405c6a;
+    text-align: center;
+}
+
+.tag-list {
+    list-style: none;
+    padding: 0;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 8px;
     justify-content: center;
 }
 
-.carousel-inner {
+.tag-item {
+    background: #163350;
+    padding: 8px 12px;
     border-radius: 4px;
-    overflow: hidden;
-    height: 100%;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s;
 }
 
-.carousel-image {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    min-height: 350px;
-    max-height: 500px;
-}
+    .tag-item:hover {
+        background: #D1C6B4;
+        transform: scale(1.1);
+    }
 
-.carousel-control-prev-icon, .carousel-control-next-icon {
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    padding: 10px;
-}
-
-.carousel-indicators {
-    margin-bottom: 0;
+.no-tags {
+    color: #C74B3A;
+    text-align: center;
+    font-style: italic;
 }
 
 .no-images {
@@ -147,28 +222,7 @@ h2, h3 {
     text-align: center;
 }
 
-.header-container {
-    background: #163350;
-    border-radius: 0 8px 0 0;
-    padding: 10px;
-    text-align: center;
-}
-
-.header-image {
-    width: 100%;
-    max-width: 100%;
-    object-fit: contain;
-    border-radius: 4px;
-}
-
-.info-container {
-    background: #163350;
-    border-radius: 0;
-    padding: 15px;
-    margin-top: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
+/* Animation for cart button */
 @keyframes sh02 {
     from {
         opacity: 0;
@@ -191,16 +245,57 @@ h2, h3 {
         flex-direction: column;
     }
 
-    .col-md-8, .col-md-4 {
-        width: 100%;
+
+
+    .game-title {
+        font-size: 1.5rem;
     }
 
-    .header-container {
-        margin-top: 20px;
+    .small-header-image {
+        width: 100%;
+        height: auto;
+        max-height: 151px;
+    }
+
+    .game-carousel {
+        height: 300px;
     }
 
     .carousel-image {
         min-height: 250px;
+        max-height: 300px;
     }
+
+    .details-pane {
+        height: auto;
+        min-height: 300px;
+    }
+
+    .info-container {
+        padding: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-top: 0; /* Avoid any gaps */
+    }
+
+    .description {
+        max-height: 100px;
+    }
+
+    .tag-section {
+        margin-top: 20px;
+    }
+}
+.row.g-0 {
+    align-items: stretch;
+}
+.game-carousel, .details-pane {
+    height: 425px !important;
+}
+.game-carousel, .details-pane {
+    overflow: hidden;
 }
 

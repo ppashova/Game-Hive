@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GameHive.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class RemoteMove : Migration
+    public partial class remotemove : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -61,6 +61,7 @@ namespace GameHive.DataAccess.Migrations
                     BriefDescription = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GameIconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GameHeaderUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SteamLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequestTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RequestStatus = table.Column<int>(type: "int", nullable: false)
@@ -242,6 +243,24 @@ namespace GameHive.DataAccess.Migrations
                     table.PrimaryKey("PK_Carts", x => x.RecordId);
                     table.ForeignKey(
                         name: "FK_Carts_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GameImages",
+                columns: table => new
+                {
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    imageURL = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameImages", x => new { x.GameId, x.imageURL });
+                    table.ForeignKey(
+                        name: "FK_GameImages_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "GameId",
@@ -450,6 +469,9 @@ namespace GameHive.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Carts");
+
+            migrationBuilder.DropTable(
+                name: "GameImages");
 
             migrationBuilder.DropTable(
                 name: "GameTags");

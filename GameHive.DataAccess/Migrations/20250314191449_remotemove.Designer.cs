@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250312064816_RemoteMove")]
-    partial class RemoteMove
+    [Migration("20250314191449_remotemove")]
+    partial class remotemove
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,6 +68,10 @@ namespace GameHive.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GameHeaderUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("GameIconUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -92,6 +96,19 @@ namespace GameHive.DataAccess.Migrations
                     b.HasKey("GameId");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("GameHive.Models.GameImage", b =>
+                {
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("imageURL")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("GameId", "imageURL");
+
+                    b.ToTable("GameImages");
                 });
 
             modelBuilder.Entity("GameHive.Models.GameTag", b =>
@@ -467,6 +484,17 @@ namespace GameHive.DataAccess.Migrations
                 });
 
             modelBuilder.Entity("GameHive.Models.Cart", b =>
+                {
+                    b.HasOne("GameHive.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("GameHive.Models.GameImage", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
                         .WithMany()
