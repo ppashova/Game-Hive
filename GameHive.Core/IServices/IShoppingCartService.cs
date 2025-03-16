@@ -13,7 +13,6 @@ namespace GameHive.Core.IServices
         Task<List<Cart>> GetCartItemsAsync();
         Task<decimal> GetCartTotalAsync();
         Task ClearCartAsync();
-        int GetCartItemCount();
         void UpdateCartItemCount(int count);
     }
 

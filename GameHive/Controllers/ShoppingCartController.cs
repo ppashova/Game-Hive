@@ -42,12 +42,16 @@ namespace GameHive.Controllers
         public async Task<IActionResult> RemoveFromCart(int productId)
         {
             await _shoppingCartService.RemoveFromCartAsync(productId);
-            int cartCount = Math.Max(_shoppingCartService.GetCartItemCount() - 1, 0);
-            _shoppingCartService.UpdateCartItemCount(cartCount);
+            var cartItems = await _shoppingCartService.GetCartItemsAsync();
+            decimal cartTotal = cartItems.Sum(item => item.Quantity * item.Game.Price);
+
+            // Optionally update the cart count and other session variables if necessary
+            ViewBag.CartTotal = cartTotal;
+
             return RedirectToAction("Index");
-
-
         }
+
+
 
         // POST: ShoppingCart/ClearCart
         [HttpPost]
@@ -55,12 +59,6 @@ namespace GameHive.Controllers
         {
             await _shoppingCartService.ClearCartAsync();
             return RedirectToAction("Index"); 
-        }
-        [HttpGet]
-        public JsonResult GetCartCount()
-        {
-            int count = _shoppingCartService.GetCartItemCount();
-            return Json(new { count });
         }
     }
 }

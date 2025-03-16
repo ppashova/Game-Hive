@@ -28,6 +28,7 @@ namespace GameHive.Models
         public string SteamLink { get; set; }
         public DateTime RequestTime { get; set; } = DateTime.Now;
         public RequestEnums RequestStatus { get; set; } = RequestEnums.Pending;
+        public RatingEnums Rating { get; set; }
         [NotMapped]
         public IFormFile? GameHeader { get; set; }
         [NotMapped]

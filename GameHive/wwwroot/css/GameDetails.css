@@ -79,7 +79,7 @@ body {
 .description {
     padding: 10px;
     color: white;
-    font-size: 16px;
+    font-size: 12px;
     margin-top: 10px;
     text-align: justify;
     max-height: calc(100% - 70px); /* Adjust for padding and cart button */
