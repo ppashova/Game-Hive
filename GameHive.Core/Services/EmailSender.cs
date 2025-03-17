@@ -15,6 +15,7 @@ using System.Data.Entity.Core.Metadata.Edm;
 using Microsoft.AspNetCore.Builder.Extensions;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
+using GameHive.Models;
 
 namespace GameHive.Core.Services
 {
@@ -51,5 +52,33 @@ namespace GameHive.Core.Services
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
+        public async Task SendOrderConfirmationEmail(string email, Order order)
+        {
+            string subject = "Order Confirmation";
+            string body = $@"
+                <h2>Thank you for your order!</h2>
+                <p>Your order ID is: <strong>{order.Id}</strong></p>
+                <p>Total Price: <strong>{order.TotalPrice:C}</strong></p>
+                <p>We appreciate you!</p>";
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("GameHive", _username));
+            message.To.Add(new MailboxAddress(null, email));
+            message.Subject = subject;
+            message.Body = new TextPart(TextFormat.Html) { Text = body };
+
+            using var client = new SmtpClient();
+            try
+            {
+                await client.ConnectAsync(_host, _port, SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_username, _password);
+                await client.SendAsync(message);
+            }
+            finally
+            {
+                await client.DisconnectAsync(true);
+            }
+        }
+
     }
 }

@@ -22,6 +22,7 @@ namespace GameHive
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IGameRepository, GameRepository>();
             builder.Services.AddScoped<ITagRepository, TagRepository>();
             builder.Services.AddScoped<IGameTagRepository, GameTagRepository>();
@@ -32,6 +33,7 @@ namespace GameHive
             builder.Services.AddScoped<IGameTagService, GameTagService>();
             builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
             builder.Services.AddScoped<IPublisherRequestService, PublisherRequestService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();

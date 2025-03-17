@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameHive.Models.enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace GameHive.Models
@@ -22,7 +23,7 @@ namespace GameHive.Models
         public decimal TotalPrice { get; set; }
         public string Email { get; set; }
         [Required]
-        public OrderStatus Status { get; set; }
+        public OrderStatusEnums Status { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 

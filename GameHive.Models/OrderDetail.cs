@@ -11,7 +11,7 @@ namespace GameHive.Models
     {
         public int GameId { get; set; }
         public Game Game { get; set; }
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
         public Order Order { get; set; }
         
     }

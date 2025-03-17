@@ -16,7 +16,6 @@ namespace GameHive.DataAccess
         public DbSet<GameTag> GameTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<UserGame> UserGames { get; set; }
-        public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Cart> Carts { get; set; }
