@@ -13,6 +13,7 @@ namespace GameHive.Core.IServices
         Task<Order> GetOrderByIdAsync(Guid orderId);
         Task<IEnumerable<Order>> GetUserOrdersAsync(string userId);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
+        Task<decimal> GetTotalPriceAsync(Guid orderId);
     }
 
 }

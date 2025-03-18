@@ -33,7 +33,10 @@ namespace GameHive.Core.Services
             await _orderRepository.AddOrderAsync(newOrder);
             return newOrder;
         }
+        public async Task CreateGameDetailsAsync(string orderId, string userId, int gameId)
+        {
 
+        }
         public async Task<Order> GetOrderByIdAsync(Guid orderId)
         {
             return await _orderRepository.GetOrderByIdAsync(orderId);
@@ -47,6 +50,11 @@ namespace GameHive.Core.Services
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
             return await _orderRepository.GetAllOrdersAsync();
+        }
+
+        public async Task<decimal> GetTotalPriceAsync(Guid orderId)
+        {
+            return await _orderRepository.GetTotalPriceAsync(orderId);
         }
     }
 

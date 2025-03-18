@@ -23,8 +23,18 @@ namespace GameHive.DataAccess.Repository.Repositories
             return await _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Game)
-                .FirstOrDefaultAsync(o => o.Id == orderId);
+                .FirstOrDefaultAsync(o => o.Id.Equals(orderId));
         }
+
+        public async Task<decimal> GetTotalPriceAsync(Guid orderId)
+        {
+            var total = await _context.OrderDetails
+                .Where(od => od.OrderId == orderId)
+                .SumAsync(od => od.Game.Price);
+
+            return total;
+        }
+
 
         public async Task<IEnumerable<Order>> GetUserOrdersAsync(string userId)
         {

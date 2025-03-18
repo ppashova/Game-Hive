@@ -1,7 +1,11 @@
 ﻿using GameHive.Core.IServices;
+using GameHive.Core.Services;
 using GameHive.Models;
+using GameHive.Models.Order_View_Models;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using System.Security.Claims;
 
 namespace GameHive.Controllers
@@ -10,37 +14,55 @@ namespace GameHive.Controllers
     public class OrdersController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly IShoppingCartService _shoppingCartService;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IShoppingCartService shoppingCartService)
         {
             _orderService = orderService;
+            _shoppingCartService = shoppingCartService;
         }
 
-        // GET: Orders/Checkout
-        public IActionResult Checkout()
+        [HttpGet]
+        public async Task<IActionResult> Checkout()
         {
-            return View();
-        }
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        // POST: Orders/Checkout
-        [HttpPost]
-        public async Task<IActionResult> Checkout(Order model, List<int> gameIds)
-        {
-            if (gameIds == null || !gameIds.Any())
+            var cartItems = await _shoppingCartService.GetCartItemsAsync();
+            var totalPrice = await _shoppingCartService.GetCartTotalAsync();
+
+            var checkoutModel = new CheckoutViewModel
             {
-                ModelState.AddModelError("", "Your cart is empty!");
+                CartItems = cartItems,
+                TotalPrice = totalPrice,
+                FirstName = "",
+                LastName = "",
+                Email = User.FindFirstValue(ClaimTypes.Email) ?? ""
+            };
+
+            return View(checkoutModel);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Checkout(CheckoutViewModel model, List<int> gameIds)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.CartItems = await _shoppingCartService.GetCartItemsAsync();
+                model.TotalPrice = await _shoppingCartService.GetCartTotalAsync();
                 return View(model);
             }
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            string email = User.FindFirstValue(ClaimTypes.Email);
+            string userId = User.Identity.GetUserId();
 
             var orderDetails = gameIds.Select(gameId => new OrderDetail { GameId = gameId }).ToList();
 
-            var order = await _orderService.CreateOrderAsync(userId, email, model.TotalPrice, orderDetails);
+            var order = await _orderService.CreateOrderAsync(userId, model.Email, model.TotalPrice, orderDetails);
 
             return RedirectToAction("OrderConfirmation", new { orderId = order.Id });
         }
+
+
     }
 
 }

@@ -15,7 +15,6 @@ namespace GameHive.Models
         public int GameId { get; set; }
         public DateTime DateCreated { get; set; }
         public int Quantity { get; set; }
-        //Nav property
         public virtual Game Game { get; set; }
     }
 }

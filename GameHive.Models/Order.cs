@@ -24,6 +24,7 @@ namespace GameHive.Models
         public string Email { get; set; }
         [Required]
         public OrderStatusEnums Status { get; set; }
+        public DateTime OrderDate { get; set; } 
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 

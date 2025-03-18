@@ -8,4 +8,5 @@ public interface IOrderRepository
     Task AddOrderAsync(Order order);
     Task UpdateOrderAsync(Order order);
     Task DeleteOrderAsync(Guid orderId);
+    Task<decimal> GetTotalPriceAsync(Guid orderId);
 }
