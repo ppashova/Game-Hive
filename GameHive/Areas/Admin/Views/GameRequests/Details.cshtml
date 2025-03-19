@@ -1,43 +1,83 @@
 ﻿@model GameHive.Models.GameDetailsViewModel
 
-
 <div class="container mt-4">
-    <h2 class="mb-4">Game Details</h2>
+    <h2 class="mb-4">Преглед на заявка</h2>
 
     <dl class="row">
-        <dt class="col-sm-2">Name</dt>
+        <dt class="col-sm-2">Име</dt>
         <dd class="col-sm-10">@Model.Game.Name</dd>
 
-        <dt class="col-sm-2">Price</dt>
-        <dd class="col-sm-10">$@Model.Game.Price</dd>
+        <dt class="col-sm-2">Цена</dt>
+        <dd class="col-sm-10">@Model.Game.Price.ToString("0.##")лв.</dd>
 
-        <dt class="col-sm-2">Brief Description</dt>
+        <dt class="col-sm-2">Кратко описание</dt>
         <dd class="col-sm-10">@Model.Game.BriefDescription</dd>
 
-        <dt class="col-sm-2">Full Description</dt>
+        <dt class="col-sm-2">Пълно описание</dt>
         <dd class="col-sm-10">@Model.Game.FullDescription</dd>
 
-        <dt class="col-sm-2">Game Icon URL</dt>
-        <dd class="col-sm-10">@Model.Game.GameIconUrl</dd>
+        <dt class="col-sm-2">Икона на играта</dt>
+        <dd class="col-sm-10">
+            <img src="@Model.Game.GameIconUrl" class="img-thumbnail" style="width: 100px; height: auto;" alt="Game Icon">
+        </dd>
 
-        <dt class="col-sm-2">Steam Link</dt>
+        <dt class="col-sm-2">Steam линк</dt>
         <dd class="col-sm-10">@Model.Game.SteamLink</dd>
 
-        <dt class="col-sm-2">Request Time</dt>
+        <dt class="col-sm-2">Време на заявката</dt>
         <dd class="col-sm-10">@Model.Game.RequestTime</dd>
 
-        <dt class="col-sm-2">Request Status</dt>
+        <dt class="col-sm-2">Статус на заявката</dt>
         <dd class="col-sm-10">@Model.Game.RequestStatus</dd>
     </dl>
 
-    <div class="mt-3">
-        <a asp-area="Admin"
-           asp-controller="GameRequests"
-           asp-action="Index"
-           class="btn btn-secondary">
-            Върни се към заявките
-        </a>
+    <!-- Image Gallery -->
+    @if (Model.Images != null && Model.Images.Any())
+    {
+        <h4>Изображения</h4>
+        <div class="image-gallery d-flex flex-wrap gap-2">
+            @foreach (var image in Model.Images)
+            {
+                <img src="@image" class="img-thumbnail" style="width: 150px; height: auto; cursor: pointer;" alt="Game Image" onclick="showFullSizeImage(this.src)">
+            }
+        </div>
+    }
+    else
+    {
+        <p>Няма изображения за тази игра.</p>
+    }
+
+    <!-- Full-Size Image Modal -->
+    <div id="imageModal" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img id="fullSizeImage" src="" class="img-fluid">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Затвори</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Tags Section -->
+    <h4>Етикети</h4>
+    <ul>
+        @if (Model.Tags != null && Model.Tags.Any())
+        {
+            foreach (var tag in Model.Tags)
+            {
+                <li>@tag.Name</li>
+            }
+        }
+        else
+        {
+            <li>Тази игра няма етикети.</li>
+        }
+    </ul>
+
+    <!-- Action Buttons -->
     <div class="mt-3">
         <form asp-area="Admin" asp-controller="GameRequests" asp-action="ApproveRequest" method="post">
             <input type="hidden" name="id" value="@Model.Game.GameId" />
@@ -50,5 +90,17 @@
             <button type="submit" class="btn btn-danger">Откажи заявката</button>
         </form>
     </div>
-
 </div>
+
+<script>
+    function showFullSizeImage(src) {
+        document.getElementById('fullSizeImage').src = src;
+        document.getElementById('imageModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

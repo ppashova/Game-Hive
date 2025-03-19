@@ -16,7 +16,8 @@ namespace GameHive.Models.Order_View_Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-
+        [Required]
+        public DateTime OrderDate { get; set; }
     }
 
 }

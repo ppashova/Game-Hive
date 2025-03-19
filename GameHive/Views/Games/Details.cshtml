@@ -66,16 +66,33 @@
                         </div>
                         <!-- Info Container with Description -->
                         <div class="info-container">
-                            <p class="description" style="padding-left: 5px;">@(string.IsNullOrEmpty(Model.Game.FullDescription) ? "Няма налично описание за тази игра." : Model.Game.FullDescription)</p>
+                            <p class="description">
+                                @(string.IsNullOrEmpty(Model.Game.FullDescription) ? "Няма налично описание за тази игра." : Model.Game.FullDescription)
+                            </p>
+
+                            <!-- Price Display -->
+                            <div class="price-container">
+                                <div>
+                                    <span class="price-label">Цена:</span>
+                                    <span class="price">@Model.Game.Price.ToString("0.##") лв.</span>
+                                </div>
+                                @if (Model.Game.Price == 0)
+                                {
+                                    <span class="badge bg-success text-white">Безплатна</span>
+                                }
+                            </div>
+
                             <a href="javascript:void(0);" onclick="document.getElementById('addToCartForm-@Model.Game.GameId').submit();" class="cart-btn mb-3">
-                                <span>Добави в количката</span>
+                                <i class="bi bi-cart-plus me-2"></i>Добави в количката
                             </a>
+
                             <form id="addToCartForm-@Model.Game.GameId" method="post" asp-controller="ShoppingCart" asp-action="AddToCart" style="display: none;">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="productId" value="@Model.Game.GameId" />
                                 <input type="hidden" name="quantity" value="1" />
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>

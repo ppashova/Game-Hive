@@ -15,6 +15,7 @@
             <th>Birthdate</th>
             <th>Date Created</th>
             <th>Status</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,28 @@
                 <td>@request.Birthdate</td>
                 <td>@request.DateCreated</td>
                 <td>@request.RequestEnums</td>
+                @if(request.RequestEnums == GameHive.Models.enums.RequestEnums.Pending)
+                {
+                    <td>
+                        <form asp-area="Admin" asp-controller="Publishers" asp-action="Approve" method="post">
+                            <input type="hidden" name="userId" value="@request.UserId" />
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        <form asp-area="Admin" asp-controller="Publishers" asp-action="Reject" method="post">
+                            <input type="hidden" name="userId" value="@request.UserId" />
+                            <button type="submit" class="btn btn-success">Reject</button>
+                        </form>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <form asp-area="Admin" asp-controller="Publishers" asp-action="Delete" method="post">
+                            <input type="hidden" name="userId" value="@request.UserId"/>
+                            <button type="submit" class="btn btn-success">Delete</button>
+                        </form>
+                    </td>
+                }
             </tr>
         }
     </tbody>

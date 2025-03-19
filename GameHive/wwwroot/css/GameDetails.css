@@ -7,8 +7,8 @@
 
 body {
     background-color: #2a6a9a;
-    color: #333;
-    font-family: Arial, sans-serif;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Game Container */
@@ -129,7 +129,7 @@ body {
 /* Cart Button */
 .cart-btn {
     display: block;
-    background-color: #273349;
+    background-color: green;
     color: white;
     padding: 10px 15px;
     border: 1px solid #273349;
@@ -146,8 +146,8 @@ body {
 }
 
     .cart-btn:hover {
-        background: rgba(39, 51, 73, 1);
-        box-shadow: 0 0 30px 5px rgba(39, 55, 82, 0.85);
+        background: rgba(40, 172, 44, 1);
+        /*        box-shadow: 0 0 30px 5px rgba(66, 189, 94, 0.8);*/
         transition: all 0.2s ease-out;
         color: white;
     }
@@ -298,4 +298,22 @@ h3 {
 .game-carousel, .details-pane {
     overflow: hidden;
 }
+.price-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
 
+.price {
+    font-size: 1.2rem;
+    color: #92d36e;
+    margin: 0;
+    font-weight: 600;
+}
+
+.price-label {
+    display: inline-block;
+    color: var(--text-muted);
+    margin-right: 8px;
+}

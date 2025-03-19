@@ -52,16 +52,16 @@ namespace GameHive.Controllers
                 model.TotalPrice = await _shoppingCartService.GetCartTotalAsync();
                 return View(model);
             }
-
+            model.TotalPrice = await _shoppingCartService.GetCartTotalAsync();
             string userId = User.Identity.GetUserId();
+            await _orderService.CreateOrderAsync(userId,model.FirstName,model.LastName, model.Email, model.TotalPrice, gameIds);
 
-            var orderDetails = gameIds.Select(gameId => new OrderDetail { GameId = gameId }).ToList();
-
-            var order = await _orderService.CreateOrderAsync(userId, model.Email, model.TotalPrice, orderDetails);
-
-            return RedirectToAction("OrderConfirmation", new { orderId = order.Id });
+            return RedirectToAction("OrderConfirmation");
         }
-
+        public IActionResult OrderConfirmation()
+        {
+            return View();
+        }
 
     }
 

@@ -18,24 +18,30 @@ namespace GameHive.Core.Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<Order> CreateOrderAsync(string userId, string email, decimal totalPrice, List<OrderDetail> orderDetails)
+        public async Task<Order> CreateOrderAsync(string userId,string firstName,string lastName, string email, decimal totalPrice, List<int> GameIds)
         {
             var newOrder = new Order
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
+                FirstName = firstName,
+                LastName = lastName,
                 Email = email,
                 TotalPrice = totalPrice,
                 Status = OrderStatusEnums.Pending,
-                OrderDetails = orderDetails
+                OrderDate = DateTime.Now
             };
 
             await _orderRepository.AddOrderAsync(newOrder);
-            return newOrder;
-        }
-        public async Task CreateGameDetailsAsync(string orderId, string userId, int gameId)
-        {
+            var newOrderDetails = GameIds.Select(gameId => new OrderDetail
+            {
+                OrderId = newOrder.Id,
+                GameId = gameId
+            }).ToList();
+            await _orderRepository.AddOrderDetailsAsync(newOrderDetails);
 
+
+            return newOrder;
         }
         public async Task<Order> GetOrderByIdAsync(Guid orderId)
         {

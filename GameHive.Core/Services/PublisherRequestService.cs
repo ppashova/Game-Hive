@@ -19,34 +19,39 @@ namespace GameHive.Core.Services
             _repository = repository;
         }
 
-        public Task AddAsync(PublisherRequest pr)
+        public async Task AddAsync(PublisherRequest pr)
         {
-            return _repository.AddAsync(pr);
+            await _repository.AddAsync(pr);
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            return _repository.DeleteAsync(id);
+            await _repository.DeleteAsync(id);
         }
 
-        public Task<List<PublisherRequest>> FindAsync(Expression<Func<PublisherRequest, bool>> filter)
+        public async Task<List<PublisherRequest>> FindAsync(Expression<Func<PublisherRequest, bool>> filter)
         {
-            return _repository.FindAsync(filter);
+            return await _repository.FindAsync(filter);
         }
 
-        public Task<List<PublisherRequest>> GetAllAsync()
+        public async Task<List<PublisherRequest>> GetAllAsync()
         {
-            return _repository.GetAllAsync();
+            return await _repository.GetAllAsync();
         }
 
-        public Task<PublisherRequest> GetAsync(int id)
+        public async Task<PublisherRequest> GetAsync(int id)
         {
-            return _repository.GetAsync(id);
+            return await _repository.GetAsync(id);
         }
 
-        public Task UpdateAsync(PublisherRequest pr)
+        public async Task<PublisherRequest?> GetRequestByUserIdAsync(string userId)
         {
-            return _repository.UpdateAsync(pr);
+            return await _repository.GetByUserIdAsync(userId);
+        }
+
+        public async Task UpdateAsync(PublisherRequest pr)
+        {
+            await _repository.UpdateAsync(pr);
         }
     }
 }

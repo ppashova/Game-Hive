@@ -1,82 +1,89 @@
 ﻿@model GameHive.Models.GameViewModel
 
+<link rel="stylesheet" href="~/css/CreateGames.css" />
 <div class="container mt-5">
-    <h2 class="mb-4 text-center">Добави игра</h2>
-    <form asp-action="Add" method="post" class="card p-4 shadow-sm" enctype="multipart/form-data">
+    <h2 class="mb-4 text-center text-light">Добави игра</h2>
+    <form asp-action="Add" method="post" class="card p-4 shadow-custom" enctype="multipart/form-data">
         <div class="form-group mb-4">
-            <label asp-for="Name" class="font-weight-bold mb-2">Име на играта</label>
-            <input asp-for="Name" class="form-control form-control-lg" placeholder="Добави име на играта" />
+            <label asp-for="Name" class="font-weight-bold mb-2 form-label">Име на играта</label>
+            <input asp-for="Name" class="form-control custom-input" placeholder="Добави име на играта" required />
             <span asp-validation-for="Name" class="text-danger small"></span>
         </div>
 
         <div class="form-group mb-4">
-            <label class="font-weight-bold mb-2">Етикети</label>
-            <div class="row">
-                @foreach (var tag in Model.AvailableTags)
-                {
-                    <div class="col-md-4 col-sm-6 mb-2">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="tag_@tag.Id" name="SelectedTagIds" value="@tag.Id" @(Model.SelectedTagIds.Contains(tag.Id) ? "checked" : "") />
-                            <label class="form-check-label" for="tag_@tag.Id">@tag.Name</label>
+            <label class="font-weight-bold mb-2 form-label">Етикети</label>
+            <input type="text" class="form-control mb-2" id="tagSearch" placeholder="Търси етикет..." onkeyup="filterTags()" />
+
+            <div class="tag-container border rounded p-2" style="max-height: 200px; overflow-y: auto;">
+                <div class="row" id="tagList">
+                    @foreach (var tag in Model.AvailableTags)
+                    {
+                        <div class="col-md-4 col-sm-6 mb-2 tag-item">
+                            <div class="form-check custom-checkbox">
+                                <input type="checkbox" class="form-check-input" id="tag_@tag.Id" name="SelectedTagIds" value="@tag.Id" @(Model.SelectedTagIds.Contains(tag.Id) ? "checked" : "") />
+                                <label class="form-check-label" for="tag_@tag.Id">@tag.Name</label>
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
             <span asp-validation-for="SelectedTagIds" class="text-danger small"></span>
         </div>
 
         <div class="form-group mb-4">
-            <label asp-for="Price" class="font-weight-bold mb-2">Цена</label>
-            <input asp-for="Price" class="form-control form-control-lg" type="number" step="0.01" placeholder="Въведи цена/Остави 0 ако е безплатна" />
+            <label asp-for="Price" class="font-weight-bold mb-2 form-label">Цена</label>
+            <input asp-for="Price" class="form-control custom-input" type="number" step="0.01" placeholder="Въведи цена/Остави 0 ако е безплатна" />
             <span asp-validation-for="Price" class="text-danger small"></span>
         </div>
 
         <div class="form-group mb-4">
-            <label asp-for="BriefDescription" class="font-weight-bold mb-2">Кратко описание</label>
-            <textarea asp-for="BriefDescription" class="form-control form-control-lg" rows="3" placeholder="Въведи кратко описание" oninput="textCounter(this, 'remLen', 160);"></textarea>
-            <small class="text-muted">Оставащи знаци: <span id="remLen">160</span></small>
+            <label asp-for="BriefDescription" class="font-weight-bold mb-2 form-label">Кратко описание</label>
+            <textarea asp-for="BriefDescription" class="form-control custom-input" rows="3" placeholder="Въведи кратко описание" oninput="textCounter(this, 'remLen', 160);" required></textarea>
+            <small class="text-muted counter-text">Оставащи знаци: <span id="remLen">160</span></small>
             <span asp-validation-for="BriefDescription" class="text-danger small"></span>
         </div>
 
         <div class="form-group mb-4">
-            <label asp-for="FullDescription" class="font-weight-bold mb-2">Пълно описание</label>
-            <textarea asp-for="FullDescription" class="form-control form-control-lg" rows="3" placeholder="Въведи пълно описание" oninput="textCounter(this, 'remLen1', 600);"></textarea>
-            <small class="text-muted">Оставащи знаци: <span id="remLen1">600</span></small>
+            <label asp-for="FullDescription" class="font-weight-bold mb-2 form-label">Пълно описание</label>
+            <textarea asp-for="FullDescription" class="form-control custom-input" rows="3" placeholder="Въведи пълно описание" oninput="textCounter(this, 'remLen1', 600);" required></textarea>
+            <small class="text-muted counter-text">Оставащи знаци: <span id="remLen1">600</span></small>
             <span asp-validation-for="FullDescription" class="text-danger small"></span>
         </div>
 
         <div class="form-group mb-4">
-            <label asp-for="SteamLink" class="font-weight-bold mb-2">Линк към Steam</label>
-            <input asp-for="SteamLink" class="form-control form-control-lg" placeholder="https://store.steampowered.com/..." />
+            <label asp-for="SteamLink" class="font-weight-bold mb-2 form-label">Линк към Steam</label>
+            <input asp-for="SteamLink" class="form-control custom-input" placeholder="https://store.steampowered.com/..." required />
         </div>
 
         <div class="form-group mb-4">
-            <label asp-for="IconFile" class="font-weight-bold mb-2">Качи икона</label>
-            <input asp-for="IconFile" type="file" class="form-control" />
+            <label asp-for="IconFile" class="font-weight-bold mb-2 form-label">Качи икона</label>
+            <input asp-for="IconFile" type="file" class="form-control custom-file-input" required />
         </div>
 
         @if (!string.IsNullOrEmpty(Model?.GameIconUrl))
         {
             <div class="form-group mb-4">
-                <p>Иконата е качена успешно!</p>
-                <img src="@Model.GameIconUrl" width="300" />
+                <p class="upload-success">Иконата е качена успешно!</p>
+                <div class="image-preview">
+                    <img src="@Model.GameIconUrl" width="300" />
+                </div>
                 <input type="hidden" asp-for="GameIconUrl" />
             </div>
         }
 
         <div class="form-group mb-4">
-            <label asp-for="GameHeader" class="font-weight-bold mb-2">Качи заглавно изображение</label>
-            <input asp-for="GameHeader" type="file" class="form-control" />
+            <label asp-for="GameHeader" class="font-weight-bold mb-2 form-label">Качи заглавно изображение</label>
+            <input asp-for="GameHeader" type="file" class="form-control custom-file-input" required/>
         </div>
 
         <div class="form-group mb-4">
-            <label asp-for="GameImages" class="font-weight-bold mb-2">Качи изображения</label>
-            <input asp-for="GameImages" type="file" class="form-control" multiple />
+            <label asp-for="GameImages" class="font-weight-bold mb-2 form-label">Качи изображения</label>
+            <input asp-for="GameImages" type="file" class="form-control custom-file-input" multiple required/>
         </div>
 
         <div class="form-group d-flex justify-content-between mt-4">
-            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-5">Отказ</a>
-            <button type="submit" class="btn btn-primary btn-lg px-5">Добави игра</button>
+            <a asp-action="Index" class="btn btn-cancel btn-lg px-5">Отказ</a>
+            <button type="submit" class="btn btn-submit btn-lg px-5">Добави игра</button>
         </div>
     </form>
 </div>
@@ -89,32 +96,13 @@
         }
         counter.textContent = maxLength - textArea.value.length;
     }
+     function filterTags() {
+        let searchQuery = document.getElementById("tagSearch").value.toLowerCase();
+        let tags = document.querySelectorAll(".tag-item");
+
+        tags.forEach(tag => {
+            let tagName = tag.textContent.toLowerCase();
+            tag.style.display = tagName.includes(searchQuery) ? "block" : "none";
+        });
+    }
 </script>
-
-<style>
-    .form-control-lg {
-        font-size: 1.1rem;
-        padding: 1rem;
-    }
-
-    .btn-lg {
-        font-size: 1.1rem;
-        padding: 0.75rem 1.5rem;
-    }
-
-    .card {
-        border-radius: 10px;
-    }
-
-    .shadow-sm {
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-    }
-
-    .form-check-label {
-        font-size: 1rem;
-    }
-
-    .text-danger.small {
-        font-size: 0.875rem;
-    }
-</style>

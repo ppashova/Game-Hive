@@ -56,5 +56,9 @@ namespace GameHive.DataAccess.Repository.Repositories
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
         }
+        public async Task<T?> GetByUserIdAsync(string userId)
+        {
+            return await _dbSet.FirstOrDefaultAsync(e => EF.Property<string>(e, "UserId") == userId);
+        }
     }
 }

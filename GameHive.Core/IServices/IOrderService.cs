@@ -9,7 +9,7 @@ namespace GameHive.Core.IServices
 {
     public interface IOrderService
     {
-        Task<Order> CreateOrderAsync(string userId, string email, decimal totalPrice, List<OrderDetail> orderDetails);
+        Task<Order> CreateOrderAsync(string userId, string firstName, string lastName, string email, decimal totalPrice, List<int> GameIds);
         Task<Order> GetOrderByIdAsync(Guid orderId);
         Task<IEnumerable<Order>> GetUserOrdersAsync(string userId);
         Task<IEnumerable<Order>> GetAllOrdersAsync();

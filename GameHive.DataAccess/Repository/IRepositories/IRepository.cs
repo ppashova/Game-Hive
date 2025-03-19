@@ -15,6 +15,6 @@ namespace GameHive.DataAccess.Repository.IRepositories
         Task<T> GetAsync(int id);
         Task<List<T>> GetAllAsync();
         Task<List<T>> FindAsync(Expression<Func<T, bool>> filter);
-
+        Task<T?> GetByUserIdAsync(string userId);
     }
 }

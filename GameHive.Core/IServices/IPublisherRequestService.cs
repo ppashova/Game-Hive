@@ -16,5 +16,6 @@ namespace GameHive.Core.IServices
         Task<PublisherRequest> GetAsync(int id);
         Task<List<PublisherRequest>> GetAllAsync();
         Task<List<PublisherRequest>> FindAsync(Expression<Func<PublisherRequest, bool>> filter);
+        Task<PublisherRequest?> GetRequestByUserIdAsync(string userId);
     }
 }

@@ -60,11 +60,14 @@ namespace GameHive.Areas.Admin.Controllers
         {
             var game = await _gameService.GetGameByIdAsync(id);
             var Tags = await _tagService.GetTagsByGameIdAsync(id);
+            var ImageUrls = await _gameService.GetGameImagesAsync(id);
             var viewModel = new GameDetailsViewModel
             {
                 Game = game,
-                Tags = Tags
+                Tags = Tags,
+                Images = ImageUrls
             };
+
             return View(viewModel);
         }
 

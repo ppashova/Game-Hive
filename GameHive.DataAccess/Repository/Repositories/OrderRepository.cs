@@ -23,7 +23,7 @@ namespace GameHive.DataAccess.Repository.Repositories
             return await _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Game)
-                .FirstOrDefaultAsync(o => o.Id.Equals(orderId));
+                .FirstOrDefaultAsync(o => o.Id.Equals(orderId)) ?? throw new InvalidOperationException("Order not found");
         }
 
         public async Task<decimal> GetTotalPriceAsync(Guid orderId)
@@ -62,6 +62,12 @@ namespace GameHive.DataAccess.Repository.Repositories
         public async Task UpdateOrderAsync(Order order)
         {
             _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddOrderDetailsAsync(List<OrderDetail> orderDetails)
+        {
+            _context.OrderDetails.AddRange(orderDetails);
             await _context.SaveChangesAsync();
         }
 
