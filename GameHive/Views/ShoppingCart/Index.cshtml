@@ -43,19 +43,6 @@ else
         <form asp-action="ClearCart" method="post">
             <button type="submit" class="btn btn-warning">Clear Cart</button>
         </form>
-
-        <!-- Checkout Form -->
-        <form asp-controller="Orders" asp-action="Checkout" method="post">
-            <!-- Add hidden inputs for each gameId -->
-            @foreach (var item in Model)
-            {
-                <input type="hidden" name="gameIds" value="@item.GameId" />
-            }
-
-            <!-- Order Total -->
-            <input type="hidden" name="TotalPrice" value="@ViewBag.CartTotal" />
-
-            <button type="submit" class="btn btn-success">Proceed to Checkout</button>
-        </form>
+        <a asp-controller="Orders" asp-action="Checkout" class="btn btn-success">Proceed to Checkout</a>
     </div>
 }

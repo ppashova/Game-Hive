@@ -13,6 +13,7 @@ using SendGrid.Helpers.Mail;
 using CloudinaryDotNet.Core;
 using CloudinaryDotNet;
 using GameHive.Utilities;
+using Stripe;
 namespace GameHive
 {
     public class Program

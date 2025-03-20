@@ -1,33 +1,119 @@
 ﻿@model GameHive.Models.Order_View_Models.CheckoutViewModel
 
-<h2>Checkout</h2>
+<link rel="stylesheet" href="~/css/Checkout.css" />
+<div class="container checkout-container">
+    <h2 class="checkout-title">Завършване на поръчката</h2>
 
-<form asp-controller="Orders" asp-action="Checkout" method="post">
-    <div class="mb-3">
-        <label class="form-label">Първо Име</label>
-        <input asp-for="FirstName" class="form-control" required />
-@*         <span asp-validation-for="FirstName" class="text-danger"></span> *@
+    <div class="row">
+        <!-- Checkout Form -->
+        <div class="col-md-7">
+            <form asp-controller="Orders" asp-action="Checkout" method="post">
+                <!-- Personal Information Section -->
+                <div class="form-section mb-4">
+                    <h4 class="section-title">Лична информация</h4>
+                    <div class="mb-4">
+                        <label class="form-label">Първо Име</label>
+                        <input asp-for="FirstName" class="form-control" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Последно име</label>
+                        <input asp-for="LastName" class="form-control" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Емайл</label>
+                        <input asp-for="Email" class="form-control" required />
+                    </div>
+                </div>
+
+                <!-- Payment Information Section -->
+                <div class="form-section mb-4">
+                    <h4 class="section-title">Информация за плащане</h4>
+                    <div class="mb-4">
+                        <label class="form-label">Име на картата</label>
+                        <input name="CardName" class="form-control" required placeholder="Име върху картата" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Номер на картата</label>
+                        <input name="CardNumber" class="form-control" required placeholder="XXXX XXXX XXXX XXXX"
+                               pattern="[0-9\s]{13,19}" maxlength="19" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label">Срок на валидност</label>
+                                <div class="d-flex">
+                                    <select name="ExpiryMonth" class="form-control me-2" required>
+                                        <option value="" disabled selected>Месец</option>
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <select name="ExpiryYear" class="form-control" required>
+                                        <option value="" disabled selected>Година</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                        <option value="2029">2029</option>
+                                        <option value="2030">2030</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label">CVV/CVC код</label>
+                                <input name="Cvv" class="form-control" required placeholder="XXX"
+                                       pattern="[0-9]{3,4}" maxlength="4" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="total-price">Обща сума: $@Model.TotalPrice.ToString("F2")</h3>
+
+                @foreach (var item in Model.CartItems)
+                {
+                    <input type="hidden" name="gameIds" value="@item.GameId" />
+                }
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-checkout btn-lg">Завърши поръчката</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-5">
+            <div class="cart-card">
+                <div class="cart-header">
+                    <h4 class="cart-title">Вашата Количка</h4>
+                </div>
+                <div class="cart-items">
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <div class="cart-item d-flex align-items-center">
+                            <img src="@item.Game.GameHeaderUrl" alt="@item.Game.Name"
+                                 class="game-image me-3" />
+                            <span class="game-name flex-grow-1">@item.Game.Name</span>
+                            <span class="game-price badge rounded-pill">@item.Game.Price.ToString("F2")лв.</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label class="form-label">Последно име</label>
-        <input asp-for="LastName" class="form-control" required/>
-@*         <span asp-validation-for="LastName" class="text-danger"></span> *@
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Емайл</label>
-        <input asp-for="Email" class="form-control" required/>
-
-    </div>
-
-
-    <h3>Обща сума: $@Model.TotalPrice.ToString("F2")</h3>
-
-    @foreach (var item in Model.CartItems)
-    {
-        <input type="hidden" name="gameIds" value="@item.GameId" />
-    }
-
-    <button type="submit" class="btn btn-primary">Завърши поръчката</button>
-</form>
+</div>
