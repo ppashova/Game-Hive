@@ -317,3 +317,140 @@ h3 {
     color: var(--text-muted);
     margin-right: 8px;
 }
+<style >
+/* Rating Section Styles to match your theme */
+.rating-section {
+    background: #163350;
+    padding: 15px 10px;
+    margin-top: 30px;
+    border-radius: 8px;
+}
+
+.rating-content {
+    padding: 10px;
+}
+
+.rating-label {
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.overall-rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(12, 28, 44, 0.5);
+    border-radius: 4px;
+}
+
+.rating-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.star-icon {
+    color: #ffd700;
+}
+
+.rating-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(12, 28, 44, 0.5);
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.rating-select {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #405c6a;
+    background-color: #0c1c2c;
+    color: white;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+    .rating-select:focus {
+        outline: none;
+        border-color: #2a6a9a;
+    }
+
+.rating-btn {
+    display: block;
+    background-color: green;
+    color: white;
+    padding: 10px 15px;
+    border: 1px solid #273349;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+    .rating-btn:hover {
+        background: rgba(40, 172, 44, 1);
+        transition: all 0.2s ease-out;
+    }
+
+.alert-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.success {
+    background-color: rgba(40, 167, 69, 0.2);
+    border: 1px solid rgba(40, 167, 69, 0.5);
+    color: #92d36e;
+}
+
+.error {
+    background-color: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    color: #C74B3A;
+}
+
+.login-message {
+    text-align: center;
+    color: #92d36e;
+    padding: 15px;
+    background: rgba(12, 28, 44, 0.5);
+    border-radius: 4px;
+    font-style: italic;
+}
+
+@media (max-width: 767px) {
+    .rating-section {
+        margin-top: 20px;
+    }
+
+    .rating-value {
+        font-size: 20px;
+    }
+}

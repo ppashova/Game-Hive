@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using GameHive.Core.IServices;
 using GameHive.DataAccess.Repository.IRepositories;
+using GameHive.DataAccess.Repository.Repositories;
 using GameHive.Models;
+using GameHive.Models.enums;
 using Microsoft.AspNetCore.Http;
 
 namespace GameHive.Core.Services
@@ -114,6 +116,56 @@ namespace GameHive.Core.Services
         public async Task<List<string>> GetGameImagesAsync(int id)
         {
             return await _repo.GetGameImagesAsync(id);
+        }
+        public async Task<bool> RateGameAsync(string userId, int gameId, double ratingValue)
+        {
+            var game = await _repo.GetByIdAsync(gameId);
+            if (game == null)
+            {
+                return false;
+            }
+            int storedRating = (int)(ratingValue * 2);
+
+            var existingRating = await _repo.GetUserRatingAsync(userId, gameId);
+
+            if (existingRating != null)
+            {
+                existingRating.Rating = (RatingEnums)storedRating;
+                existingRating.CreatedAt = DateTime.Now;
+                await _repo.UpdateUserRatingAsync(existingRating);
+            }
+            else
+            {
+                var newRating = new UserRating
+                {
+                    UserId = userId,
+                    GameId = gameId,
+                    Rating = (RatingEnums)storedRating,
+                    CreatedAt = DateTime.Now
+                };
+                await _repo.AddRatingAsync(newRating);
+            }
+            await UpdateGameAverageRatingAsync(gameId);
+
+            return true;
+        }
+
+        public async Task UpdateGameAverageRatingAsync(int gameId)
+        {
+            var ratings = await _repo.GetRatingsByGameIdAsync(gameId);
+
+            if (ratings.Any())
+            {
+                var averageRatingValue = ratings.Average(r => (int)r.Rating);
+
+                int roundedValue = (int)(Math.Round(averageRatingValue / 2.0, MidpointRounding.AwayFromZero) * 2);
+
+                var game = await _repo.GetByIdAsync(gameId);
+                if (game != null)
+                {
+                    game.Rating = (RatingEnums)roundedValue;
+                }
+            }
         }
     }
 }

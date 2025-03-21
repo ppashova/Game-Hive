@@ -10,6 +10,7 @@ using GameHive.DataAccess.Repository.IRepositories;
 using GameHive.Models.enums;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace GameHive.DataAccess.Repository.Repositories
 {
@@ -78,6 +79,41 @@ namespace GameHive.DataAccess.Repository.Repositories
         public async Task<List<string>> GetGameImagesAsync(int id)
         {
             return await _context.GameImages.Where(g => id == g.GameId).Select(g => g.imageURL).ToListAsync();
+        }
+        public async Task<List<UserRating>> GetRatingsByGameIdAsync(int gameId)
+        {
+            return await _context.UserRatings
+                .Where(r => r.GameId == gameId)
+                .ToListAsync();
+        }
+        public async Task AddRatingAsync(UserRating rating)
+        {
+            _context.UserRatings.Add(rating);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<UserRating?> GetUserRatingAsync(string userId, int gameId)
+        {
+            return await _context.UserRatings
+                .FirstOrDefaultAsync(r => r.UserId == userId && r.GameId == gameId);
+        }
+        public async Task UpdateGameRatingAsync(UserRating rating,int newRating)
+        {
+            var game = await _context.Games.FindAsync(rating.GameId);
+            if (game != null)
+            {
+                game.Rating = (RatingEnums)newRating;
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task DeleteRatingAsync(UserRating rating)
+        {
+            _context.UserRatings.Remove(rating);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateUserRatingAsync(UserRating rating)
+        {
+            _context.UserRatings.Update(rating);
+            await _context.SaveChangesAsync();
         }
     }
 }

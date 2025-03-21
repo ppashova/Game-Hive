@@ -20,5 +20,11 @@ namespace GameHive.DataAccess.Repository.IRepositories
         Task<int> GetRequestCountAsync();
         Task AddGameImagesAsync(GameImage gameImage);
         Task<List<string>> GetGameImagesAsync(int id);
+        Task<List<UserRating>> GetRatingsByGameIdAsync(int gameId);
+        Task AddRatingAsync(UserRating rating);
+        Task UpdateGameRatingAsync(UserRating rating, int newRating);
+        Task<UserRating?> GetUserRatingAsync(string userId, int gameId);
+        Task UpdateUserRatingAsync(UserRating rating);
+        Task DeleteRatingAsync(UserRating rating);
     }
 }

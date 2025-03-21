@@ -114,6 +114,43 @@
                     }
                 </ul>
             </div>
+            <!-- Rating Section -->
+            <div class="rating-section mt-4">
+                <h3>Оценка</h3>
+
+                <!-- Display Average Rating -->
+                <div class="average-rating mb-3">
+                    <span class="rating-label">Средна оценка:</span>
+                    <span class="rating-value">@((Model.AverageRating / 2).ToString("0.0")) / 5</span>
+                </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form method="post" asp-controller="Games" asp-action="RateGame">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="gameId" value="@Model.Game.GameId" />
+
+                        <div class="rating-stars">
+                            <label>Вашата оценка:</label>
+                            <select name="ratingValue" class="form-select rating-dropdown">
+                                @for (double i = 1.0; i <= 5.0; i += 0.5)
+                                {
+                                    <option value="@(i * 2)" selected="@(Model.UserRating == i * 2 ? "selected" : null)">
+                                        @i / 5
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-2">Оцени</button>
+                    </form>
+                }
+                else
+                {
+                    <p>Влезте в профила си, за да оцените тази игра.</p>
+                }
+            </div>
+
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

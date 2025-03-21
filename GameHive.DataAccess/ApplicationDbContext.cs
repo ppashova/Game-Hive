@@ -21,6 +21,7 @@ namespace GameHive.DataAccess
         public DbSet<Cart> Carts { get; set; }
         public DbSet<PublisherRequest> PublisherRequests { get; set; }
         public DbSet<GameImage> GameImages { get; set; }
+        public DbSet<UserRating> UserRatings { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

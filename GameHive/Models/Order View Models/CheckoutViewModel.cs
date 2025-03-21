@@ -43,7 +43,6 @@ namespace GameHive.Models.Order_View_Models
         public decimal TotalPrice { get; set; }
         public List<Cart> CartItems { get; set; }
 
-        // Helper method to get full expiration date string (MM/YY format)
         public string GetExpirationDate()
         {
             if (!string.IsNullOrEmpty(ExpiryMonth) && !string.IsNullOrEmpty(ExpiryYear))
@@ -52,7 +51,6 @@ namespace GameHive.Models.Order_View_Models
             }
             return null;
         }
-        // Helper method to get masked card number (only last 4 digits visible)
         public string GetMaskedCardNumber()
         {
             if (!string.IsNullOrEmpty(CardNumber))

@@ -2,12 +2,14 @@
 using GameHive.Core.IServices;
 using GameHive.Core.Services;
 using GameHive.Models;
+using GameHive.Models.enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Security.Claims;
 
 namespace GameHive.Controllers
 {
@@ -158,6 +160,41 @@ namespace GameHive.Controllers
             await _gameService.DeleteGameAsync(id);
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RateGame(int gameId, int ratingValue)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData["Error"] = "Трябва да влезете в профила си, за да оцените игра.";
+                return RedirectToAction("Details", new { id = gameId });
+            }
 
+            if (ratingValue != 2 && ratingValue != 3 && ratingValue != 4 && ratingValue != 5 && ratingValue != 6 && ratingValue != 7 && ratingValue != 8 && ratingValue != 9 && ratingValue != 10)
+            {
+                TempData["Error"] = "Невалидна оценка. Моля, изберете валидна оценка.";
+                return RedirectToAction("Details", new { id = gameId });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                TempData["Error"] = "Възникна грешка. Моля, опитайте отново.";
+                return RedirectToAction("Details", new { id = gameId });
+            }
+
+            var success = await _gameService.RateGameAsync(userId, gameId, ratingValue);
+
+            if (!success)
+            {
+                TempData["Error"] = "Неуспешно записване на оценка.";
+            }
+            else
+            {
+                TempData["Success"] = "Благодарим за вашата оценка!";
+            }
+
+            return RedirectToAction("Details", new { id = gameId });
+        }
     }
 }
