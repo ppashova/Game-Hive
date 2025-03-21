@@ -103,7 +103,8 @@ namespace GameHive.Controllers
             {
                 Game = game,
                 Tags = Tags,
-                Images = ImageUrls
+                Images = ImageUrls,
+                AverageRating = (double)game.Rating / 2.0
             };
 
             return View(viewModel);
@@ -170,7 +171,7 @@ namespace GameHive.Controllers
                 return RedirectToAction("Details", new { id = gameId });
             }
 
-            if (ratingValue != 2 && ratingValue != 3 && ratingValue != 4 && ratingValue != 5 && ratingValue != 6 && ratingValue != 7 && ratingValue != 8 && ratingValue != 9 && ratingValue != 10)
+            if (ratingValue != 1 && ratingValue != 2 && ratingValue != 3 && ratingValue != 4 && ratingValue != 5 && ratingValue != 6 && ratingValue != 7 && ratingValue != 8 && ratingValue != 9 && ratingValue != 10)
             {
                 TempData["Error"] = "Невалидна оценка. Моля, изберете валидна оценка.";
                 return RedirectToAction("Details", new { id = gameId });
@@ -193,7 +194,7 @@ namespace GameHive.Controllers
             {
                 TempData["Success"] = "Благодарим за вашата оценка!";
             }
-
+            await _gameService.UpdateGameAverageRatingAsync(gameId);
             return RedirectToAction("Details", new { id = gameId });
         }
     }

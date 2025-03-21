@@ -564,7 +564,7 @@ namespace GameHive.DataAccess.Migrations
             modelBuilder.Entity("GameHive.Models.UserRating", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("UserRatings")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -638,6 +638,8 @@ namespace GameHive.DataAccess.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("UserGames");
+
+                    b.Navigation("UserRatings");
                 });
 
             modelBuilder.Entity("GameHive.Models.Order", b =>

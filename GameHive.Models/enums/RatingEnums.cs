@@ -8,6 +8,8 @@ namespace GameHive.Models.enums
 {
     public enum RatingEnums
     {
+        ZeroStars = 0,
+        HalfAStar = 1,
         OneStar = 2,
         OneAndAHalfStars = 3,
         TwoStars = 4,

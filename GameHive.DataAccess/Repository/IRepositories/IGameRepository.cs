@@ -1,4 +1,5 @@
 ﻿using GameHive.Models;
+using GameHive.Models.enums;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace GameHive.DataAccess.Repository.IRepositories
         Task<List<string>> GetGameImagesAsync(int id);
         Task<List<UserRating>> GetRatingsByGameIdAsync(int gameId);
         Task AddRatingAsync(UserRating rating);
-        Task UpdateGameRatingAsync(UserRating rating, int newRating);
+        Task UpdateGameAverageRatingAsync(RatingEnums newRating, int gameId);
         Task<UserRating?> GetUserRatingAsync(string userId, int gameId);
         Task UpdateUserRatingAsync(UserRating rating);
         Task DeleteRatingAsync(UserRating rating);

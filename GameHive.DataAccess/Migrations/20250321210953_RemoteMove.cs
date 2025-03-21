@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GameHive.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class remotemove : Migration
+    public partial class RemoteMove : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -298,6 +298,33 @@ namespace GameHive.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRatings",
+                columns: table => new
+                {
+                    RatingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRatings", x => x.RatingId);
+                    table.ForeignKey(
+                        name: "FK_UserRatings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRatings_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderDetails",
                 columns: table => new
                 {
@@ -408,6 +435,16 @@ namespace GameHive.DataAccess.Migrations
                 name: "IX_UserGames_UserId",
                 table: "UserGames",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRatings_GameId",
+                table: "UserRatings",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRatings_UserId",
+                table: "UserRatings",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -445,6 +482,9 @@ namespace GameHive.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserGames");
+
+            migrationBuilder.DropTable(
+                name: "UserRatings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

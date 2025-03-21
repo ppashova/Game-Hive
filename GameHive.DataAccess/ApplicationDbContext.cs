@@ -67,6 +67,20 @@ namespace GameHive.DataAccess
                 .HasForeignKey(od => od.OrderId);
             modelBuilder.Entity<GameImage>()
                 .HasKey(g => new { g.GameId, g.imageURL });
+            modelBuilder.Entity<UserRating>()
+            .HasKey(ur => ur.RatingId);
+
+            modelBuilder.Entity<UserRating>()
+                .HasOne(ur => ur.User)
+                .WithMany()
+                .HasForeignKey(ur => ur.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserRating>()
+                .HasOne(ur => ur.Game)
+                .WithMany(g => g.UserRatings)
+                .HasForeignKey(ur => ur.GameId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -96,13 +96,14 @@ namespace GameHive.DataAccess.Repository.Repositories
             return await _context.UserRatings
                 .FirstOrDefaultAsync(r => r.UserId == userId && r.GameId == gameId);
         }
-        public async Task UpdateGameRatingAsync(UserRating rating,int newRating)
+        
+        public async Task UpdateGameAverageRatingAsync(RatingEnums newRating, int gameId)
         {
-            var game = await _context.Games.FindAsync(rating.GameId);
+            var game = await _context.Games.FindAsync(gameId);
             if (game != null)
             {
-                game.Rating = (RatingEnums)newRating;
-                await _context.SaveChangesAsync();
+                game.Rating = newRating;
+                await UpdateAsync(game);
             }
         }
         public async Task DeleteRatingAsync(UserRating rating)

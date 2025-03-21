@@ -36,5 +36,6 @@ namespace GameHive.Models
         public ICollection<UserGame> UserGames { get; set; }
         public ICollection<GameTag> GameTags { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
+        public ICollection<UserRating> UserRatings { get; set; }
     }
 }

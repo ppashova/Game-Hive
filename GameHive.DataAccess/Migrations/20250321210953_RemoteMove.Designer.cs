@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250321111847_UpdatedRatings2")]
-    partial class UpdatedRatings2
+    [Migration("20250321210953_RemoteMove")]
+    partial class RemoteMove
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -567,7 +567,7 @@ namespace GameHive.DataAccess.Migrations
             modelBuilder.Entity("GameHive.Models.UserRating", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("UserRatings")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -641,6 +641,8 @@ namespace GameHive.DataAccess.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("UserGames");
+
+                    b.Navigation("UserRatings");
                 });
 
             modelBuilder.Entity("GameHive.Models.Order", b =>

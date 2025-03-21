@@ -154,18 +154,13 @@ namespace GameHive.Core.Services
         {
             var ratings = await _repo.GetRatingsByGameIdAsync(gameId);
 
-            if (ratings.Any())
-            {
-                var averageRatingValue = ratings.Average(r => (int)r.Rating);
+            if (ratings == null || !ratings.Any())
+                return;
 
-                int roundedValue = (int)(Math.Round(averageRatingValue / 2.0, MidpointRounding.AwayFromZero) * 2);
-
-                var game = await _repo.GetByIdAsync(gameId);
-                if (game != null)
-                {
-                    game.Rating = (RatingEnums)roundedValue;
-                }
-            }
+            double ratingsum = ratings.Sum(r => (int)r.Rating);
+            double averageRating = ratingsum / ratings.Count; 
+            await _repo.UpdateGameAverageRatingAsync((RatingEnums)Math.Round(averageRating), gameId);
         }
+
     }
 }

@@ -7,6 +7,6 @@
         public List<Tag> Tags { get; set; }
         public List<string> Images { get; set; }
         public double AverageRating { get; set; }
-        public int? UserRating { get; set; }
+        public double? UserRating { get; set; }
     }
 }
