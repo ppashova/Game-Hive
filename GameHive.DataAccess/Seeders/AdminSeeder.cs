@@ -11,7 +11,7 @@ namespace GameHive.DataAccess.Seeders
     {
         public static async Task SeedAdminAsync(UserManager<IdentityUser> userManager)
         {
-            var adminEmail = "admin@example.com";
+            var adminEmail = "Admin@example.com";
             var adminPassword = "Admin123!";
 
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
@@ -41,7 +41,7 @@ namespace GameHive.DataAccess.Seeders
             {
                 companyUser = new IdentityUser
                 {
-                    UserName = companyEmail,
+                    UserName = "PPashova",
                     Email = companyEmail,
                     EmailConfirmed = true
                 };
