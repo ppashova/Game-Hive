@@ -20,7 +20,6 @@ namespace GameHive.Models
         public string Name { get; set; }
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
-        [MaxLength(150, ErrorMessage = "You've reached the brief description limit")]
         public string? BriefDescription { get; set; }
         public string FullDescription { get; set; }
         public string GameIconUrl { get; set; }
@@ -28,7 +27,7 @@ namespace GameHive.Models
         public string SteamLink { get; set; }
         public DateTime RequestTime { get; set; } = DateTime.Now;
         public RequestEnums RequestStatus { get; set; } = RequestEnums.Pending;
-        public RatingEnums Rating { get; set; }
+        public double Rating { get; set; }
         [NotMapped]
         public IFormFile? GameHeader { get; set; }
         [NotMapped]

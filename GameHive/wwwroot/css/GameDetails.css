@@ -407,3 +407,18 @@ h3 {
         transform: scale(1);
     }
 }
+.full-description-section {
+    background-color: #0c1c2c;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.description-content {
+    background-color: #163350;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.full-description {
+    line-height: 1.6;
+}

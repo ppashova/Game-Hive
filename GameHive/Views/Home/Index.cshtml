@@ -1,8 +1,35 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<GameHive.Models.Game>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <h2 class="text-2xl font-bold mb-4 text-white">Игри</h2>
+
+    <div class="row">
+        @foreach (var game in Model)
+        {
+            if (game.RequestStatus == GameHive.Models.enums.RequestEnums.Approved)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card game-card">
+                        <a asp-controller="Games" asp-action="Details" asp-route-id="@game.GameId" class="card-link">
+                            <!-- Game Image (blurs on hover) -->
+                            <div class="card-header" style="background-image: url('@game.GameIconUrl');"></div>
+                            <!-- Default content (Visible before hover) -->
+                            <div class="card-body default-content">
+                                <h5 class="card-title">@game.Name</h5>
+                                <p class="price">@game.Price.ToString("f2") лв.</p>
+                            </div>
+                            <!-- Hover content (Hidden until hover) -->
+                            <div class="hover-content">
+                                <p class="card-text full-description">@game.BriefDescription</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 </div>

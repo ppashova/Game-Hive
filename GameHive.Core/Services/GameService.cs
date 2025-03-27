@@ -159,7 +159,7 @@ namespace GameHive.Core.Services
 
             double ratingsum = ratings.Sum(r => (int)r.Rating);
             double averageRating = ratingsum / ratings.Count; 
-            await _repo.UpdateGameAverageRatingAsync((RatingEnums)Math.Round(averageRating), gameId);
+            await _repo.UpdateGameAverageRatingAsync(Math.Round(averageRating), gameId);
         }
 
     }

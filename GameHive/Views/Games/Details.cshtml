@@ -67,7 +67,7 @@
                         <!-- Info Container with Description -->
                         <div class="info-container">
                             <p class="description">
-                                @(string.IsNullOrEmpty(Model.Game.FullDescription) ? "Няма налично описание за тази игра." : Model.Game.FullDescription)
+                                @(string.IsNullOrEmpty(Model.Game.BriefDescription) ? "Няма налично описание за тази игра." : Model.Game.BriefDescription)
                             </p>
 
                             <!-- Price Display -->
@@ -179,6 +179,25 @@
                     <p class="text-muted">Влезте в профила си, за да оцените тази игра.</p>
                 }
             </div>
+
+            <!-- Full Description Section -->
+            <div class="full-description-section mt-4">
+                <h3>Пълно описание</h3>
+                <div class="description-content p-3">
+                    @if (!string.IsNullOrEmpty(Model.Game.FullDescription))
+                    {
+                        <div class="full-description">
+                            @Html.Raw(Model.Game.FullDescription)
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Няма подробно описание за тази игра.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

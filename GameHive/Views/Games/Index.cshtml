@@ -38,7 +38,7 @@
 
         <!-- Games Grid -->
         <div class="col-md-9">
-            <h2 class="text-2xl font-bold mb-4" style="color:white;">Игри</h2>
+            <h2 class="text-2xl font-bold mb-4" style="color:white !important;">Игри</h2>
 
             <div class="row">
                 @foreach (var game in Model.Games)
@@ -55,37 +55,32 @@
                                         <h5 class="card-title">@game.Name</h5>
                                         <p class="rating">
                                             @{
-                                                // Calculate full stars
-                                                int fullStars = (int)Math.Floor((double)game.Rating);
-                                                // Calculate if there's a half star
-                                                bool halfStar = (double)(game.Rating - fullStars) >= 0.5;
-                                                // Calculate empty stars
-                                                int emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-
-                                                // Display full stars
-                                                for (int i = 0; i < fullStars; i++)
+                                                // Display 5 stars and fill them based on rating
+                                                for (int i = 1; i <= 5; i++)
                                                 {
-                                                    <span class="star full">&#9733;</span>
-                                                }
-
-                                                // Display half star if needed
-                                                if (halfStar)
-                                                {
-                                                    <span class="star half">&#9734;&#9733;</span>
-                                                }
-
-                                                // Display empty stars
-                                                for (int i = 0; i < emptyStars; i++)
-                                                {
-                                                    <span class="star empty">&#9734;</span>
+                                                    if (game.Rating / 4 >= i)
+                                                    {
+                                                    // Full star
+                                                        <span class="star full">&#9733;</span>
+                                                    }
+                                                    else if (game.Rating / 4 >= i - 0.5)
+                                                    {
+                                                    // Half star
+                                                        <span class="star half">&#9733;</span>
+                                                    }
+                                                    else
+                                                    {
+                                                    // Empty star
+                                                        <span class="star empty">&#9734;</span>
+                                                    }
                                                 }
                                             }
-                                            <span class="rating-number">(@string.Format("{0:0.0}", game.Rating))</span>
+                                            <span class="rating-number">(@((double)game.Rating/4))</span>
                                         </p>
-                                        <p class="price">@string.Format("{0:0.00}", game.Price) лв.</p>
+                                        <p class="price">@game.Price.ToString("f2") лв.</p>
                                     </div>
                                     <!-- Hover content (Hidden until hover) -->
-                                    <div class="card-body hover-content">
+                                    <div class="hover-content">
                                         <p class="card-text full-description">@game.BriefDescription</p>
                                     </div>
                                 </a>

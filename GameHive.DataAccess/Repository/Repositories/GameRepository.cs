@@ -97,7 +97,7 @@ namespace GameHive.DataAccess.Repository.Repositories
                 .FirstOrDefaultAsync(r => r.UserId == userId && r.GameId == gameId);
         }
         
-        public async Task UpdateGameAverageRatingAsync(RatingEnums newRating, int gameId)
+        public async Task UpdateGameAverageRatingAsync(double newRating, int gameId)
         {
             var game = await _context.Games.FindAsync(gameId);
             if (game != null)

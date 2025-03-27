@@ -13,7 +13,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar-style" style="background-color: #0b1928;">
+        <nav class="navbar-style" style="background-color: #0b1928; position: fixed; top: 0; width: 100%; z-index: 1000; padding: 1rem 0">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" asp-area="" asp-controller="Games" asp-action="Index">GameHive</a>
 
@@ -37,7 +37,7 @@
                                 </a>
                             </li>
                         }
-                        else if(User.IsInRole("User"))
+                        else if (User.IsInRole("User"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Publishers" asp-action="Index">
@@ -45,7 +45,7 @@
                                 </a>
                             </li>
                         }
-                        else if(User.IsInRole("Company"))
+                        else if (User.IsInRole("Company"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Add">
@@ -70,11 +70,14 @@
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="#273349"></path>
                         </svg>
                     </a>
+                </li>
                 <div class="auth-links">
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
+
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -82,7 +85,7 @@
         </main>
     </div>
 
-    <footer class="footer text-muted" style="background-color:#0b1928;">
+    <footer class="footer text-muted" style="background-color:#0b1928; position: sticky; bottom: 0; width: 100%; padding: 1rem 0;">
         <div class="container">
             &copy; 2025 - GameHive - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

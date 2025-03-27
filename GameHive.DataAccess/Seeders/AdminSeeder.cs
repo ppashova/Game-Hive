@@ -41,7 +41,7 @@ namespace GameHive.DataAccess.Seeders
             {
                 companyUser = new IdentityUser
                 {
-                    UserName = "PPashova",
+                    UserName = companyEmail,
                     Email = companyEmail,
                     EmailConfirmed = true
                 };

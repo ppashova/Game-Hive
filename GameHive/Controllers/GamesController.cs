@@ -19,6 +19,7 @@ namespace GameHive.Controllers
         private readonly ITagService _tagService;
         private readonly IGameTagService _gameTagService;
         private readonly CloudinaryService _cloudinaryService;
+
         public GamesController(IGameService gameService, ITagService tagService, IGameTagService gameTagService, CloudinaryService cloudinaryService)
         {
             _gameService = gameService;
@@ -26,32 +27,28 @@ namespace GameHive.Controllers
             _gameTagService = gameTagService;
             _cloudinaryService = cloudinaryService;
         }
+
         public async Task<IActionResult> Index(GameFilterViewModel filter)
         {
-            // Get all games
             var games = await _gameService.GetAllGamesAsync();
             var query = games.AsQueryable();
 
-            // Apply filters if they exist
             if (filter != null)
             {
-                if (filter.Tag != null)
+                if (filter.Tag.HasValue)
                 {
                     query = query.Where(game => game.GameTags.Any(gt => gt.TagId == filter.Tag.Value));
                 }
-
-                if (filter.MinPrice != null)
+                if (filter.MinPrice.HasValue && filter.MinPrice >= 0)
                 {
                     query = query.Where(game => game.Price >= filter.MinPrice.Value);
                 }
-
-                if (filter.MaxPrice != null)
+                if (filter.MaxPrice.HasValue && filter.MaxPrice >= filter.MinPrice)
                 {
                     query = query.Where(p => p.Price <= filter.MaxPrice.Value);
                 }
             }
 
-            // Create view model with filtered games
             var model = new GameFilterViewModel
             {
                 Tag = filter?.Tag,
@@ -60,36 +57,40 @@ namespace GameHive.Controllers
                 Tags = new SelectList(await _tagService.GetAllAsync(), "Id", "Name"),
                 Games = query.ToList()
             };
-
             return View(model);
         }
 
         [Authorize(Roles = "Company")]
         public async Task<IActionResult> Add()
         {
-            var model = new GameViewModel
-            {
-                AvailableTags = await _tagService.GetAllAsync()
-            };
+            var model = new GameViewModel { AvailableTags = await _tagService.GetAllAsync() };
             return View(model);
         }
+
         [HttpPost]
         [Authorize(Roles = "Company")]
         public async Task<IActionResult> Add(GameViewModel model, List<IFormFile> images)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             if (model.IconFile == null)
             {
-                return BadRequest("Icon file is required.");
+                ModelState.AddModelError("IconFile", "Icon file is required.");
+                return View(model);
             }
             if (model.SelectedTagIds == null || !model.SelectedTagIds.Any())
             {
-                return BadRequest("At least one tag must be selected.");
+                ModelState.AddModelError("SelectedTagIds", "At least one tag must be selected.");
+                return View(model);
             }
 
             var game = new Game
             {
                 Name = model.Name,
-                Price = model.Price,
+                Price = model.Price >= 0 ? model.Price : throw new ArgumentException("Price must be non-negative"),
                 BriefDescription = model.BriefDescription,
                 FullDescription = model.FullDescription,
                 SteamLink = model.SteamLink
@@ -98,34 +99,61 @@ namespace GameHive.Controllers
             return RedirectToAction("Index");
         }
 
-        //public async Task<IActionResult> Filter(GameFilterViewModel? filter)
-        //{
-        //    var games = await _gameService.GetAllGamesAsync();
-        //    var query = games.AsQueryable();
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var game = await _gameService.GetGameByIdAsync(id);
+            if (game == null)
+            {
+                return NotFound();
+            }
 
-        //    if (filter.Tag != null)
-        //    {
-        //        query = query.Where(game => game.GameTags.Any(gt => gt.TagId == filter.Tag.Value));
-        //    }
-        //    if (filter.MinPrice != null)
-        //    {
-        //        query = query.Where(game => game.Price >= filter.MinPrice.Value);
-        //    }
-        //    if(filter.MaxPrice != null)
-        //    {
-        //        query = query.Where(p => p.Price <= filter.MaxPrice.Value);
-        //    }
+            var tags = await _tagService.GetAllAsync();
+            var selectedTags = await _tagService.GetTagsByGameIdAsync(id);
 
-        //    var model = new GameFilterViewModel
-        //    {
-        //        Tag = filter.Tag,
-        //        MinPrice = filter.MinPrice,
-        //        MaxPrice = filter.MaxPrice,
-        //        Tags = new SelectList(_tagService.GetAllAsync().Result, "Id", "Name"),
-        //        Games = query.Include(game => game.GameTags).ToList()
-        //    };
-        //    return View(model);
-        //}
+            var model = new GameViewModel
+            {
+                GameId = game.GameId,
+                Name = game.Name,
+                Price = game.Price,
+                AvailableTags = tags,
+                SelectedTagIds = selectedTags.Select(tag => tag.Id).ToList(),
+                BriefDescription = game.BriefDescription,
+                FullDescription = game.FullDescription,
+                RequestStatus = game.RequestStatus
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(GameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var game = await _gameService.GetGameByIdAsync(model.GameId);
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            game.Name = model.Name;
+            game.Price = model.Price >= 0 ? model.Price : throw new ArgumentException("Price must be non-negative");
+            game.BriefDescription = model.BriefDescription;
+            game.FullDescription = model.FullDescription;
+
+            await _gameService.UpdateGameAsync(game, model.SelectedTagIds);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _gameService.DeleteGameAsync(id);
+            return RedirectToAction("Index");
+        }
 
         public async Task<IActionResult> Details(int id)
         {
@@ -142,90 +170,39 @@ namespace GameHive.Controllers
 
             return View(viewModel);
         }
-
-
-        [HttpGet]
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            var game = await _gameService.GetGameByIdAsync(id);
-            if (game == null)
-            {
-                return NotFound();
-            }
-            var tags = await _tagService.GetAllAsync();
-            var selectedTags = await _tagService.GetTagsByGameIdAsync(id);
-            var selectedTagsId = selectedTags.Select(tag => tag.Id).ToList();
-            var model = new GameViewModel
-            {
-                GameId = game.GameId,
-                Name = game.Name,
-                Price = game.Price,
-                AvailableTags = tags,
-                SelectedTagIds = selectedTagsId,
-                BriefDescription = game.BriefDescription,
-                FullDescription = game.FullDescription,
-                RequestStatus = game.RequestStatus
-            };
-
-
-            return View(model);
-
-        }
-        [HttpPost]
-        public async Task<IActionResult> Edit(GameViewModel model)
-        {
-            var game = await _gameService.GetGameByIdAsync(model.GameId);
-            if (game == null)
-            {
-                return NotFound();
-            }
-            game.Name = model.Name;
-            game.Price = model.Price;
-            game.BriefDescription = model.BriefDescription;
-            game.FullDescription = model.FullDescription;
-            await _gameService.UpdateGameAsync(game, model.SelectedTagIds);
-
-            return RedirectToAction("Index");
-        }
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
-        {
-            await _gameService.DeleteGameAsync(id);
-            return RedirectToAction("Index");
-        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RateGame(int gameId, int ratingValue)
         {
             if (!User.Identity.IsAuthenticated)
             {
-                TempData["Error"] = "Трябва да влезете в профила си, за да оцените игра.";
+                TempData["Error"] = "You must be logged in to rate a game.";
                 return RedirectToAction("Details", new { id = gameId });
             }
 
-            if (ratingValue != 1 && ratingValue != 2 && ratingValue != 3 && ratingValue != 4 && ratingValue != 5 && ratingValue != 6 && ratingValue != 7 && ratingValue != 8 && ratingValue != 9 && ratingValue != 10)
+            if (ratingValue < 1 || ratingValue > 10)
             {
-                TempData["Error"] = "Невалидна оценка. Моля, изберете валидна оценка.";
+                TempData["Error"] = "Invalid rating. Please choose a valid rating.";
                 return RedirectToAction("Details", new { id = gameId });
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                TempData["Error"] = "Възникна грешка. Моля, опитайте отново.";
+                TempData["Error"] = "An error occurred. Please try again.";
                 return RedirectToAction("Details", new { id = gameId });
             }
 
-            var success = await _gameService.RateGameAsync(userId, gameId, ratingValue);
 
+
+            var success = await _gameService.RateGameAsync(userId, gameId, ratingValue);
             if (!success)
             {
-                TempData["Error"] = "Неуспешно записване на оценка.";
+                TempData["Error"] = "Failed to save rating.";
             }
             else
             {
-                TempData["Success"] = "Благодарим за вашата оценка!";
+                TempData["Success"] = "Thank you for your rating!";
             }
             await _gameService.UpdateGameAverageRatingAsync(gameId);
             return RedirectToAction("Details", new { id = gameId });

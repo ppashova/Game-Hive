@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using GameHive.Core.IServices;
 using GameHive.Models;
+using GameHive.Models.enums;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,17 +11,20 @@ namespace GameHive.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IGameService _gameService;
 
-        public HomeController(ILogger<HomeController> logger, IEmailSender emailSender)
+        public HomeController(ILogger<HomeController> logger, IEmailSender emailSender, IGameService gameService)
         {
             _logger = logger;
             _emailSender = emailSender;
+            _gameService = gameService;
         }
 
 
         public async Task<IActionResult> Index()
         {
-            return View();
+            var games = await _gameService.GetAllGamesAsync();
+            return View(games);
         }
 
         public IActionResult Privacy()

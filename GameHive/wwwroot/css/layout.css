@@ -116,3 +116,12 @@ a,a:hover{
     gap: 10px;
     align-items: center;
 }
+body {
+    background-color: #214c78 !important;
+}
+.footer {
+    background-color: #0b1928;
+    padding: 1rem 0;
+    text-align: center;
+    color: #f8f9fa;
+}
