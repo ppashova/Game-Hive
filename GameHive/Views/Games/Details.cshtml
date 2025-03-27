@@ -126,32 +126,59 @@
 
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
-                    <form method="post" asp-controller="Games" asp-action="RateGame">
+                    <form method="post" asp-controller="Games" asp-action="RateGame" id="ratingForm">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="gameId" value="@Model.Game.GameId" />
 
-                        <div class="rating-stars">
-                            <label for="ratingValue">Вашата оценка:</label>
-                            <select id="ratingValue" name="ratingValue" class="form-select rating-dropdown">
-                                @for (double i = 1.0; i <= 5.0; i += 0.5)
-                                {
-                                    <option value="@(i * 2)" selected="@(Model.UserRating == i * 2 ? "selected" : null)">
-                                        @($"{i:0.0}") / 5
-                                    </option>
-                                }
-                            </select>
-                        </div>
+                        <!-- Star Rating Selection -->
+                        <fieldset class="rate">
+                            <input type="radio" id="rating10" name="ratingValue" value="10" @(Model.UserRating == 10 ? "checked" : "") />
+                            <label for="rating10" title="5 stars"></label>
 
-                        <button type="submit" class="btn btn-primary mt-2">Оцени</button>
+                            <input type="radio" id="rating9" name="ratingValue" value="9" @(Model.UserRating == 9 ? "checked" : "") />
+                            <label class="half" for="rating9" title="4 1/2 stars"></label>
+
+                            <input type="radio" id="rating8" name="ratingValue" value="8" @(Model.UserRating == 8 ? "checked" : "") />
+                            <label for="rating8" title="4 stars"></label>
+
+                            <input type="radio" id="rating7" name="ratingValue" value="7" @(Model.UserRating == 7 ? "checked" : "") />
+                            <label class="half" for="rating7" title="3 1/2 stars"></label>
+
+                            <input type="radio" id="rating6" name="ratingValue" value="6" @(Model.UserRating == 6 ? "checked" : "") />
+                            <label for="rating6" title="3 stars"></label>
+
+                            <input type="radio" id="rating5" name="ratingValue" value="5" @(Model.UserRating == 5 ? "checked" : "") />
+                            <label class="half" for="rating5" title="2 1/2 stars"></label>
+
+                            <input type="radio" id="rating4" name="ratingValue" value="4" @(Model.UserRating == 4 ? "checked" : "") />
+                            <label for="rating4" title="2 stars"></label>
+
+                            <input type="radio" id="rating3" name="ratingValue" value="3" @(Model.UserRating == 3 ? "checked" : "") />
+                            <label class="half" for="rating3" title="1 1/2 stars"></label>
+
+                            <input type="radio" id="rating2" name="ratingValue" value="2" @(Model.UserRating == 2 ? "checked" : "") />
+                            <label for="rating2" title="1 star"></label>
+
+                            <input type="radio" id="rating1" name="ratingValue" value="1" @(Model.UserRating == 1 ? "checked" : "") />
+                            <label class="half" for="rating1" title="1/2 star"></label>
+                        </fieldset>
                     </form>
+
+                    <script>
+                        document.querySelectorAll('.rate input').forEach(function(radio) {
+                            radio.addEventListener('change', function() {
+                                setTimeout(function() {
+                                    document.getElementById('ratingForm').submit();
+                                }, 300);
+                            });
+                        });
+                    </script>
                 }
                 else
                 {
                     <p class="text-muted">Влезте в профила си, за да оцените тази игра.</p>
                 }
             </div>
-        </div>
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

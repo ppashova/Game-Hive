@@ -1,30 +1,99 @@
-﻿@model IEnumerable<GameHive.Models.Game>
-
+﻿@model GameHive.Models.GameFilterViewModel
 <link rel="stylesheet" href="~/css/Games.css">
-<h2 class="text-2xl font-bold mb-4" style="color:white;">Игри</h2>
-<div class="mb-4">
-    <a asp-action="Filter" class="btn">Филтрирай игри</a>
-</div>
 
-<div class="row">
-    @foreach (var game in Model)
-    {
-        if (game.RequestStatus == GameHive.Models.enums.RequestEnums.Approved)
-        {
-            <div class="col-md-3 mb-4">
-                <div class="card game-card">
-                <a asp-action="Details" asp-route-id="@game.GameId">
-                    <div class ="card-header"style="background-image: url('@game.GameIconUrl'); background-size:cover;"></div>
-                <div class="card-body">
-                    <h5 class="card-title">@game.Name</h5>
-                    <p class="card-text">@game.BriefDescription</p>
-                    <p class="rating">&#9733;&#9733;&#9733;&#9734;&#9734; (3/5)</p>
-                </div>
-                </a>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Filter -->
+        <div class="col-md-3 sidebar-filter">
+            <div class="filter-container">
+                <h3 class="filter-title">Филтри</h3>
+                <form asp-action="Index" method="get">
+                    <div class="form-group mb-3">
+                        <label asp-for="Tag" class="control-label">Категория</label>
+                        <select asp-for="Tag" asp-items="Model.Tags" class="form-control">
+                            <option value="">-- Всички категории --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="MinPrice" class="control-label">Минимална цена</label>
+                        <input asp-for="MinPrice" class="form-control" type="number" min="0" step="0.01" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="MaxPrice" class="control-label">Максимална цена</label>
+                        <input asp-for="MaxPrice" class="form-control" type="number" min="0" step="0.01" />
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary w-100">Приложи филтри</button>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary w-100">Изчисти филтри</a>
+                    </div>
+                </form>
             </div>
         </div>
-        }
-    }
+
+        <!-- Games Grid -->
+        <div class="col-md-9">
+            <h2 class="text-2xl font-bold mb-4" style="color:white;">Игри</h2>
+
+            <div class="row">
+                @foreach (var game in Model.Games)
+                {
+                    if (game.RequestStatus == GameHive.Models.enums.RequestEnums.Approved)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card game-card">
+                                <a asp-action="Details" asp-route-id="@game.GameId" class="card-link">
+                                    <!-- Game Image (blurs on hover) -->
+                                    <div class="card-header" style="background-image: url('@game.GameIconUrl');"></div>
+                                    <!-- Default content (Visible before hover) -->
+                                    <div class="card-body default-content">
+                                        <h5 class="card-title">@game.Name</h5>
+                                        <p class="rating">
+                                            @{
+                                                // Calculate full stars
+                                                int fullStars = (int)Math.Floor((double)game.Rating);
+                                                // Calculate if there's a half star
+                                                bool halfStar = (double)(game.Rating - fullStars) >= 0.5;
+                                                // Calculate empty stars
+                                                int emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+                                                // Display full stars
+                                                for (int i = 0; i < fullStars; i++)
+                                                {
+                                                    <span class="star full">&#9733;</span>
+                                                }
+
+                                                // Display half star if needed
+                                                if (halfStar)
+                                                {
+                                                    <span class="star half">&#9734;&#9733;</span>
+                                                }
+
+                                                // Display empty stars
+                                                for (int i = 0; i < emptyStars; i++)
+                                                {
+                                                    <span class="star empty">&#9734;</span>
+                                                }
+                                            }
+                                            <span class="rating-number">(@string.Format("{0:0.0}", game.Rating))</span>
+                                        </p>
+                                        <p class="price">@string.Format("{0:0.00}", game.Price) лв.</p>
+                                    </div>
+                                    <!-- Hover content (Hidden until hover) -->
+                                    <div class="card-body hover-content">
+                                        <p class="card-text full-description">@game.BriefDescription</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
 </div>
-
-

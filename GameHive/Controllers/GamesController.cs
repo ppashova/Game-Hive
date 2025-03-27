@@ -26,11 +26,44 @@ namespace GameHive.Controllers
             _gameTagService = gameTagService;
             _cloudinaryService = cloudinaryService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(GameFilterViewModel filter)
         {
+            // Get all games
             var games = await _gameService.GetAllGamesAsync();
-            return View(games);
+            var query = games.AsQueryable();
+
+            // Apply filters if they exist
+            if (filter != null)
+            {
+                if (filter.Tag != null)
+                {
+                    query = query.Where(game => game.GameTags.Any(gt => gt.TagId == filter.Tag.Value));
+                }
+
+                if (filter.MinPrice != null)
+                {
+                    query = query.Where(game => game.Price >= filter.MinPrice.Value);
+                }
+
+                if (filter.MaxPrice != null)
+                {
+                    query = query.Where(p => p.Price <= filter.MaxPrice.Value);
+                }
+            }
+
+            // Create view model with filtered games
+            var model = new GameFilterViewModel
+            {
+                Tag = filter?.Tag,
+                MinPrice = filter?.MinPrice,
+                MaxPrice = filter?.MaxPrice,
+                Tags = new SelectList(await _tagService.GetAllAsync(), "Id", "Name"),
+                Games = query.ToList()
+            };
+
+            return View(model);
         }
+
         [Authorize(Roles = "Company")]
         public async Task<IActionResult> Add()
         {
@@ -65,34 +98,34 @@ namespace GameHive.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Filter(GameFilterViewModel? filter)
-        {
-            var games = await _gameService.GetAllGamesAsync();
-            var query = games.AsQueryable();
+        //public async Task<IActionResult> Filter(GameFilterViewModel? filter)
+        //{
+        //    var games = await _gameService.GetAllGamesAsync();
+        //    var query = games.AsQueryable();
 
-            if (filter.Tag != null)
-            {
-                query = query.Where(game => game.GameTags.Any(gt => gt.TagId == filter.Tag.Value));
-            }
-            if (filter.MinPrice != null)
-            {
-                query = query.Where(game => game.Price >= filter.MinPrice.Value);
-            }
-            if(filter.MaxPrice != null)
-            {
-                query = query.Where(p => p.Price <= filter.MaxPrice.Value);
-            }
+        //    if (filter.Tag != null)
+        //    {
+        //        query = query.Where(game => game.GameTags.Any(gt => gt.TagId == filter.Tag.Value));
+        //    }
+        //    if (filter.MinPrice != null)
+        //    {
+        //        query = query.Where(game => game.Price >= filter.MinPrice.Value);
+        //    }
+        //    if(filter.MaxPrice != null)
+        //    {
+        //        query = query.Where(p => p.Price <= filter.MaxPrice.Value);
+        //    }
 
-            var model = new GameFilterViewModel
-            {
-                Tag = filter.Tag,
-                MinPrice = filter.MinPrice,
-                MaxPrice = filter.MaxPrice,
-                Tags = new SelectList(_tagService.GetAllAsync().Result, "Id", "Name"),
-                Games = query.Include(game => game.GameTags).ToList()
-            };
-            return View(model);
-        }
+        //    var model = new GameFilterViewModel
+        //    {
+        //        Tag = filter.Tag,
+        //        MinPrice = filter.MinPrice,
+        //        MaxPrice = filter.MaxPrice,
+        //        Tags = new SelectList(_tagService.GetAllAsync().Result, "Id", "Name"),
+        //        Games = query.Include(game => game.GameTags).ToList()
+        //    };
+        //    return View(model);
+        //}
 
         public async Task<IActionResult> Details(int id)
         {
