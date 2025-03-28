@@ -24,5 +24,6 @@ namespace GameHive.Core.IServices
         Task<List<string>> GetGameImagesAsync(int id);
         Task<bool> RateGameAsync(string userId, int gameId, double ratingValue);
         Task UpdateGameAverageRatingAsync(int gameId);
+        Task ProcessOrderAsync(Order order);
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using Stripe.Climate;
 using System.Security.Claims;
 
 namespace GameHive.Controllers
@@ -15,11 +16,13 @@ namespace GameHive.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IGameService _gameService;
 
-        public OrdersController(IOrderService orderService, IShoppingCartService shoppingCartService)
+        public OrdersController(IOrderService orderService, IShoppingCartService shoppingCartService, IGameService gameService)
         {
             _orderService = orderService;
             _shoppingCartService = shoppingCartService;
+            _gameService = gameService;
         }
 
         [HttpGet]
@@ -46,16 +49,16 @@ namespace GameHive.Controllers
         [HttpPost]
         public async Task<IActionResult> Checkout(CheckoutViewModel model, List<int> gameIds)
         {
-            if (!ModelState.IsValid)
-            {
-                model.CartItems = await _shoppingCartService.GetCartItemsAsync();
-                model.TotalPrice = await _shoppingCartService.GetCartTotalAsync();
-                return View(model);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    model.CartItems = await _shoppingCartService.GetCartItemsAsync();
+            //    model.TotalPrice = await _shoppingCartService.GetCartTotalAsync();
+            //    return View(model);
+            //}
             model.TotalPrice = await _shoppingCartService.GetCartTotalAsync();
             string userId = User.Identity.GetUserId();
-            await _orderService.CreateOrderAsync(userId,model.FirstName,model.LastName, model.Email, model.TotalPrice, gameIds);
-
+            var order = await _orderService.CreateOrderAsync(userId,model.FirstName,model.LastName, model.Email, model.TotalPrice, gameIds);
+            await _gameService.ProcessOrderAsync(order);
             return RedirectToAction("OrderConfirmation");
         }
         public IActionResult OrderConfirmation()

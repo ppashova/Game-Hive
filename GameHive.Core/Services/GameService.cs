@@ -162,5 +162,21 @@ namespace GameHive.Core.Services
             await _repo.UpdateGameAverageRatingAsync(Math.Round(averageRating), gameId);
         }
 
+        public async Task ProcessOrderAsync(Order order)
+        {
+            var gameIds = order.OrderDetails.Select(o => o.GameId).ToList();
+            var games = await _repo.GetGamesByIdsAsync(gameIds);
+
+            foreach (var game in games)
+            {
+                var orderItem = order.OrderDetails.First(o => o.GameId == game.GameId);
+                game.Orders += orderItem.Quantity;
+            }
+
+            foreach (var game in games)
+            {
+                await _repo.UpdateAsync(game);
+            }
+        }
     }
 }

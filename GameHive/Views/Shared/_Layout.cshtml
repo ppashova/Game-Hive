@@ -13,7 +13,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar-style" style="background-color: #0b1928; position: fixed; top: 0; width: 100%; z-index: 1000; padding: 1rem 0">
+        <nav class="navbar-style" style="background-color: #0b1928;  position: sticky; top:0;">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" asp-area="" asp-controller="Games" asp-action="Index">GameHive</a>
 
@@ -70,10 +70,9 @@
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="#273349"></path>
                         </svg>
                     </a>
-                </li>
-                <div class="auth-links">
-                    <partial name="_LoginPartial" />
-                </div>
+                    <div class="auth-links">
+                        <partial name="_LoginPartial" />
+                    </div>
             </div>
         </nav>
 
@@ -85,11 +84,16 @@
         </main>
     </div>
 
-    <footer class="footer text-muted" style="background-color:#0b1928; position: sticky; bottom: 0; width: 100%; padding: 1rem 0;">
+    <footer class="footer text-muted">
         <div class="container">
             &copy; 2025 - GameHive - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <!-- Add padding to the body/content area so it’s not covered by the fixed footer -->
+    <div style="padding-bottom: 60px;">
+        <!-- Adjust padding according to footer height -->
+        <!-- Your page content here -->
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

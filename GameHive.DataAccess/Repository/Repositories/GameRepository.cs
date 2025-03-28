@@ -11,6 +11,7 @@ using GameHive.Models.enums;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Stripe.Climate;
 
 namespace GameHive.DataAccess.Repository.Repositories
 {
@@ -105,6 +106,12 @@ namespace GameHive.DataAccess.Repository.Repositories
                 game.Rating = newRating;
                 await UpdateAsync(game);
             }
+        }
+        public async Task<List<Game>> GetGamesByIdsAsync(List<int> GameIds)
+        {
+            return await _context.Games
+            .Where(g => GameIds.Contains(g.GameId))
+            .ToListAsync();
         }
         public async Task DeleteRatingAsync(UserRating rating)
         {

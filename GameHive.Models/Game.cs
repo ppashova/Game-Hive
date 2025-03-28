@@ -24,10 +24,10 @@ namespace GameHive.Models
         public string FullDescription { get; set; }
         public string GameIconUrl { get; set; }
         public string GameHeaderUrl { get; set; }
-        public string SteamLink { get; set; }
         public DateTime RequestTime { get; set; } = DateTime.Now;
         public RequestEnums RequestStatus { get; set; } = RequestEnums.Pending;
         public double Rating { get; set; }
+        public int Orders { get; set; }
         [NotMapped]
         public IFormFile? GameHeader { get; set; }
         [NotMapped]

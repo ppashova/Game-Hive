@@ -93,7 +93,6 @@ namespace GameHive.Controllers
                 Price = model.Price >= 0 ? model.Price : throw new ArgumentException("Price must be non-negative"),
                 BriefDescription = model.BriefDescription,
                 FullDescription = model.FullDescription,
-                SteamLink = model.SteamLink
             };
             await _gameService.AddGameAsync(game, model.IconFile, model.SelectedTagIds, model.GameImages, model.GameHeader);
             return RedirectToAction("Index");
