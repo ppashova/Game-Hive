@@ -58,14 +58,14 @@ namespace GameHive.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "money", nullable: false),
-                    BriefDescription = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    BriefDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GameIconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GameHeaderUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SteamLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequestTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RequestStatus = table.Column<int>(type: "int", nullable: false),
-                    Rating = table.Column<int>(type: "int", nullable: false)
+                    Rating = table.Column<double>(type: "float", nullable: false),
+                    Orders = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -329,7 +329,8 @@ namespace GameHive.DataAccess.Migrations
                 columns: table => new
                 {
                     GameId = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

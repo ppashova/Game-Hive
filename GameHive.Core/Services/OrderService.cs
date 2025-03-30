@@ -18,7 +18,7 @@ namespace GameHive.Core.Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<Order> CreateOrderAsync(string userId,string firstName,string lastName, string email, decimal totalPrice, List<int> GameIds)
+        public async Task<Order> CreateOrderAsync(string userId, string firstName, string lastName, string email, decimal totalPrice, List<int> gameIds, List<int> quantities)
         {
             var newOrder = new Order
             {
@@ -33,16 +33,20 @@ namespace GameHive.Core.Services
             };
 
             await _orderRepository.AddOrderAsync(newOrder);
-            var newOrderDetails = GameIds.Select(gameId => new OrderDetail
+
+            // Ensure gameIds and quantities are paired correctly
+            var newOrderDetails = gameIds.Select((gameId, index) => new OrderDetail
             {
                 OrderId = newOrder.Id,
-                GameId = gameId
+                GameId = gameId,
+                Quantity = quantities[index] // Assign the corresponding quantity
             }).ToList();
-            await _orderRepository.AddOrderDetailsAsync(newOrderDetails);
 
+            await _orderRepository.AddOrderDetailsAsync(newOrderDetails);
 
             return newOrder;
         }
+
         public async Task<Order> GetOrderByIdAsync(Guid orderId)
         {
             return await _orderRepository.GetOrderByIdAsync(orderId);

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250327075103_remotemv")]
+    [Migration("20250329102252_remotemv")]
     partial class remotemv
     {
         /// <inheritdoc />
@@ -61,8 +61,7 @@ namespace GameHive.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameId"));
 
                     b.Property<string>("BriefDescription")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullDescription")
                         .IsRequired()
@@ -80,21 +79,20 @@ namespace GameHive.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Orders")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("money");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.Property<int>("RequestStatus")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("RequestTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("SteamLink")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("GameId");
 
@@ -172,6 +170,9 @@ namespace GameHive.DataAccess.Migrations
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.HasKey("GameId", "OrderId");
 

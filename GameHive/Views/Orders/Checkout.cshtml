@@ -89,6 +89,8 @@
                 @foreach (var item in Model.CartItems)
                 {
                     <input type="hidden" name="gameIds" value="@item.GameId" />
+                    <input type="hidden" name="quantities" value="@item.Quantity" />
+                    
                 }
 
                 <div class="mt-3">

@@ -60,22 +60,22 @@
                                                 {
                                                     if (game.Rating / 4 >= i)
                                                     {
-                                                    // Full star
+                                                        // Full star
                                                         <span class="star full">&#9733;</span>
                                                     }
                                                     else if (game.Rating / 4 >= i - 0.5)
                                                     {
-                                                    // Half star
+                                                        // Half star
                                                         <span class="star half">&#9733;</span>
                                                     }
                                                     else
                                                     {
-                                                    // Empty star
+                                                        // Empty star
                                                         <span class="star empty">&#9734;</span>
                                                     }
                                                 }
                                             }
-                                            <span class="rating-number">(@((double)game.Rating/4))</span>
+                                            <span class="rating-number">(@((double)game.Rating / 4))</span>
                                         </p>
                                         <p class="price">@game.Price.ToString("f2") лв.</p>
                                     </div>

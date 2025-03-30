@@ -47,18 +47,15 @@ namespace GameHive.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Checkout(CheckoutViewModel model, List<int> gameIds)
+        public async Task<IActionResult> Checkout(CheckoutViewModel model, List<int> gameIds, List<int> quantities)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    model.CartItems = await _shoppingCartService.GetCartItemsAsync();
-            //    model.TotalPrice = await _shoppingCartService.GetCartTotalAsync();
-            //    return View(model);
-            //}
             model.TotalPrice = await _shoppingCartService.GetCartTotalAsync();
             string userId = User.Identity.GetUserId();
-            var order = await _orderService.CreateOrderAsync(userId,model.FirstName,model.LastName, model.Email, model.TotalPrice, gameIds);
+
+            var order = await _orderService.CreateOrderAsync(userId, model.FirstName, model.LastName, model.Email, model.TotalPrice, gameIds, quantities);
+
             await _gameService.ProcessOrderAsync(order);
+
             return RedirectToAction("OrderConfirmation");
         }
         public IActionResult OrderConfirmation()

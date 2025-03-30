@@ -1,35 +1,146 @@
 ﻿@model IEnumerable<GameHive.Models.Game>
-
 @{
     ViewData["Title"] = "Home";
 }
+<link rel="stylesheet" href="~/css/Index.css" />
+<!-- Hero Section with Animated Gradient -->
+<div class="hero-container position-relative">
+    <div class="hero text-center text-white py-5 position-relative overflow-hidden">
+        <div class="hero-bg-animation"></div>
+        <div class="container position-relative z-index-1">
+            <h1 class="display-3 fw-bold text-shadow mb-3">Discover Your Next Adventure</h1>
+            <p class="lead fs-4 mb-4">Find the most popular games based on real player experiences</p>
+            <a asp-controller="Games" asp-action="Index" class="navbar-button">
+                EXPLORE GAMES <i class="bi bi-arrow-right-circle ms-2"></i>
+            </a>
+        </div>
+    </div>
+</div>
 
-<div class="container-fluid">
-    <h2 class="text-2xl font-bold mb-4 text-white">Игри</h2>
+<!-- Featured Games Carousel -->
+<div class="container mt-5 mb-5">
+    <div class="section-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white fw-bold">
+            <span class="highlight-text">TRENDING</span> GAMES
+        </h2>
+        <a asp-controller="Games" asp-action="Index" class="text-decoration-none view-all">
+            View All <i class="bi bi-grid-3x3-gap-fill ms-2"></i>
+        </a>
+    </div>
 
-    <div class="row">
-        @foreach (var game in Model)
-        {
-            if (game.RequestStatus == GameHive.Models.enums.RequestEnums.Approved)
+    <div id="gameCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            @for (int i = 0; i < Math.Min(Model.Count(), 6); i++)
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card game-card">
-                        <a asp-controller="Games" asp-action="Details" asp-route-id="@game.GameId" class="card-link">
-                            <!-- Game Image (blurs on hover) -->
-                            <div class="card-header" style="background-image: url('@game.GameIconUrl');"></div>
-                            <!-- Default content (Visible before hover) -->
-                            <div class="card-body default-content">
-                                <h5 class="card-title">@game.Name</h5>
-                                <p class="price">@game.Price.ToString("f2") лв.</p>
+                <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"
+                        aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
+            }
+        </div>
+
+        <div class="carousel-inner rounded-4 shadow-lg">
+            @foreach (var game in Model.OrderByDescending(g => g.Orders).Take(6).Select((g, i) => new { Game = g, Index = i }))
+            {
+                <div class="carousel-item @(game.Index == 0 ? "active" : "")" data-bs-interval="5000">
+                    <div class="game-card-backdrop" style="background-image: url('@game.Game.GameHeaderUrl');"></div>
+                    <div class="carousel-caption">
+                        <div class="game-info-card">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="@game.Game.GameIconUrl" alt="@game.Game.Name" class="game-logo me-3">
+                                <div class="game-meta text-start">
+                                    <h3 class="game-title mb-0">@game.Game.Name</h3>
+                                    <div class="game-stats">
+                                        <span class="badge bg-success me-2">Top Seller</span>
+                                        <span class="orders-count"><i class="bi bi-people-fill"></i> @game.Game.Orders orders</span>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- Hover content (Hidden until hover) -->
-                            <div class="hover-content">
-                                <p class="card-text full-description">@game.BriefDescription</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="price-tag">@game.Game.Price.ToString("f2") лв.</div>
+                                <a href="#" class="navbar-button">
+                                    <i class="bi bi-cart-plus-fill me-2"></i> Add to Cart
+                                </a>
                             </div>
-                        </a>
+                        </div>
                     </div>
                 </div>
             }
-        }
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
+            <div class="nav-button prev-button">
+                <i class="bi bi-chevron-left"></i>
+            </div>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#gameCarousel" data-bs-slide="next">
+            <div class="nav-button next-button">
+                <i class="bi bi-chevron-right"></i>
+            </div>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 </div>
+
+<!-- Game Categories -->
+<div class="container mb-5">
+    <div class="section-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white fw-bold">
+            <span class="highlight-text">BROWSE</span> CATEGORIES
+        </h2>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="bi bi-controller"></i>
+                </div>
+                <h5>Action</h5>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="bi bi-grid-3x3"></i>
+                </div>
+                <h5>Strategy</h5>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="bi bi-joystick"></i>
+                </div>
+                <h5>RPG</h5>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h5>Multiplayer</h5>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="bi bi-trophy-fill"></i>
+                </div>
+                <h5>Sports</h5>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="bi bi-puzzle-fill"></i>
+                </div>
+                <h5>Puzzle</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Import Bootstrap and Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
