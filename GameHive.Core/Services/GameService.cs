@@ -15,58 +15,18 @@ namespace GameHive.Core.Services
 {
     public class GameService : IGameService
     {
+        private readonly IGameRequestRepository _grRepo;
         private readonly IGameRepository _repo;
         private readonly IGameTagRepository _gtrepo;
         private readonly CloudinaryService _cloudinaryService;
 
-        public GameService(IGameRepository repo, IGameTagRepository gtrepo, CloudinaryService cloudinaryService)
+        public GameService(IGameRepository repo, IGameTagRepository gtrepo, CloudinaryService cloudinaryService, IGameRequestRepository grRepo)
         {
             _repo = repo;
             _gtrepo = gtrepo;
             _cloudinaryService = cloudinaryService;
+            _grRepo = grRepo;
         }
-
-        public async Task AddGameAsync(Game game, IFormFile ImageFile, List<int> TagId, List<IFormFile> images, IFormFile gameHeader, string publisherId)
-        {
-            game.PublisherId = publisherId;
-
-            List<string> imageUrls = new List<string>();
-            if (gameHeader != null)
-            {
-                game.GameHeaderUrl = await _cloudinaryService.UploadHeaderAsync(gameHeader);
-            }
-            if (ImageFile != null)
-            {
-                game.GameIconUrl = await _cloudinaryService.UploadImageAsync(ImageFile);
-            }
-
-            if (images.Count > 0)
-            {
-                imageUrls = await _cloudinaryService.MultipleImageUploadAsync(images);
-            }
-
-            await _repo.AddAsync(game);
-            foreach (var tag in TagId)
-            {
-                var gameTag = new GameTag
-                {
-                    GameId = game.GameId,
-                    TagId = tag
-                };
-                await _gtrepo.AddAsync(gameTag);
-            }
-            foreach (var image in imageUrls)
-            {
-                var gameImage = new GameImage
-                {
-                    GameId = game.GameId,
-                    imageURL = image
-                };
-                await _repo.AddGameImagesAsync(gameImage);
-            }
-        }
-
-
         public async Task DeleteGameAsync(int gameId, string publisherId)
         {
             var game = await _repo.GetByIdAsync(gameId);
@@ -84,11 +44,6 @@ namespace GameHive.Core.Services
         public async Task<IEnumerable<Game>> GetAllGamesAsync()
         {
             return await _repo.GetAllAsync();
-        }
-
-        public async Task<List<Game>> GetPendingGamesAsync()
-        {
-            return await _repo.GetPendingGamesAsync();
         }
 
         public async Task<Game> GetGameWithTagsById(int id)
@@ -120,11 +75,6 @@ namespace GameHive.Core.Services
                 var gameTag = new GameTag { GameId = game.GameId, TagId = tag };
                 await _gtrepo.AddAsync(gameTag);
             }
-        }
-
-        public async Task<int> GetRequestCountAsync()
-        {
-            return await _repo.GetRequestCountAsync();
         }
 
         public async Task<List<string>> GetGameImagesAsync(int id)

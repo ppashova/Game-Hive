@@ -22,6 +22,9 @@ namespace GameHive.DataAccess
         public DbSet<PublisherRequest> PublisherRequests { get; set; }
         public DbSet<GameImage> GameImages { get; set; }
         public DbSet<UserRating> UserRatings { get; set; }
+        public DbSet<GameRequest> GameRequests { get; set; }
+        public DbSet<RequestTag> RequestTags { get; set; }
+        public DbSet<RequestImage> RequestImages { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -101,6 +104,30 @@ namespace GameHive.DataAccess
                 .WithMany()
                 .HasForeignKey(g => g.PublisherId)
                 .OnDelete(DeleteBehavior.Restrict); // Prevents cascade error on IdentityUser
+
+            modelBuilder.Entity<GameRequest>()
+                .HasOne(gr => gr.Game)  // GameRequest has one Game
+                .WithOne(g => g.GameRequest)  // Game has one GameRequest
+                .HasForeignKey<GameRequest>(gr => gr.GameId)  // Foreign key in GameRequest
+                 .OnDelete(DeleteBehavior.Cascade);  // Delete GameRequest if Game is deleted
+
+            modelBuilder.Entity<RequestTag>()
+                .HasKey(rt => new { rt.RequestId, rt.TagId });  // Composite key
+
+            modelBuilder.Entity<RequestTag>()
+                .HasOne(rt => rt.GameRequest)
+                .WithMany(gr => gr.Tags)
+                .HasForeignKey(rt => rt.RequestId)
+                .OnDelete(DeleteBehavior.Cascade);  // Delete RequestTag if GameRequest is deleted
+
+            modelBuilder.Entity<RequestTag>()
+                .HasOne(rt => rt.Tag)
+                .WithMany(t => t.RequestTags)
+                .HasForeignKey(rt => rt.TagId)
+                .OnDelete(DeleteBehavior.Cascade);  // Delete RequestTag if Tag is deleted
+
+            modelBuilder.Entity<RequestImage>()
+                .HasKey(ri => new { ri.RequestId, ri.ImageUrl });  // Composite key
         }
 
     }

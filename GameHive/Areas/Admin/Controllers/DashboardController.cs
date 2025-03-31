@@ -18,7 +18,7 @@ namespace GameHive.Areas.Admin.Controllers
         {
             var model = new DashboardViewModel
             {
-                GameUploadRequestsCount = await _gameService.GetRequestCountAsync(),
+                GameUploadRequestsCount = 5,
                 PublisherRequestsCount = 3,
                 OtherRequestsCount = 8,
             };

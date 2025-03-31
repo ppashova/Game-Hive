@@ -35,56 +35,48 @@
                 </form>
             </div>
         </div>
-
-        <!-- Games Grid -->
         <div class="col-md-9">
+            <h2 class="text-2xl font-bold mb-4" style="color:white !important;">Игри</h2>
+
             <div class="row">
                 @foreach (var game in Model.Games)
                 {
-                    if (game.RequestStatus == GameHive.Models.enums.RequestEnums.Approved)
-                    {
-                        <div class="col-md-4 mb-4">
-                            <div class="card game-card">
-                                <a asp-action="Details" asp-route-id="@game.GameId" class="card-link">
-                                    <!-- Game Image (blurs on hover) -->
-                                    <div class="card-header" style="background-image: url('@game.GameIconUrl');"></div>
-                                    <!-- Default content (Visible before hover) -->
-                                    <div class="card-body default-content">
-                                        <h5 class="card-title">@game.Name</h5>
-                                        <p class="rating">
-                                            @{
-                                                // Display 5 stars and fill them based on rating
-                                                for (int i = 1; i <= 5; i++)
+                    <div class="col-md-4 mb-4">
+                        <div class="card game-card">
+                            <a asp-action="Details" asp-route-id="@game.GameId" class="card-link">
+                                <!-- Game Image (blurs on hover) -->
+                                <div class="card-header" style="background-image: url('@game.GameIconUrl');"></div>
+                                <!-- Default content (Visible before hover) -->
+                                <div class="card-body default-content">
+                                    <h5 class="card-title">@game.Name</h5>
+                                    <p class="rating">
+                                        @{
+                                            for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (game.Rating / 4 >= i)
                                                 {
-                                                    if (game.Rating / 4 >= i)
-                                                    {
-                                                        // Full star
-                                                        <span class="star full">&#9733;</span>
-                                                    }
-                                                    else if (game.Rating / 4 >= i - 0.5)
-                                                    {
-                                                        // Half star
-                                                        <span class="star half">&#9733;</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        // Empty star
-                                                        <span class="star empty">&#9734;</span>
-                                                    }
+                                                    <span class="star full">&#9733;</span>
+                                                }
+                                                else if (game.Rating / 4 >= i - 0.5)
+                                                {
+                                                    <span class="star half">&#9733;</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="star empty">&#9734;</span>
                                                 }
                                             }
-                                            <span class="rating-number">(@((double)game.Rating / 4))</span>
-                                        </p>
-                                        <p class="price">@game.Price.ToString("f2") лв.</p>
-                                    </div>
-                                    <!-- Hover content (Hidden until hover) -->
-                                    <div class="hover-content">
-                                        <p class="card-text full-description">@game.BriefDescription</p>
-                                    </div>
-                                </a>
-                            </div>
+                                        }
+                                        <span class="rating-number">(@((double)game.Rating / 4))</span>
+                                    </p>
+                                    <p class="price">@game.Price.ToString("f2") лв.</p>
+                                </div>
+                                <div class="hover-content">
+                                    <p class="card-text full-description">@game.BriefDescription</p>
+                                </div>
+                            </a>
                         </div>
-                    }
+                    </div>
                 }
             </div>
         </div>

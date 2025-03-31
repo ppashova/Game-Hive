@@ -1,4 +1,5 @@
-﻿@model IEnumerable<GameHive.Models.Game>
+﻿@model IEnumerable<GameHive.Models.GameRequest>
+
 <div class="container mt-4">
     <h2 class="text-center">Game Upload Requests</h2>
 
@@ -14,14 +15,20 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var game in Model.Where(g => g.RequestStatus == GameHive.Models.enums.RequestEnums.Pending))
+                @foreach (var gameRequest in Model.Where(g => g.Status == GameHive.Models.enums.RequestEnums.Pending))
                 {
                     <tr>
-                        <td>@game.Name</td>
-                        <td>@game.BriefDescription</td>
-                        <td>@game.RequestTime.ToShortDateString()</td>
+                        <td>@gameRequest.Title</td>
+                        <td>@gameRequest.BriefDescription</td>
+                        <td>@gameRequest.CreatedAt.ToShortDateString()</td>
                         <td>
-                            <a asp-area="Admin" asp-controller="GameRequests" asp-action="Details" asp-route-id="@game.GameId" class="btn btn-primary btn-sm"> Details </a>
+                            <a asp-area="Admin" asp-controller="GameRequests" asp-action="Details" asp-route-id="@gameRequest.Id" class="btn btn-primary btn-sm"> Details </a>
+                            <form method="post" asp-area="Admin" asp-controller="GameRequests" asp-action="ApproveRequest" asp-route-id="@gameRequest.Id" class="d-inline">
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            <form method="post" asp-area="Admin" asp-controller="GameRequests" asp-action="RejectRequest" asp-route-id="@gameRequest.Id" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
                         </td>
                     </tr>
                 }

@@ -26,7 +26,6 @@ namespace GameHive.Models
         public string GameIconUrl { get; set; }
         public string GameHeaderUrl { get; set; }
         public DateTime RequestTime { get; set; } = DateTime.Now;
-        public RequestEnums RequestStatus { get; set; } = RequestEnums.Pending;
         public double Rating { get; set; }
         public int Orders { get; set; }
         public string? PublisherId { get; set; }
@@ -39,5 +38,6 @@ namespace GameHive.Models
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<UserRating> UserRatings { get; set; }
         public IdentityUser Publisher { get; set; }
+        public GameRequest GameRequest { get; set; }
     }
 }

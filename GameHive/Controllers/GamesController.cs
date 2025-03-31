@@ -1,15 +1,12 @@
-﻿using CloudinaryDotNet.Actions;
-using GameHive.Core.IServices;
+﻿using GameHive.Core.IServices;
 using GameHive.Core.Services;
 using GameHive.Models;
 using GameHive.Models.enums;
-using Microsoft.AspNetCore.Identity;
+using GameHive.Models.enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Identity.Client;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Security.Claims;
 
 namespace GameHive.Controllers
@@ -17,20 +14,24 @@ namespace GameHive.Controllers
     public class GamesController : Controller
     {
         private readonly IGameService _gameService;
+        private readonly IGameRequestService _gameRequestService;
         private readonly ITagService _tagService;
-        private readonly IGameTagService _gameTagService;
         private readonly CloudinaryService _cloudinaryService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public GamesController(IGameService gameService, ITagService tagService, IGameTagService gameTagService, CloudinaryService cloudinaryService, UserManager<IdentityUser> userManager)
+        public GamesController(
+            IGameService gameService,
+            IGameRequestService gameRequestService,
+            ITagService tagService,
+            CloudinaryService cloudinaryService,
+            UserManager<IdentityUser> userManager)
         {
             _gameService = gameService;
+            _gameRequestService = gameRequestService;
             _tagService = tagService;
-            _gameTagService = gameTagService;
             _cloudinaryService = cloudinaryService;
             _userManager = userManager;
         }
-
         public async Task<IActionResult> Index(GameFilterViewModel filter)
         {
             var games = await _gameService.GetAllGamesAsync();
@@ -62,64 +63,71 @@ namespace GameHive.Controllers
             };
             return View(model);
         }
+        public async Task<IActionResult> Details(int id)
+        {
+            var game = await _gameService.GetGameByIdAsync(id);
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            var publisher = await _userManager.FindByIdAsync(game.PublisherId);
+            var tags = await _tagService.GetTagsByGameIdAsync(id);
+            var images = await _gameService.GetGameImagesAsync(id);
+
+            var viewModel = new GameDetailsViewModel
+            {
+                Game = game,
+                Tags = tags,
+                Images = images,
+                AverageRating = (double)game.Rating / 2.0,
+                Publisher = publisher
+            };
+
+            return View(viewModel);
+        }
 
         [Authorize(Roles = "Company")]
         public async Task<IActionResult> Add()
         {
-            var model = new GameViewModel { AvailableTags = await _tagService.GetAllAsync() };
+            var model = new GameViewModel
+            {
+                AvailableTags = await _tagService.GetAllAsync()
+            };
             return View(model);
         }
 
         [HttpPost]
         [Authorize(Roles = "Company")]
-        public async Task<IActionResult> Add(GameViewModel model, List<IFormFile> images)
+        public async Task<IActionResult> Add(GameViewModel model, IFormFile iconFile, IFormFile gameHeader, List<IFormFile> images)
         {
             if (!ModelState.IsValid)
             {
+                model.AvailableTags = await _tagService.GetAllAsync();
                 return View(model);
             }
 
-            if (model.IconFile == null)
-            {
-                ModelState.AddModelError("IconFile", "Icon file is required.");
-                return View(model);
-            }
-            if (model.SelectedTagIds == null || !model.SelectedTagIds.Any())
-            {
-                ModelState.AddModelError("SelectedTagIds", "At least one tag must be selected.");
-                return View(model);
-            }
             var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (publisherId == null)
             {
-                TempData["Error"] = "You must be logged in to add a game.";
+                TempData["Error"] = "You must be logged in to submit a game.";
                 return RedirectToAction("Index");
             }
 
-            var game = new Game
+            var gameRequest = new GameRequest
             {
-                Name = model.Name,
-                Price = model.Price >= 0 ? model.Price : throw new ArgumentException("Price must be non-negative"),
+                Title = model.Name,
+                Price = model.Price,
                 BriefDescription = model.BriefDescription,
                 FullDescription = model.FullDescription,
                 PublisherId = publisherId
             };
 
-            await _gameService.AddGameAsync(game, model.IconFile, model.SelectedTagIds, model.GameImages, model.GameHeader, publisherId);
+            await _gameRequestService.AddGameRequestAsync(gameRequest, iconFile, model.SelectedTagIds, images,gameHeader, publisherId);
+            TempData["Success"] = "Your game request has been submitted for approval.";
             return RedirectToAction("Index");
         }
-        public async Task<IActionResult> PublisherGames(string publisherId)
-        {
-            var publisherGames = await _gameService.GetPublisherGamesAsync(publisherId);
-
-            if (publisherGames == null || !publisherGames.Any())
-            {
-                return NotFound("No games found for this publisher.");
-            }
-
-            return View(publisherGames);
-        }
-        [HttpGet]
+        [Authorize(Roles = "Company")]
         public async Task<IActionResult> Edit(int id)
         {
             var game = await _gameService.GetGameByIdAsync(id);
@@ -127,8 +135,9 @@ namespace GameHive.Controllers
             {
                 return NotFound();
             }
+
             var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (game.PublisherId != publisherId && !User.IsInRole("Admin"))
+            if (game.PublisherId != publisherId)
             {
                 TempData["Error"] = "You can only edit your own games.";
                 return RedirectToAction("Index");
@@ -145,112 +154,60 @@ namespace GameHive.Controllers
                 AvailableTags = tags,
                 SelectedTagIds = selectedTags.Select(tag => tag.Id).ToList(),
                 BriefDescription = game.BriefDescription,
-                FullDescription = game.FullDescription,
-                RequestStatus = game.RequestStatus
+                FullDescription = game.FullDescription
             };
             return View(model);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Company")]
         public async Task<IActionResult> Edit(GameViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                model.AvailableTags = await _tagService.GetAllAsync();
+                return View(model);
+            }
+
             var game = await _gameService.GetGameByIdAsync(model.GameId);
             if (game == null)
             {
                 return NotFound();
             }
 
-            // Ensure only the publisher or admin can edit the game
             var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (game.PublisherId != publisherId && !User.IsInRole("Admin"))
+            if (game.PublisherId != publisherId)
             {
-                TempData["Error"] = "You can only edit your own games.";
+                TempData["Error"] = "You can only update your own games.";
                 return RedirectToAction("Index");
             }
 
-            game.Name = model.Name;
-            game.Price = model.Price >= 0 ? model.Price : throw new ArgumentException("Price must be non-negative");
-            game.BriefDescription = model.BriefDescription;
-            game.FullDescription = model.FullDescription;
-
-            await _gameService.UpdateGameAsync(game, model.SelectedTagIds, publisherId);
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var game = await _gameService.GetGameByIdAsync(id);
-            if (game == null)
+            var UpdateRequest = new GameRequest
             {
-                return NotFound();
-            }
-
-            // Ensure only the publisher or admin can delete the game
-            var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (game.PublisherId != publisherId && !User.IsInRole("Admin"))
-            {
-                TempData["Error"] = "You can only delete your own games.";
-                return RedirectToAction("Index");
-            }
-
-            await _gameService.DeleteGameAsync(id, publisherId);
-            return RedirectToAction("Index");
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            var game = await _gameService.GetGameByIdAsync(id);
-            var publisher = await _userManager.FindByIdAsync(game.PublisherId);
-            var Tags = await _tagService.GetTagsByGameIdAsync(id);
-            var ImageUrls = await _gameService.GetGameImagesAsync(id);
-            var viewModel = new GameDetailsViewModel
-            {
-                Game = game,
-                Tags = Tags,
-                Images = ImageUrls,
-                AverageRating = (double)game.Rating / 2.0,
-                Publisher = publisher
+                GameId = model.GameId,
+                Title = model.Name,
+                Price = model.Price,
+                BriefDescription = model.BriefDescription,
+                FullDescription = model.FullDescription,
+                PublisherId = publisherId,
+                Status = RequestEnums.Pending,
+                Tags = model.SelectedTagIds.Select(tagId => new RequestTag { TagId = tagId }).ToList()
             };
+            await _gameRequestService.AddGameRequestAsync(UpdateRequest, model.IconFile, model.SelectedTagIds, model.GameImages, model.GameHeader, publisherId);
 
-            return View(viewModel);
+            TempData["Success"] = "Your update request has been submitted for approval.";
+            return RedirectToAction("Index");
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RateGame(int gameId, int ratingValue)
+        public async Task<IActionResult> PublisherGames(string publisherId)
         {
-            if (!User.Identity.IsAuthenticated)
+            var publisherGames = await _gameService.GetPublisherGamesAsync(publisherId);
+
+            if (publisherGames == null || !publisherGames.Any())
             {
-                TempData["Error"] = "You must be logged in to rate a game.";
-                return RedirectToAction("Details", new { id = gameId });
+                return NotFound("No games found for this publisher.");
             }
 
-            if (ratingValue < 1 || ratingValue > 10)
-            {
-                TempData["Error"] = "Invalid rating. Please choose a valid rating.";
-                return RedirectToAction("Details", new { id = gameId });
-            }
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-            {
-                TempData["Error"] = "An error occurred. Please try again.";
-                return RedirectToAction("Details", new { id = gameId });
-            }
-
-            var success = await _gameService.RateGameAsync(userId, gameId, ratingValue);
-            if (!success)
-            {
-                TempData["Error"] = "Failed to save rating.";
-            }
-            else
-            {
-                TempData["Success"] = "Thank you for your rating!";
-            }
-            await _gameService.UpdateGameAverageRatingAsync(gameId);
-            return RedirectToAction("Details", new { id = gameId });
+            return View(publisherGames);
         }
     }
-
 }

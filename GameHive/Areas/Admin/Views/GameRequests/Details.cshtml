@@ -1,43 +1,41 @@
-﻿@model GameHive.Models.GameDetailsViewModel
+﻿@model GameHive.Areas.Admin.Models.GameRequestDetailsViewModel
 
 <div class="container mt-4">
     <h2 class="mb-4">Преглед на заявка</h2>
 
     <dl class="row">
         <dt class="col-sm-2">Име</dt>
-        <dd class="col-sm-10">@Model.Game.Name</dd>
+        <dd class="col-sm-10">@Model.GameRequest.Title</dd>
 
         <dt class="col-sm-2">Цена</dt>
-        <dd class="col-sm-10">@Model.Game.Price.ToString("0.##")лв.</dd>
+        <dd class="col-sm-10">@Model.GameRequest.Price.ToString("0.##")лв.</dd>
 
         <dt class="col-sm-2">Кратко описание</dt>
-        <dd class="col-sm-10">@Model.Game.BriefDescription</dd>
+        <dd class="col-sm-10">@Model.GameRequest.BriefDescription</dd>
 
         <dt class="col-sm-2">Пълно описание</dt>
-        <dd class="col-sm-10">@Model.Game.FullDescription</dd>
+        <dd class="col-sm-10">@Model.GameRequest.FullDescription</dd>
 
         <dt class="col-sm-2">Икона на играта</dt>
         <dd class="col-sm-10">
-            <img src="@Model.Game.GameIconUrl" class="img-thumbnail" style="width: 100px; height: auto;" alt="Game Icon">
+            <img src="@Model.GameRequest.GameIconUrl" class="img-thumbnail" style="width: 100px; height: auto;" alt="Game Icon">
         </dd>
 
-
-
         <dt class="col-sm-2">Време на заявката</dt>
-        <dd class="col-sm-10">@Model.Game.RequestTime</dd>
+        <dd class="col-sm-10">@Model.GameRequest.CreatedAt.ToShortDateString()</dd>
 
         <dt class="col-sm-2">Статус на заявката</dt>
-        <dd class="col-sm-10">@Model.Game.RequestStatus</dd>
+        <dd class="col-sm-10">@Model.GameRequest.Status</dd>
     </dl>
 
     <!-- Image Gallery -->
-    @if (Model.Images != null && Model.Images.Any())
+    @if (Model.ImageUrls != null && Model.ImageUrls.Any())
     {
         <h4>Изображения</h4>
         <div class="image-gallery d-flex flex-wrap gap-2">
-            @foreach (var image in Model.Images)
+            @foreach (var imageUrl in Model.ImageUrls)
             {
-                <img src="@image" class="img-thumbnail" style="width: 150px; height: auto; cursor: pointer;" alt="Game Image" onclick="showFullSizeImage(this.src)">
+                <img src="@imageUrl" class="img-thumbnail" style="width: 150px; height: auto; cursor: pointer;" alt="Game Image" onclick="showFullSizeImage(this.src)">
             }
         </div>
     }
@@ -79,13 +77,13 @@
     <!-- Action Buttons -->
     <div class="mt-3">
         <form asp-area="Admin" asp-controller="GameRequests" asp-action="ApproveRequest" method="post">
-            <input type="hidden" name="id" value="@Model.Game.GameId" />
+            <input type="hidden" name="id" value="@Model.GameRequest.Id" />
             <button type="submit" class="btn btn-primary">Приеми заявката</button>
         </form>
     </div>
     <div class="mt-3">
         <form asp-area="Admin" asp-controller="GameRequests" asp-action="RejectRequest" method="post">
-            <input type="hidden" name="id" value="@Model.Game.GameId" />
+            <input type="hidden" name="id" value="@Model.GameRequest.Id" />
             <button type="submit" class="btn btn-danger">Откажи заявката</button>
         </form>
     </div>

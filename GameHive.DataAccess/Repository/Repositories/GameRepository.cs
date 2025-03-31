@@ -27,15 +27,6 @@ namespace GameHive.DataAccess.Repository.Repositories
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
         }
-        public async Task<List<Game>> GetPendingGamesAsync()
-        {
-            return await _context.Games
-                .Include(g => g.GameTags)
-                    .ThenInclude(gt => gt.Tag)
-                .Where(g => g.RequestStatus == RequestEnums.Pending)
-                .ToListAsync();
-        }
-
         public async Task DeleteAsync(int id)
         {
             var game = await _context.Games.FindAsync(id);
@@ -65,12 +56,6 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             _context.Games.Update(game);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task<int> GetRequestCountAsync()
-        {
-            var requests = await _context.Games.Where(r => r.RequestStatus == RequestEnums.Pending).ToListAsync();
-            return requests.Count;
         }
         public async Task AddGameImagesAsync(GameImage gameImage)
         {
@@ -128,6 +113,11 @@ namespace GameHive.DataAccess.Repository.Repositories
             return await _context.Games
                 .Where(g => g.PublisherId == publisherId)
                 .ToListAsync();
+        }
+
+        public async Task AddGameImageWithUrl(int GameId, string ImageUrl)
+        {
+            await _context.GameImages.AddAsync(new GameImage { GameId = GameId, imageURL = ImageUrl });
         }
     }
 }

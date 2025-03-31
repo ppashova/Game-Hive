@@ -4,6 +4,7 @@ using GameHive.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250331154125_RequestUpdate")]
+    partial class RequestUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,8 +141,12 @@ namespace GameHive.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GameId")
+                    b.Property<int>("GameId")
                         .HasColumnType("int");
+
+                    b.PrimitiveCollection<string>("ImageUrls")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("money");
@@ -161,8 +168,7 @@ namespace GameHive.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GameId")
-                        .IsUnique()
-                        .HasFilter("[GameId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("PublisherId");
 
@@ -282,7 +288,12 @@ namespace GameHive.DataAccess.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("GameRequestId")
+                        .HasColumnType("int");
+
                     b.HasKey("RequestId", "ImageUrl");
+
+                    b.HasIndex("GameRequestId");
 
                     b.ToTable("RequestImages");
                 });
@@ -597,7 +608,8 @@ namespace GameHive.DataAccess.Migrations
                     b.HasOne("GameHive.Models.Game", "Game")
                         .WithOne("GameRequest")
                         .HasForeignKey("GameHive.Models.GameRequest", "GameId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Publisher")
                         .WithMany()
@@ -661,13 +673,13 @@ namespace GameHive.DataAccess.Migrations
 
             modelBuilder.Entity("GameHive.Models.RequestImage", b =>
                 {
-                    b.HasOne("GameHive.Models.GameRequest", "Request")
+                    b.HasOne("GameHive.Models.GameRequest", "GameRequest")
                         .WithMany("Images")
-                        .HasForeignKey("RequestId")
+                        .HasForeignKey("GameRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Request");
+                    b.Navigation("GameRequest");
                 });
 
             modelBuilder.Entity("GameHive.Models.RequestTag", b =>

@@ -29,12 +29,14 @@ namespace GameHive
             builder.Services.AddScoped<IGameTagRepository, GameTagRepository>();
             builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IGameRequestRepository, GameRequestRepository>();
             builder.Services.AddScoped<IGameService, GameService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IGameTagService, GameTagService>();
             builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
             builder.Services.AddScoped<IPublisherRequestService, PublisherRequestService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IGameRequestService, GameRequestService>();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
