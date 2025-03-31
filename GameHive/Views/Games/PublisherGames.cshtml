@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Game>
+@{
+    ViewData["Title"] = "Игри по Издател";
+}
+<link rel="stylesheet" href="~/css/PublisherGames.css" />
+<div class="container">
+    <h1>Игри по Издател</h1>
+
+    @if (Model != null && Model.Any())
+    {
+        <ul class="games-list">
+            @foreach (var game in Model)
+            {
+                <li class="game-card">
+                    <div class="game-card-header">
+                        <h3>@game.Name</h3>
+                    </div>
+                    <div class="game-card-body">
+                        <div class="default-content">
+                            <p class="game-description">@game.BriefDescription</p>
+                            <div class="game-info">
+                                <div class="price">@game.Price.ToString("C")</div>
+                                <div class="rating">
+                                    <div class="star-rating">
+                                        <div class="star-rating-fill" style="width: @(game.Rating * 20)%"></div>
+                                    </div>
+                                    <span class="rating-value">@(game.Rating / 4)/5</span>
+                                </div>
+                            </div>
+                            <a href="@Url.Action("Details", "Game", new { id = game.GameId })" class="view-details">Преглед на детайлите</a>
+                        </div>
+                        <div class="hover-content">
+                            <p class="full-description">
+                                @game.BriefDescription<br /><br />
+                                Рейтинг: @game.Rating/5<br />
+                                Цена: @game.Price.ToString("C")<br /><br />
+                                <a href="@Url.Action("Details", "Game", new { id = game.GameId })" class="view-details">Преглед на детайлите</a>
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="empty-state">
+            <p>Няма намерени игри за този издател.</p>
+        </div>
+    }
+</div>

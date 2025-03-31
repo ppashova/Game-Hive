@@ -14,10 +14,10 @@ namespace GameHive.Core.IServices
     {
         Task<IEnumerable<Game>> GetAllGamesAsync();
         Task<Game> GetGameByIdAsync(int id);
-        Task AddGameAsync(Game game,IFormFile ImageFile, List<int> tagIds, List<IFormFile> images, IFormFile gameHeader);
-        Task DeleteGameAsync(int id);
+        Task AddGameAsync(Game game,IFormFile ImageFile, List<int> tagIds, List<IFormFile> images, IFormFile gameHeader, string publisherId);
+        Task DeleteGameAsync(int id, string publisherid);
         Task DeleteGameTagAsync(int gameId, int tagId);
-        Task UpdateGameAsync(Game game, List<int> tagIds);
+        Task UpdateGameAsync(Game game, List<int> tagIds, string publisherId);
         Task<Game> GetGameWithTagsById(int id);
         Task<List<Game>> GetPendingGamesAsync();
         Task<int> GetRequestCountAsync();
@@ -25,5 +25,6 @@ namespace GameHive.Core.IServices
         Task<bool> RateGameAsync(string userId, int gameId, double ratingValue);
         Task UpdateGameAverageRatingAsync(int gameId);
         Task ProcessOrderAsync(Order order);
+        Task<List<Game>> GetPublisherGamesAsync(string publisherId);
     }
 }

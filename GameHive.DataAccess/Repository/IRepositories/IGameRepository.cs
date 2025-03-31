@@ -28,5 +28,6 @@ namespace GameHive.DataAccess.Repository.IRepositories
         Task UpdateUserRatingAsync(UserRating rating);
         Task DeleteRatingAsync(UserRating rating);
         Task<List<Game>> GetGamesByIdsAsync(List<int> GameIds);
+        public Task<List<Game>> GetPublisherGamesAsync(string publisherId);
     }
 }

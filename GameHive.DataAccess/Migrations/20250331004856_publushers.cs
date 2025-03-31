@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GameHive.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class remotemv : Migration
+    public partial class publushers : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,28 +48,6 @@ namespace GameHive.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Games",
-                columns: table => new
-                {
-                    GameId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "money", nullable: false),
-                    BriefDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GameIconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GameHeaderUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RequestTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RequestStatus = table.Column<int>(type: "int", nullable: false),
-                    Rating = table.Column<double>(type: "float", nullable: false),
-                    Orders = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Games", x => x.GameId);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,6 +188,35 @@ namespace GameHive.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Games",
+                columns: table => new
+                {
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "money", nullable: false),
+                    BriefDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GameIconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GameHeaderUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RequestTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RequestStatus = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<double>(type: "float", nullable: false),
+                    Orders = table.Column<int>(type: "int", nullable: false),
+                    PublisherId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Games", x => x.GameId);
+                    table.ForeignKey(
+                        name: "FK_Games_AspNetUsers_PublisherId",
+                        column: x => x.PublisherId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PublisherRequests",
                 columns: table => new
                 {
@@ -274,53 +281,26 @@ namespace GameHive.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserGames",
+                name: "GameTags",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    GameId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserGames", x => new { x.GameId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_UserGames_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserGames_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
-                        principalColumn: "GameId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserRatings",
-                columns: table => new
-                {
-                    RatingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: false),
-                    Rating = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TagId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRatings", x => x.RatingId);
+                    table.PrimaryKey("PK_GameTags", x => new { x.GameId, x.TagId });
                     table.ForeignKey(
-                        name: "FK_UserRatings_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserRatings_Games_GameId",
+                        name: "FK_GameTags_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GameTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -350,26 +330,53 @@ namespace GameHive.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameTags",
+                name: "UserGames",
                 columns: table => new
                 {
-                    GameId = table.Column<int>(type: "int", nullable: false),
-                    TagId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameTags", x => new { x.GameId, x.TagId });
+                    table.PrimaryKey("PK_UserGames", x => new { x.GameId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_GameTags_Games_GameId",
+                        name: "FK_UserGames_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserGames_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRatings",
+                columns: table => new
+                {
+                    RatingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRatings", x => x.RatingId);
                     table.ForeignKey(
-                        name: "FK_GameTags_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
+                        name: "FK_UserRatings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserRatings_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -416,6 +423,11 @@ namespace GameHive.DataAccess.Migrations
                 name: "IX_Carts_GameId",
                 table: "Carts",
                 column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_PublisherId",
+                table: "Games",
+                column: "PublisherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameTags_TagId",
@@ -497,10 +509,10 @@ namespace GameHive.DataAccess.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Games");
 
             migrationBuilder.DropTable(
-                name: "Games");
+                name: "AspNetUsers");
         }
     }
 }

@@ -38,14 +38,14 @@
 
         <div class="form-group mb-4">
             <label asp-for="BriefDescription" class="font-weight-bold mb-2 form-label">Кратко описание</label>
-            <textarea asp-for="BriefDescription" class="form-control custom-input" rows="3" placeholder="Въведи кратко описание" oninput="textCounter(this, 'remLen', 160);" required></textarea>
+            <textarea asp-for="BriefDescription" class="form-control custom-input" rows="3" placeholder="Въведи кратко описание" oninput="textCounter(this, 'remLen', 300);" required></textarea>
             <small class="text-muted counter-text">Оставащи знаци: <span id="remLen">300</span></small>
             <span asp-validation-for="BriefDescription" class="text-danger small"></span>
         </div>
 
         <div class="form-group mb-4">
             <label asp-for="FullDescription" class="font-weight-bold mb-2 form-label">Пълно описание</label>
-            <textarea asp-for="FullDescription" class="form-control custom-input" rows="3" placeholder="Въведи пълно описание" oninput="textCounter(this, 'remLen1', 600);" required></textarea>
+            <textarea asp-for="FullDescription" class="form-control custom-input" rows="3" placeholder="Въведи пълно описание" oninput="textCounter(this, 'remLen1', 6000);" required></textarea>
             <small class="text-muted counter-text">Оставащи знаци: <span id="remLen1">6000</span></small>
             <span asp-validation-for="FullDescription" class="text-danger small"></span>
         </div>

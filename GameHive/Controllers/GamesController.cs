@@ -3,6 +3,7 @@ using GameHive.Core.IServices;
 using GameHive.Core.Services;
 using GameHive.Models;
 using GameHive.Models.enums;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,13 +20,15 @@ namespace GameHive.Controllers
         private readonly ITagService _tagService;
         private readonly IGameTagService _gameTagService;
         private readonly CloudinaryService _cloudinaryService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public GamesController(IGameService gameService, ITagService tagService, IGameTagService gameTagService, CloudinaryService cloudinaryService)
+        public GamesController(IGameService gameService, ITagService tagService, IGameTagService gameTagService, CloudinaryService cloudinaryService, UserManager<IdentityUser> userManager)
         {
             _gameService = gameService;
             _tagService = tagService;
             _gameTagService = gameTagService;
             _cloudinaryService = cloudinaryService;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(GameFilterViewModel filter)
@@ -86,6 +89,12 @@ namespace GameHive.Controllers
                 ModelState.AddModelError("SelectedTagIds", "At least one tag must be selected.");
                 return View(model);
             }
+            var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (publisherId == null)
+            {
+                TempData["Error"] = "You must be logged in to add a game.";
+                return RedirectToAction("Index");
+            }
 
             var game = new Game
             {
@@ -93,11 +102,23 @@ namespace GameHive.Controllers
                 Price = model.Price >= 0 ? model.Price : throw new ArgumentException("Price must be non-negative"),
                 BriefDescription = model.BriefDescription,
                 FullDescription = model.FullDescription,
+                PublisherId = publisherId
             };
-            await _gameService.AddGameAsync(game, model.IconFile, model.SelectedTagIds, model.GameImages, model.GameHeader);
+
+            await _gameService.AddGameAsync(game, model.IconFile, model.SelectedTagIds, model.GameImages, model.GameHeader, publisherId);
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> PublisherGames(string publisherId)
+        {
+            var publisherGames = await _gameService.GetPublisherGamesAsync(publisherId);
 
+            if (publisherGames == null || !publisherGames.Any())
+            {
+                return NotFound("No games found for this publisher.");
+            }
+
+            return View(publisherGames);
+        }
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -105,6 +126,12 @@ namespace GameHive.Controllers
             if (game == null)
             {
                 return NotFound();
+            }
+            var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (game.PublisherId != publisherId && !User.IsInRole("Admin"))
+            {
+                TempData["Error"] = "You can only edit your own games.";
+                return RedirectToAction("Index");
             }
 
             var tags = await _tagService.GetAllAsync();
@@ -127,15 +154,18 @@ namespace GameHive.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(GameViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             var game = await _gameService.GetGameByIdAsync(model.GameId);
             if (game == null)
             {
                 return NotFound();
+            }
+
+            // Ensure only the publisher or admin can edit the game
+            var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (game.PublisherId != publisherId && !User.IsInRole("Admin"))
+            {
+                TempData["Error"] = "You can only edit your own games.";
+                return RedirectToAction("Index");
             }
 
             game.Name = model.Name;
@@ -143,20 +173,35 @@ namespace GameHive.Controllers
             game.BriefDescription = model.BriefDescription;
             game.FullDescription = model.FullDescription;
 
-            await _gameService.UpdateGameAsync(game, model.SelectedTagIds);
+            await _gameService.UpdateGameAsync(game, model.SelectedTagIds, publisherId);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await _gameService.DeleteGameAsync(id);
+            var game = await _gameService.GetGameByIdAsync(id);
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure only the publisher or admin can delete the game
+            var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (game.PublisherId != publisherId && !User.IsInRole("Admin"))
+            {
+                TempData["Error"] = "You can only delete your own games.";
+                return RedirectToAction("Index");
+            }
+
+            await _gameService.DeleteGameAsync(id, publisherId);
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Details(int id)
         {
             var game = await _gameService.GetGameByIdAsync(id);
+            var publisher = await _userManager.FindByIdAsync(game.PublisherId);
             var Tags = await _tagService.GetTagsByGameIdAsync(id);
             var ImageUrls = await _gameService.GetGameImagesAsync(id);
             var viewModel = new GameDetailsViewModel
@@ -164,11 +209,13 @@ namespace GameHive.Controllers
                 Game = game,
                 Tags = Tags,
                 Images = ImageUrls,
-                AverageRating = (double)game.Rating / 2.0
+                AverageRating = (double)game.Rating / 2.0,
+                Publisher = publisher
             };
 
             return View(viewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RateGame(int gameId, int ratingValue)
@@ -192,8 +239,6 @@ namespace GameHive.Controllers
                 return RedirectToAction("Details", new { id = gameId });
             }
 
-
-
             var success = await _gameService.RateGameAsync(userId, gameId, ratingValue);
             if (!success)
             {
@@ -207,4 +252,5 @@ namespace GameHive.Controllers
             return RedirectToAction("Details", new { id = gameId });
         }
     }
+
 }

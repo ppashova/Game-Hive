@@ -82,6 +82,9 @@ namespace GameHive.DataAccess.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("money");
 
+                    b.Property<string>("PublisherId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<double>("Rating")
                         .HasColumnType("float");
 
@@ -92,6 +95,8 @@ namespace GameHive.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("GameId");
+
+                    b.HasIndex("PublisherId");
 
                     b.ToTable("Games");
                 });
@@ -483,6 +488,16 @@ namespace GameHive.DataAccess.Migrations
                     b.Navigation("Game");
                 });
 
+            modelBuilder.Entity("GameHive.Models.Game", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Publisher")
+                        .WithMany()
+                        .HasForeignKey("PublisherId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Publisher");
+                });
+
             modelBuilder.Entity("GameHive.Models.GameImage", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
@@ -554,7 +569,7 @@ namespace GameHive.DataAccess.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Game");
@@ -573,7 +588,7 @@ namespace GameHive.DataAccess.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Game");

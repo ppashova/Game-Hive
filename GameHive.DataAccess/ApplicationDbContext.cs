@@ -27,60 +27,81 @@ namespace GameHive.DataAccess
         {
             base.OnModelCreating(modelBuilder);
 
+            // Composite Key for GameTag
             modelBuilder.Entity<GameTag>()
                 .HasKey(gt => new { gt.GameId, gt.TagId });
 
             modelBuilder.Entity<GameTag>()
                 .HasOne(gt => gt.Game)
                 .WithMany(g => g.GameTags)
-                .HasForeignKey(gt => gt.GameId);
+                .HasForeignKey(gt => gt.GameId)
+                .OnDelete(DeleteBehavior.Cascade); // Ensures tags get removed if game is deleted
 
             modelBuilder.Entity<GameTag>()
                 .HasOne(gt => gt.Tag)
                 .WithMany(t => t.GameTags)
-                .HasForeignKey(gt => gt.TagId);
+                .HasForeignKey(gt => gt.TagId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Composite Key for UserGame
+            modelBuilder.Entity<UserGame>()
+                .HasKey(ug => new { ug.GameId, ug.UserId });
 
             modelBuilder.Entity<UserGame>()
-               .HasKey(gt => new { gt.GameId, gt.UserId });
-
-            modelBuilder.Entity<UserGame>()
-                .HasOne(gt => gt.Game)
+                .HasOne(ug => ug.Game)
                 .WithMany(g => g.UserGames)
-                .HasForeignKey(gt => gt.GameId);
+                .HasForeignKey(ug => ug.GameId)
+                .OnDelete(DeleteBehavior.Cascade); // Ensures UserGame records are removed if game is deleted
 
             modelBuilder.Entity<UserGame>()
-             .HasOne(ug => ug.Game)
-             .WithMany(g => g.UserGames)
-             .HasForeignKey(ug => ug.GameId);
+                .HasOne(ug => ug.User)
+                .WithMany()
+                .HasForeignKey(ug => ug.UserId)
+                .OnDelete(DeleteBehavior.Restrict); // Avoids cascade issues with IdentityUser
 
+            // Composite Key for OrderDetail
             modelBuilder.Entity<OrderDetail>()
                 .HasKey(od => new { od.GameId, od.OrderId });
 
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(od => od.Game)
                 .WithMany(g => g.OrderDetails)
-                .HasForeignKey(od => od.GameId);
+                .HasForeignKey(od => od.GameId)
+                .OnDelete(DeleteBehavior.Cascade); // Ensures OrderDetails are removed if game is deleted
 
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(od => od.Order)
                 .WithMany(o => o.OrderDetails)
-                .HasForeignKey(od => od.OrderId);
+                .HasForeignKey(od => od.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Composite Key for GameImage
             modelBuilder.Entity<GameImage>()
-                .HasKey(g => new { g.GameId, g.imageURL });
+                .HasKey(gi => new { gi.GameId, gi.imageURL }); // Fixed property name casing
+
+            // User Ratings Setup
             modelBuilder.Entity<UserRating>()
-            .HasKey(ur => ur.RatingId);
+                .HasKey(ur => ur.RatingId);
 
             modelBuilder.Entity<UserRating>()
                 .HasOne(ur => ur.User)
                 .WithMany()
                 .HasForeignKey(ur => ur.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict); // Prevents issues with IdentityUser
 
             modelBuilder.Entity<UserRating>()
                 .HasOne(ur => ur.Game)
                 .WithMany(g => g.UserRatings)
                 .HasForeignKey(ur => ur.GameId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade); // Ensures ratings are deleted when game is deleted
+
+            // 🔥 Fix for Publisher Cascade Delete Issue
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.Publisher)
+                .WithMany()
+                .HasForeignKey(g => g.PublisherId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevents cascade error on IdentityUser
         }
+
     }
 }

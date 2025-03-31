@@ -1,4 +1,6 @@
-﻿namespace GameHive.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace GameHive.Models
 {
     public class GameDetailsViewModel
     {
@@ -8,5 +10,6 @@
         public List<string> Images { get; set; }
         public double AverageRating { get; set; }
         public double? UserRating { get; set; }
+        public IdentityUser Publisher { get; set; }
     }
 }

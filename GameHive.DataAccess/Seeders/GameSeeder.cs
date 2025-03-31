@@ -14,6 +14,7 @@ namespace GameHive.DataAccess.Seeders
         {
             if(!context.Games.Any())
             {
+                var publisherId = context.Users.FirstOrDefault(p => p.Email == "company@example.com")?.Id;
                 context.Games.AddRange(new List<Game>
                 {
                     new Game {
@@ -24,7 +25,8 @@ namespace GameHive.DataAccess.Seeders
                         GameIconUrl = "https://cdn2.steamgriddb.com/icon/bc573864331a9e42e4511de6f678aa83/24/256x256.png",
                         GameHeaderUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1426300/header.jpg?t=1732645274",
                         RequestStatus = GameHive.Models.enums.RequestEnums.Approved,
-                        Rating = 0.0
+                        Rating = 0.0,
+                        PublisherId = publisherId
                     },
 
                     new Game { 
@@ -35,7 +37,8 @@ namespace GameHive.DataAccess.Seeders
                         GameIconUrl = "https://cdn2.steamgriddb.com/icon/851300ee84c2b80ed40f51ed26d866fc/32/256x256.png",
                         GameHeaderUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1145360/header.jpg?t=1715722799",
                         RequestStatus = GameHive.Models.enums.RequestEnums.Approved,
-                        Rating = 0.0
+                        Rating = 0.0,
+                        PublisherId = publisherId
                     },
                     new Game {
                         Name = "Resident Evil 8: Village",
@@ -45,7 +48,8 @@ namespace GameHive.DataAccess.Seeders
                         GameIconUrl = "https://assets-prd.ignimgs.com/2021/01/22/re-village-button-fin-1611277715193.jpg?width=300&crop=1%3A1%2Csmart&auto=webp&dpr=2",
                         GameHeaderUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1196590/header.jpg?t=1741142800",
                         RequestStatus = GameHive.Models.enums.RequestEnums.Approved,
-                        Rating = 0.0
+                        Rating = 0.0,
+                        PublisherId = publisherId
                     },
                     new Game{
                         Name = "Red Dead Redemption 2",
@@ -55,7 +59,8 @@ namespace GameHive.DataAccess.Seeders
                         GameIconUrl = "https://cdn2.steamgriddb.com/icon_thumb/2e65f2f2fdaf6c699b223c61b1b5ab89.png",                     
                         GameHeaderUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1174180/header.jpg?t=1720558643",
                         RequestStatus = GameHive.Models.enums.RequestEnums.Approved,
-                        Rating = 0.0
+                        Rating = 0.0,
+                        PublisherId = publisherId
                     },
                     new Game
                     {
@@ -66,7 +71,8 @@ namespace GameHive.DataAccess.Seeders
                         GameIconUrl = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/9a6ae0c8-60bc-4cdb-93d4-d81bba9240ed/dfkzvpf-8a472c23-48b9-4ad9-99fc-cc3c6272b3a2.png",
                         GameHeaderUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/header.jpg?t=1734434803",
                         RequestStatus = GameHive.Models.enums.RequestEnums.Approved,
-                        Rating = 0.0
+                        Rating = 0.0,
+                        PublisherId = publisherId
                     },
                     new Game
                     {
@@ -77,7 +83,8 @@ namespace GameHive.DataAccess.Seeders
                         GameIconUrl = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/c78bc3fc-9f08-47ca-81ae-d89055c7ec49/d8p7j8m-978d944f-b106-413d-9e7b-18fc7875b47c.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2M3OGJjM2ZjLTlmMDgtNDdjYS04MWFlLWQ4OTA1NWM3ZWM0OVwvZDhwN2o4bS05NzhkOTQ0Zi1iMTA2LTQxM2QtOWU3Yi0xOGZjNzg3NWI0N2MucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.YKJZ24xa3NeCKchv4M8bc3mMBqCjJtto3TRQl57XeJY",
                         GameHeaderUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/292030/header.jpg?t=1736424367",
                         RequestStatus = GameHive.Models.enums.RequestEnums.Approved,
-                        Rating = 0.0
+                        Rating = 0.0,
+                        PublisherId = publisherId
                     },
                     new Game
                     {
@@ -88,7 +95,8 @@ namespace GameHive.DataAccess.Seeders
                         GameIconUrl = "https://static.vecteezy.com/system/resources/previews/027/127/540/non_2x/grand-theft-auto-gta-v-logo-grand-theft-auto-gta-v-icon-transparent-free-png.png",
                         GameHeaderUrl = "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3240220/header.jpg?t=1741381848",
                         RequestStatus = GameHive.Models.enums.RequestEnums.Approved,
-                        Rating = 0.0
+                        Rating = 0.0,
+                        PublisherId = publisherId
                     }
                 });
                 context.SaveChanges();

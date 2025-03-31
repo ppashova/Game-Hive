@@ -18,6 +18,7 @@ namespace GameHive.Core.Services
         private readonly IGameRepository _repo;
         private readonly IGameTagRepository _gtrepo;
         private readonly CloudinaryService _cloudinaryService;
+
         public GameService(IGameRepository repo, IGameTagRepository gtrepo, CloudinaryService cloudinaryService)
         {
             _repo = repo;
@@ -25,10 +26,12 @@ namespace GameHive.Core.Services
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task AddGameAsync(Game game,IFormFile ImageFile, List<int> TagId, List<IFormFile> images, IFormFile gameHeader)
+        public async Task AddGameAsync(Game game, IFormFile ImageFile, List<int> TagId, List<IFormFile> images, IFormFile gameHeader, string publisherId)
         {
+            game.PublisherId = publisherId;
+
             List<string> imageUrls = new List<string>();
-            if(gameHeader != null)
+            if (gameHeader != null)
             {
                 game.GameHeaderUrl = await _cloudinaryService.UploadHeaderAsync(gameHeader);
             }
@@ -36,8 +39,8 @@ namespace GameHive.Core.Services
             {
                 game.GameIconUrl = await _cloudinaryService.UploadImageAsync(ImageFile);
             }
-            
-            if(images.Count > 0)
+
+            if (images.Count > 0)
             {
                 imageUrls = await _cloudinaryService.MultipleImageUploadAsync(images);
             }
@@ -61,16 +64,19 @@ namespace GameHive.Core.Services
                 };
                 await _repo.AddGameImagesAsync(gameImage);
             }
-            
-            
         }
 
-        public async Task DeleteGameAsync(int id)
+
+        public async Task DeleteGameAsync(int gameId, string publisherId)
         {
-            await _repo.DeleteAsync(id);
+            var game = await _repo.GetByIdAsync(gameId);
+            if (game == null || game.PublisherId != publisherId)
+                throw new UnauthorizedAccessException("You are not authorized to delete this game.");
+
+            await _repo.DeleteAsync(gameId);
         }
 
-        public async Task DeleteGameTagAsync(int gameId,int tagId)
+        public async Task DeleteGameTagAsync(int gameId, int tagId)
         {
             await _gtrepo.DeleteAsync(gameId, tagId);
         }
@@ -79,6 +85,7 @@ namespace GameHive.Core.Services
         {
             return await _repo.GetAllAsync();
         }
+
         public async Task<List<Game>> GetPendingGamesAsync()
         {
             return await _repo.GetPendingGamesAsync();
@@ -94,17 +101,23 @@ namespace GameHive.Core.Services
             return await _repo.GetByIdAsync(id);
         }
 
-        public async Task UpdateGameAsync(Game game, List<int> Tags)
+        public async Task<List<Game>> GetPublisherGamesAsync(string publisherId)
         {
+            return await _repo.GetPublisherGamesAsync(publisherId);
+        }
+
+        public async Task UpdateGameAsync(Game game, List<int> Tags, string publisherId)
+        {
+            var existingGame = await _repo.GetByIdAsync(game.GameId);
+            if (existingGame == null || existingGame.PublisherId != publisherId)
+                throw new UnauthorizedAccessException("You are not authorized to edit this game.");
+
             await _repo.UpdateAsync(game);
             await _gtrepo.DeleteByGameIdAsync(game.GameId);
+
             foreach (var tag in Tags)
             {
-                var gameTag = new GameTag
-                {
-                    GameId = game.GameId,
-                    TagId = tag
-                };
+                var gameTag = new GameTag { GameId = game.GameId, TagId = tag };
                 await _gtrepo.AddAsync(gameTag);
             }
         }
@@ -113,10 +126,12 @@ namespace GameHive.Core.Services
         {
             return await _repo.GetRequestCountAsync();
         }
+
         public async Task<List<string>> GetGameImagesAsync(int id)
         {
             return await _repo.GetGameImagesAsync(id);
         }
+
         public async Task<bool> RateGameAsync(string userId, int gameId, double ratingValue)
         {
             var game = await _repo.GetByIdAsync(gameId);
@@ -158,7 +173,7 @@ namespace GameHive.Core.Services
                 return;
 
             double ratingsum = ratings.Sum(r => (int)r.Rating);
-            double averageRating = ratingsum / ratings.Count; 
+            double averageRating = ratingsum / ratings.Count;
             await _repo.UpdateGameAverageRatingAsync(Math.Round(averageRating), gameId);
         }
 

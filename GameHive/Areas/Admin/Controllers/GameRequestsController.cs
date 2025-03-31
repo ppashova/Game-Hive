@@ -43,7 +43,7 @@ namespace GameHive.Areas.Admin.Controllers
             var tags = await _tagService.GetTagsByGameIdAsync(id);
             var selectedTagsIds = tags.Select(t => t.Id).ToList();
 
-            await _gameService.UpdateGameAsync(game, selectedTagsIds);
+            await _gameService.UpdateGameAsync(game, selectedTagsIds, game.PublisherId);
 
             return RedirectToAction(nameof(Index));
         }
@@ -51,7 +51,8 @@ namespace GameHive.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> RejectRequest(int id)
         {
-            await _gameService.DeleteGameAsync(id);
+            var game = await _gameService.GetGameByIdAsync(id);
+            await _gameService.DeleteGameAsync(id, game.PublisherId);
 
             return RedirectToAction(nameof(Index));
         }

@@ -29,24 +29,24 @@
                                 <div class="carousel-indicators">
                                     @for (int i = 0; i < Model.Images.Count; i++)
                                     {
-                                        <button type="button" data-bs-target="#gameImagesCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i+1)"></button>
+                                        <button type="button" data-bs-target="#gameImagesCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
                                     }
                                 </div>
                                 <div class="carousel-inner">
                                     @for (int i = 0; i < Model.Images.Count; i++)
                                     {
                                         <div class="carousel-item @(i == 0 ? "active" : "")">
-                                            <img src="@Model.Images[i]" class="d-block w-100 carousel-image" alt="Game Image @(i+1)">
+                                            <img src="@Model.Images[i]" class="d-block w-100 carousel-image" alt="Game Image @(i + 1)">
                                         </div>
                                     }
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#gameImagesCarousel" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
+                                    <span class="visually-hidden">Предишен</span>
                                 </button>
                                 <button class="carousel-control-next" type="button" data-bs-target="#gameImagesCarousel" data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
+                                    <span class="visually-hidden">Следващ</span>
                                 </button>
                             </div>
                         }
@@ -133,34 +133,34 @@
                         <!-- Star Rating Selection -->
                         <fieldset class="rate">
                             <input type="radio" id="rating10" name="ratingValue" value="10" @(Model.UserRating == 10 ? "checked" : "") />
-                            <label for="rating10" title="5 stars"></label>
+                            <label for="rating10" title="5 звезди"></label>
 
                             <input type="radio" id="rating9" name="ratingValue" value="9" @(Model.UserRating == 9 ? "checked" : "") />
-                            <label class="half" for="rating9" title="4 1/2 stars"></label>
+                            <label class="half" for="rating9" title="4 1/2 звезди"></label>
 
                             <input type="radio" id="rating8" name="ratingValue" value="8" @(Model.UserRating == 8 ? "checked" : "") />
-                            <label for="rating8" title="4 stars"></label>
+                            <label for="rating8" title="4 звезди"></label>
 
                             <input type="radio" id="rating7" name="ratingValue" value="7" @(Model.UserRating == 7 ? "checked" : "") />
-                            <label class="half" for="rating7" title="3 1/2 stars"></label>
+                            <label class="half" for="rating7" title="3 1/2 звезди"></label>
 
                             <input type="radio" id="rating6" name="ratingValue" value="6" @(Model.UserRating == 6 ? "checked" : "") />
-                            <label for="rating6" title="3 stars"></label>
+                            <label for="rating6" title="3 звезди"></label>
 
                             <input type="radio" id="rating5" name="ratingValue" value="5" @(Model.UserRating == 5 ? "checked" : "") />
-                            <label class="half" for="rating5" title="2 1/2 stars"></label>
+                            <label class="half" for="rating5" title="2 1/2 звезди"></label>
 
                             <input type="radio" id="rating4" name="ratingValue" value="4" @(Model.UserRating == 4 ? "checked" : "") />
-                            <label for="rating4" title="2 stars"></label>
+                            <label for="rating4" title="2 звезди"></label>
 
                             <input type="radio" id="rating3" name="ratingValue" value="3" @(Model.UserRating == 3 ? "checked" : "") />
-                            <label class="half" for="rating3" title="1 1/2 stars"></label>
+                            <label class="half" for="rating3" title="1 1/2 звезди"></label>
 
                             <input type="radio" id="rating2" name="ratingValue" value="2" @(Model.UserRating == 2 ? "checked" : "") />
-                            <label for="rating2" title="1 star"></label>
+                            <label for="rating2" title="1 звезда"></label>
 
                             <input type="radio" id="rating1" name="ratingValue" value="1" @(Model.UserRating == 1 ? "checked" : "") />
-                            <label class="half" for="rating1" title="1/2 star"></label>
+                            <label class="half" for="rating1" title="1/2 звезда"></label>
                         </fieldset>
                     </form>
 
@@ -196,6 +196,13 @@
                     }
                 </div>
             </div>
+            <div class="publisher-info mt-3">
+                <span class="publisher-label">Издател:</span>
+                <a href="@Url.Action("PublisherGames", "Games", new { publisherId = Model.Publisher.Id })" class="publisher-name">
+                    @Model.Publisher.UserName
+                </a>
+            </div>
+
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

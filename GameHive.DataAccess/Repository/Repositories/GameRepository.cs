@@ -123,5 +123,11 @@ namespace GameHive.DataAccess.Repository.Repositories
             _context.UserRatings.Update(rating);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<Game>> GetPublisherGamesAsync(string publisherId)
+        {
+            return await _context.Games
+                .Where(g => g.PublisherId == publisherId)
+                .ToListAsync();
+        }
     }
 }

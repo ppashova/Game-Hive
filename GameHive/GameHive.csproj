@@ -37,4 +37,11 @@
     <ProjectReference Include="..\GameHive.Utilities\GameHive.Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Company\Controllers\" />
+    <Folder Include="Areas\Company\Data\" />
+    <Folder Include="Areas\Company\Models\" />
+    <Folder Include="Areas\Company\Views\" />
+  </ItemGroup>
+
 </Project>

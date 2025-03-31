@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using GameHive.Models.enums;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Identity.Client;
 
 namespace GameHive.Models
@@ -28,6 +29,7 @@ namespace GameHive.Models
         public RequestEnums RequestStatus { get; set; } = RequestEnums.Pending;
         public double Rating { get; set; }
         public int Orders { get; set; }
+        public string? PublisherId { get; set; }
         [NotMapped]
         public IFormFile? GameHeader { get; set; }
         [NotMapped]
@@ -36,5 +38,6 @@ namespace GameHive.Models
         public ICollection<GameTag> GameTags { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
         public ICollection<UserRating> UserRatings { get; set; }
+        public IdentityUser Publisher { get; set; }
     }
 }
