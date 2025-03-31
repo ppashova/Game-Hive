@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250331161130_RequestUpdate4")]
-    partial class RequestUpdate4
+    [Migration("20250331213552_Remotemv")]
+    partial class Remotemv
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -285,12 +285,7 @@ namespace GameHive.DataAccess.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("GameRequestId")
-                        .HasColumnType("int");
-
                     b.HasKey("RequestId", "ImageUrl");
-
-                    b.HasIndex("GameRequestId");
 
                     b.ToTable("RequestImages");
                 });
@@ -669,13 +664,13 @@ namespace GameHive.DataAccess.Migrations
 
             modelBuilder.Entity("GameHive.Models.RequestImage", b =>
                 {
-                    b.HasOne("GameHive.Models.GameRequest", "GameRequest")
+                    b.HasOne("GameHive.Models.GameRequest", "Request")
                         .WithMany("Images")
-                        .HasForeignKey("GameRequestId")
+                        .HasForeignKey("RequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("GameRequest");
+                    b.Navigation("Request");
                 });
 
             modelBuilder.Entity("GameHive.Models.RequestTag", b =>

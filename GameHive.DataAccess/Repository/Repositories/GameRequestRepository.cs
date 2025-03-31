@@ -25,6 +25,12 @@ namespace GameHive.DataAccess.Repository.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddRequestImagesAsync(int reqId, string imgurl)
+        {
+            await _context.AddAsync(new RequestImage { RequestId = reqId, ImageUrl = imgurl });
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<GameRequest> GetByIdAsync(int requestId)
         {
             return await _context.GameRequests
@@ -75,6 +81,11 @@ namespace GameHive.DataAccess.Repository.Repositories
         public async Task<List<RequestImage>> GetRequestImagesByIdAsync(int id)
         {
             return await _context.RequestImages.Where(rq => rq.RequestId == id).ToListAsync();
+        }
+
+        public async Task<List<GameRequest>> GetPublisherRequestsById(string PublisherId)
+        {
+            return await _context.GameRequests.Where(rq => rq.PublisherId == PublisherId).ToListAsync();
         }
     }
 

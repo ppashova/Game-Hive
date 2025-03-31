@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Company\Data\**" />
+    <Content Remove="Areas\Company\Data\**" />
+    <EmbeddedResource Remove="Areas\Company\Data\**" />
+    <None Remove="Areas\Company\Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CloudinaryDotNet" Version="1.27.4" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.12" />
@@ -35,13 +42,6 @@
     <ProjectReference Include="..\GameHive.DataAccess\GameHive.DataAccess.csproj" />
     <ProjectReference Include="..\GameHive.Models\GameHive.Models.csproj" />
     <ProjectReference Include="..\GameHive.Utilities\GameHive.Utilities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Company\Controllers\" />
-    <Folder Include="Areas\Company\Data\" />
-    <Folder Include="Areas\Company\Models\" />
-    <Folder Include="Areas\Company\Views\" />
   </ItemGroup>
 
 </Project>

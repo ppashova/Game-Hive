@@ -15,6 +15,7 @@ namespace GameHive.Core.IServices
         Task<bool> ApproveGameRequestAsync(int requestId);
         Task RejectGameRequestAsync(int requestId);
         Task<GameRequest> GetGameRequestByIdAsync(int id);
+        Task<List<GameRequest>> GetPublisherRequestsById(string PublisherId);
     }
 
 }

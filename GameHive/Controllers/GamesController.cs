@@ -99,7 +99,7 @@ namespace GameHive.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Company")]
-        public async Task<IActionResult> Add(GameViewModel model, IFormFile iconFile, IFormFile gameHeader, List<IFormFile> images)
+        public async Task<IActionResult> Add(GameViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -123,7 +123,14 @@ namespace GameHive.Controllers
                 PublisherId = publisherId
             };
 
-            await _gameRequestService.AddGameRequestAsync(gameRequest, iconFile, model.SelectedTagIds, images,gameHeader, publisherId);
+            await _gameRequestService.AddGameRequestAsync(
+                gameRequest,
+                model.IconFile,
+                model.SelectedTagIds,
+                model.GameImages,
+                model.GameHeader,
+                publisherId);
+
             TempData["Success"] = "Your game request has been submitted for approval.";
             return RedirectToAction("Index");
         }

@@ -19,6 +19,7 @@ namespace GameHive.Core.Services
     {
         private readonly Cloudinary _cloudinary;
         private readonly IGameRepository _gameRepository;
+        private readonly IGameRequestRepository _gameRequestRepository;
 
         public CloudinaryService(IOptions<CloudinarySettings> config)
         {
@@ -82,6 +83,19 @@ namespace GameHive.Core.Services
             return true;
         }
 
+        public async Task<bool> AddRequestImagesAsync(int requestid, List<IFormFile> images)
+        {
+            var imageUrls = await MultipleImageUploadAsync(images);
+            if (imageUrls.Count == 0) return false;
+            var requestImages = imageUrls.Select(url => new RequestImage
+            {
+                RequestId = requestid,
+                ImageUrl = url
+            });
+            foreach (var image in requestImages)
+                await _gameRequestRepository.AddGameRequestImagesAsync(image);
+            return true;
+        }
         public async Task<string> UploadHeaderAsync(IFormFile header)
         {
             if (header == null || header.Length == 0) return null;

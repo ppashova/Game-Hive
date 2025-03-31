@@ -1,4 +1,5 @@
-﻿using GameHive.Core.IServices;
+﻿using CloudinaryDotNet;
+using GameHive.Core.IServices;
 using GameHive.DataAccess.Repository.IRepositories;
 using GameHive.Models;
 using GameHive.Models.enums;
@@ -50,12 +51,10 @@ namespace GameHive.Core.Services
                 gameRequest.GameIconUrl = await _cloudinaryService.UploadImageAsync(imageFile);
             }
 
-            // Upload multiple images if any exist
-            if (images.Count > 0)
+            if(images.Count > 0)
             {
-                imageUrls = await _cloudinaryService.MultipleImageUploadAsync(images);
+                 imageUrls = await _cloudinaryService.MultipleImageUploadAsync(images);
             }
-
             // Add the request to the database
             await _requestRepo.AddRequestAsync(gameRequest);
 
@@ -69,16 +68,9 @@ namespace GameHive.Core.Services
                 };
                 await _requestRepo.AddGameRequestTagsAsync(gameRequestTag);
             }
-
-            // Associate images with the game request
-            foreach (var image in imageUrls)
+            foreach(var url in imageUrls)
             {
-                var gameRequestImage = new RequestImage
-                {
-                    RequestId = gameRequest.Id,
-                    ImageUrl = image
-                };
-                await _requestRepo.AddGameRequestImagesAsync(gameRequestImage); // Ensure you have the right repository method for this
+                await _requestRepo.AddRequestImagesAsync(gameRequest.Id, url);
             }
         }
 
@@ -132,6 +124,11 @@ namespace GameHive.Core.Services
         public async Task<GameRequest> GetGameRequestByIdAsync(int id)
         {
             return await _requestRepo.GetByIdAsync(id);
+        }
+
+        public async Task<List<GameRequest>> GetPublisherRequestsById(string PublisherId)
+        {
+            return await _requestRepo.GetPublisherRequestsById(PublisherId);
         }
     }
 
