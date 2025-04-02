@@ -23,5 +23,6 @@ namespace GameHive.Core.IServices
         Task UpdateGameAverageRatingAsync(int gameId);
         Task ProcessOrderAsync(Order order);
         Task<List<Game>> GetPublisherGamesAsync(string publisherId);
+        Task DeleteGameImageByUrlAsync(string imageUrl);
     }
 }

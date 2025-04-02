@@ -143,5 +143,9 @@ namespace GameHive.Core.Services
                 await _repo.UpdateAsync(game);
             }
         }
+        public async Task DeleteGameImageByUrlAsync(string imageUrl)
+        {
+            await _repo.DeleteByUrlAsync(imageUrl);
+        }
     }
 }

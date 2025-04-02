@@ -1,72 +1,213 @@
-﻿@model GameHive.Models.GameViewModel
-<h2>Редактирай</h2>
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="GameId" />
-    <div class="form-group">
-        <label asp-for="Name">Име на играта</label>
-        <input asp-for="Name" class="form-control" required />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Price">Цена</label>
-        <input asp-for="Price" class="form-control" type="number" step="0.01" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>Етикети</label>
-        <select asp-for="SelectedTagIds" asp-items="@(new SelectList(Model.AvailableTags, "Id", "Name", Model.SelectedTagIds))" multiple="multiple" class="form-control"></select>
-        <span asp-validation-for="SelectedTagIds" class="text-danger"></span>
-    </div>
+﻿@model GameHive.Models.Game_View_Models.GameEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Game";
+}
+<link rel="stylesheet" href="~/css/GameEdit.css"/>
+<div class="container">
+    <h2>Edit Game</h2>
+    <h4>Submit changes for approval</h4>
+    <hr />
+
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="GameId" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" type="number" step="0.01 />q
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="BriefDescription" class="control-label"></label>
+                    <textarea asp-for="BriefDescription" class="form-control" rows="3"
+                              oninput="textCounter(this, 'briefDescCounter', 300);"></textarea>
+                    <small class="text-muted">Remaining characters: <span id="briefDescCounter">300</span></small>
+                    <span asp-validation-for="BriefDescription" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="FullDescription" class="control-label"></label>
+                    <textarea asp-for="FullDescription" class="form-control" rows="6"
+                              oninput="textCounter(this, 'fullDescCounter', 6000);"></textarea>
+                    <small class="text-muted">Remaining characters: <span id="fullDescCounter">6000</span></small>
+                    <span asp-validation-for="FullDescription" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedTagIds" class="control-label">Tags</label>
+                    <div class="tag-search-container">
+                        <input type="text" id="tagSearch" class="tag-search" placeholder="Search tags...">
+                    </div>
+                    <div class="tags-container">
+                        @foreach (var tag in Model.AvailableTags)
+                        {
+                            <div class="tag-item">
+                                <input type="checkbox" id="tag-@tag.Id" name="SelectedTagIds" value="@tag.Id"
+                                       class="tag-radio" @(Model.SelectedTagIds != null && Model.SelectedTagIds.Contains(tag.Id) ? "checked" : "")>
+                                <label for="tag-@tag.Id" class="tag-label">
+                                    <span class="tag-name">@tag.Name</span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <span asp-validation-for="SelectedTagIds" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Game Icon -->
+                <div class="form-group">
+                    <label asp-for="IconFile" class="control-label"></label>
+                    @if (!string.IsNullOrEmpty(Model.ExistingIconUrl))
+                    {
+                        <div class="mb-2">
+                            <img src="@Model.ExistingIconUrl" alt="Game Icon" class="img-thumbnail" style="max-width: 150px;" />
+                            <p>Current icon (will be replaced if you upload a new one)</p>
+                        </div>
+                    }
+                    <input asp-for="IconFile" type="file" class="form-control" />
+                    <span asp-validation-for="IconFile" class="text-danger"></span>
+                </div>
+
+                <!-- Game Header -->
+                <div class="form-group">
+                    <label asp-for="GameHeader" class="control-label"></label>
+                    @if (!string.IsNullOrEmpty(Model.ExistingHeaderUrl))
+                    {
+                        <div class="mb-2">
+                            <img src="@Model.ExistingHeaderUrl" alt="Game Header" class="img-thumbnail" style="max-width: 250px;" />
+                            <p>Current header (will be replaced if you upload a new one)</p>
+                        </div>
+                    }
+                    <input asp-for="GameHeader" type="file" class="form-control" />
+                    <span asp-validation-for="GameHeader" class="text-danger"></span>
+                </div>
+
+                <!-- Game Images -->
+                <div class="form-group">
+                    <label asp-for="GameImages" class="control-label"></label>
+                    <input asp-for="GameImages" type="file" multiple class="form-control" />
+                    <span asp-validation-for="GameImages" class="text-danger"></span>
+                    <small class="form-text text-muted">You can select multiple files to upload new images.</small>
+                </div>
+
+                <!-- Existing Images -->
+                @if (Model.ExistingImageUrls != null && Model.ExistingImageUrls.Any())
+                {
+                    <div class="form-group">
+                        <label class="control-label">Existing Game Images</label>
+                        <div class="row">
+                            @for (int i = 0; i < Model.ExistingImageUrls.Count; i++)
+                            {
+                                var url = Model.ExistingImageUrls[i];
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <img src="@url" class="card-img-top" alt="Game Image">
+                                        <div class="card-body">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" name="ImagesToKeep" value="@url" id="image-@i" checked>
+                                                <label class="form-check-label" for="image-@i">Keep this image</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <small class="form-text text-muted">Uncheck images you want to remove.</small>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group mt-4">
+            <input type="submit" value="Submit for Approval" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    // Add this to your Scripts section
     <script>
-        function textCounter(textArea, counterId, maxLength) {
-            let counter = document.getElementById(counterId);
-            if (textArea.value.length > maxLength) {
-                textArea.value = textArea.value.substring(0, maxLength);
+        $(document).ready(function() {
+            // Character counters for description fields
+            textCounter(document.getElementById('BriefDescription'), 'briefDescCounter', 300);
+            textCounter(document.getElementById('FullDescription'), 'fullDescCounter', 6000);
+
+            // Tag search functionality
+            $("#tagSearch").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $(".tag-item").filter(function() {
+                    var text = $(this).find(".tag-name").text().toLowerCase();
+                    var matches = text.indexOf(value) > -1;
+                    $(this).toggle(matches);
+                });
+            });
+
+            // Show selected tags at the top
+            function sortTags() {
+                var container = $(".tags-container");
+                var items = container.find(".tag-item").get();
+
+                items.sort(function(a, b) {
+                    var aChecked = $(a).find("input").prop("checked");
+                    var bChecked = $(b).find("input").prop("checked");
+
+                    if (aChecked && !bChecked) return -1;
+                    if (!aChecked && bChecked) return 1;
+
+                    // If both are checked or both are unchecked, sort alphabetically
+                    var aText = $(a).find(".tag-name").text().toLowerCase();
+                    var bText = $(b).find(".tag-name").text().toLowerCase();
+                    return aText.localeCompare(bText);
+                });
+
+                $.each(items, function(i, item) {
+                    container.append(item);
+                });
             }
-            counter.textContent = maxLength - textArea.value.length;
+
+            // Sort tags initially
+            sortTags();
+
+            // Re-sort when a tag is selected
+            $(".tag-radio").on("change", function() {
+                sortTags();
+            });
+        });
+
+        // Character counter function
+        function textCounter(field, counterField, maxLimit) {
+            if (field) {
+                document.getElementById(counterField).textContent = maxLimit - field.value.length;
+                field.addEventListener('input', function() {
+                    var remaining = maxLimit - field.value.length;
+                    document.getElementById(counterField).textContent = remaining;
+
+                    // Adding visual feedback
+                    if (remaining < 10) {
+                        document.getElementById(counterField).style.color = '#ff8a8a';
+                    } else if (remaining < 30) {
+                        document.getElementById(counterField).style.color = '#ffd280';
+                    } else {
+                        document.getElementById(counterField).style.color = '#9bc6f0';
+                    }
+                });
+            }
         }
     </script>
-    <div class="form-group">
-        <label>Кратко описание</label>
-        <textarea asp-for="BriefDescription" class="form-control form-control-lg" rows="3"
-                  oninput="textCounter(this,'remLen',160);"></textarea>
-        <small class="text-muted">Оставащи знаци: <span id="remLen">300</span></small>
-        <span asp-validation-for="BriefDescription" class="text-danger small"></span>
-    </div>
-    <div class="form-group mb-4">
-        <label asp-for="FullDescription" class="font-weight-bold mb-2">Пълно описание</label>
-        <textarea asp-for="FullDescription" class="form-control form-control-lg" rows="3"
-                  oninput="textCounter(this, 'remLen1', 600);"></textarea>
-        <small class="text-muted">Оставащи знаци: <span id="remLen1">6000</span></small>
-        <span asp-validation-for="FullDescription" class="text-danger small"></span>
-    </div>
-    <button type="submit" asp-action="Edit" asp-controller="Games" class="btn btn-primary">Запази</button>
-    <a asp-action="Index" class="btn btn-secondary">Отказ</a>
-</form>
-<style>
-    .form-control-lg {
-        font-size: 1.1rem;
-        padding: 1rem;
-    }
-
-    .btn-lg {
-        font-size: 1.1rem;
-        padding: 0.75rem 1.5rem;
-    }
-
-    .card {
-        border-radius: 10px;
-    }
-
-    .shadow-sm {
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-    }
-
-    .form-check-label {
-        font-size: 1rem;
-    }
-
-    .text-danger.small {
-        font-size: 0.875rem;
-    }
-</style>
+}

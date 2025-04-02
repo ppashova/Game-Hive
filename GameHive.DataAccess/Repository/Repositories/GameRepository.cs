@@ -119,5 +119,16 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             await _context.GameImages.AddAsync(new GameImage { GameId = GameId, imageURL = ImageUrl });
         }
+        public async Task DeleteByUrlAsync(string imageUrl)
+        {
+            var image = await _context.GameImages
+                .FirstOrDefaultAsync(gi => gi.imageURL == imageUrl);
+
+            if (image != null)
+            {
+                _context.GameImages.Remove(image);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

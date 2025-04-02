@@ -3,6 +3,7 @@ using GameHive.Core.Services;
 using GameHive.Models;
 using GameHive.Models.enums;
 using GameHive.Models.enums;
+using GameHive.Models.Game_View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -120,7 +121,8 @@ namespace GameHive.Controllers
                 Price = model.Price,
                 BriefDescription = model.BriefDescription,
                 FullDescription = model.FullDescription,
-                PublisherId = publisherId
+                PublisherId = publisherId,
+                RequestType = RequestTypeEnums.Add
             };
 
             await _gameRequestService.AddGameRequestAsync(
@@ -134,6 +136,7 @@ namespace GameHive.Controllers
             TempData["Success"] = "Your game request has been submitted for approval.";
             return RedirectToAction("Index");
         }
+        [HttpGet]
         [Authorize(Roles = "Company")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -152,8 +155,9 @@ namespace GameHive.Controllers
 
             var tags = await _tagService.GetAllAsync();
             var selectedTags = await _tagService.GetTagsByGameIdAsync(id);
+            var imageUrls = await _gameService.GetGameImagesAsync(id);
 
-            var model = new GameViewModel
+            var model = new GameEditViewModel
             {
                 GameId = game.GameId,
                 Name = game.Name,
@@ -161,18 +165,26 @@ namespace GameHive.Controllers
                 AvailableTags = tags,
                 SelectedTagIds = selectedTags.Select(tag => tag.Id).ToList(),
                 BriefDescription = game.BriefDescription,
-                FullDescription = game.FullDescription
+                FullDescription = game.FullDescription,
+                ExistingImageUrls = imageUrls.ToList(),
+                ExistingIconUrl = game.GameIconUrl,
+                ExistingHeaderUrl = game.GameHeaderUrl,
+                ImagesToKeep = imageUrls.ToList()
             };
             return View(model);
         }
 
         [HttpPost]
         [Authorize(Roles = "Company")]
-        public async Task<IActionResult> Edit(GameViewModel model)
+        public async Task<IActionResult> Edit(GameEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 model.AvailableTags = await _tagService.GetAllAsync();
+                if (model.GameId > 0)
+                {
+                    model.ExistingImageUrls = await _gameService.GetGameImagesAsync(model.GameId);
+                }
                 return View(model);
             }
 
@@ -189,7 +201,19 @@ namespace GameHive.Controllers
                 return RedirectToAction("Index");
             }
 
-            var UpdateRequest = new GameRequest
+            // First, handle image deletion - we're deleting images before creating the update request
+            var existingImageUrls = await _gameService.GetGameImagesAsync(model.GameId);
+            var imagesToDelete = existingImageUrls
+                .Where(url => !model.ImagesToKeep.Contains(url))
+                .ToList();
+
+            foreach (var imageUrlToDelete in imagesToDelete)
+            {
+                await _gameService.DeleteGameImageByUrlAsync(imageUrlToDelete);
+            }
+
+            // Then create update request using your existing service
+            var updateRequest = new GameRequest
             {
                 GameId = model.GameId,
                 Title = model.Name,
@@ -198,9 +222,16 @@ namespace GameHive.Controllers
                 FullDescription = model.FullDescription,
                 PublisherId = publisherId,
                 Status = RequestEnums.Pending,
-                Tags = model.SelectedTagIds.Select(tagId => new RequestTag { TagId = tagId }).ToList()
+                RequestType = RequestTypeEnums.Edit
             };
-            await _gameRequestService.AddGameRequestAsync(UpdateRequest, model.IconFile, model.SelectedTagIds, model.GameImages, model.GameHeader, publisherId);
+
+            await _gameRequestService.AddGameRequestAsync(
+                updateRequest,
+                model.IconFile,
+                model.SelectedTagIds,
+                model.GameImages,
+                model.GameHeader,
+                publisherId);
 
             TempData["Success"] = "Your update request has been submitted for approval.";
             return RedirectToAction("Index");

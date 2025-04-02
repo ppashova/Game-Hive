@@ -28,5 +28,6 @@ namespace GameHive.DataAccess.Repository.IRepositories
         Task<List<Game>> GetGamesByIdsAsync(List<int> GameIds);
         public Task<List<Game>> GetPublisherGamesAsync(string publisherId);
         public Task AddGameImageWithUrl(int GameId, string imageUrls);
+        Task DeleteByUrlAsync(string imageUrl);
     }
 }
