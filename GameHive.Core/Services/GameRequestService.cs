@@ -33,19 +33,14 @@ namespace GameHive.Core.Services
 
         public async Task AddGameRequestAsync(GameRequest gameRequest, IFormFile imageFile, List<int> tagIds, List<IFormFile> images, IFormFile gameHeader, string publisherId)
         {
-            // Set the publisher ID for the request
             gameRequest.PublisherId = publisherId;
 
-            // Initialize an empty list for image URLs
             List<string> imageUrls = new List<string>();
 
-            // Upload the game header if it exists
             if (gameHeader != null)
             {
                 gameRequest.GameHeaderUrl = await _cloudinaryService.UploadHeaderAsync(gameHeader);
             }
-
-            // Upload the image file for the game icon if it exists
             if (imageFile != null)
             {
                 gameRequest.GameIconUrl = await _cloudinaryService.UploadImageAsync(imageFile);
@@ -84,26 +79,66 @@ namespace GameHive.Core.Services
             var gameRequest = await _requestRepo.GetByIdAsync(requestId);
             if (gameRequest == null) return false;
 
-            var game = new Game
-            {
-                Name = gameRequest.Title,
-                BriefDescription = gameRequest.BriefDescription,
-                FullDescription = gameRequest.FullDescription,
-                Price = gameRequest.Price,
-                GameIconUrl = gameRequest.GameIconUrl,
-                GameHeaderUrl = gameRequest.GameHeaderUrl,
-                PublisherId = gameRequest.PublisherId
-            };
+           if(gameRequest.RequestType == RequestTypeEnums.Add)
+           {
+                var game = new Game
+                {
+                    Name = gameRequest.Title,
+                    BriefDescription = gameRequest.BriefDescription,
+                    FullDescription = gameRequest.FullDescription,
+                    Price = gameRequest.Price,
+                    GameIconUrl = gameRequest.GameIconUrl,
+                    GameHeaderUrl = gameRequest.GameHeaderUrl,
+                    PublisherId = gameRequest.PublisherId
+                };
+                await _gameRepo.AddAsync(game);
+                foreach (var requestTag in gameRequest.Tags)
+                {
+                    await _gtrepo.AddAsync(new GameTag { GameId = game.GameId, TagId = requestTag.TagId });
+                }
+                foreach (var ImageUrl in gameRequest.Images)
+                {
+                    await _gameRepo.AddGameImageWithUrl(game.GameId, ImageUrl.ImageUrl);
+                }
+           }
 
-            await _gameRepo.AddAsync(game);
-            foreach (var requestTag in gameRequest.Tags)
-            {
-                await _gtrepo.AddAsync(new GameTag { GameId = game.GameId, TagId = requestTag.TagId });
-            }
-            foreach(var ImageUrl in gameRequest.Images)
-            {
-                await _gameRepo.AddGameImageWithUrl(game.GameId, ImageUrl.ImageUrl);
-            }
+           else if(gameRequest.RequestType == RequestTypeEnums.Edit && gameRequest.GameId.HasValue)
+           {
+                var game = await _gameRepo.GetByIdAsync(gameRequest.GameId.Value);
+                if (game == null) return false;
+                var imageUrls = await _requestRepo.GetRequestImagesAsync(requestId);
+
+                game.Name = gameRequest.Title;
+                game.BriefDescription = gameRequest.BriefDescription;
+                game.FullDescription = gameRequest.FullDescription;
+                game.Price = gameRequest.Price;
+
+                if (!string.IsNullOrEmpty(gameRequest.GameIconUrl))
+                {
+                    game.GameIconUrl = gameRequest.GameIconUrl;
+                }
+
+                if (!string.IsNullOrEmpty(gameRequest.GameHeaderUrl))
+                {
+                    game.GameHeaderUrl = gameRequest.GameHeaderUrl;
+                }
+
+                await _gameRepo.UpdateAsync(game);
+
+                await _gtrepo.DeleteByGameIdAsync(game.GameId);
+                foreach (var requestTag in gameRequest.Tags)
+                {
+                    await _gtrepo.AddAsync(new GameTag { GameId = game.GameId, TagId = requestTag.TagId });
+                }
+
+
+                await _gameRepo.DeleteAllGameImagesAsync(game.GameId);
+                foreach (var imageUrl in imageUrls)
+                {
+                    await _gameRepo.AddGameImageWithUrl(game.GameId, imageUrl);
+
+                }
+           }
             gameRequest.Status = RequestEnums.Approved;
             await _requestRepo.UpdateRequestAsync(gameRequest);
 
@@ -129,6 +164,11 @@ namespace GameHive.Core.Services
         public async Task<List<GameRequest>> GetPublisherRequestsById(string PublisherId)
         {
             return await _requestRepo.GetPublisherRequestsById(PublisherId);
+        }
+
+        public async Task AddExistingImageToRequestAsync(int requestId, string imageUrl)
+        {
+            await _requestRepo.AddRequestImagesAsync(requestId, imageUrl);
         }
     }
 

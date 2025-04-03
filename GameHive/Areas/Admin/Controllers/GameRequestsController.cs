@@ -17,19 +17,28 @@ namespace GameHive.Areas.Admin.Controllers
     {
         private readonly IGameRequestService _gameRequestService;
         private readonly ITagService _tagService;
+        private readonly IGameService _gameService;
 
-        public GameRequestsController(IGameRequestService gameRequestService, ITagService tagService)
+        public GameRequestsController(IGameRequestService gameRequestService, ITagService tagService, IGameService gameService)
         {
             _gameRequestService = gameRequestService;
             _tagService = tagService;
+            _gameService = gameService;
         }
 
 
         // GET: Admin/GameRequests
         public async Task<IActionResult> Index()
         {
-            IEnumerable<GameRequest> pendingRequests = await _gameRequestService.GetPendingRequestsAsync();
-            return View(pendingRequests);
+            var pendingRequests = await _gameRequestService.GetPendingRequestsAsync();
+            var games = await _gameService.GetAllGamesAsync();
+
+            var model = new GameIndexViewModel
+                        {
+                            GameRequests = pendingRequests,
+                            Games = games
+                        };
+            return View(model);
         }
 
         [HttpPost]
@@ -73,6 +82,13 @@ namespace GameHive.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+        
+        public async Task<IActionResult> Delete(int gameId)
+        {
+            var game = await _gameService.GetGameByIdAsync(gameId);
+            await _gameService.DeleteGameAsync(gameId, game.PublisherId);
+            return RedirectToAction("Index");
+        }
 
     }
 }

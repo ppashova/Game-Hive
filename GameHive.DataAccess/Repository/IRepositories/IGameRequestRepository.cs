@@ -19,5 +19,6 @@ namespace GameHive.DataAccess.Repository.IRepositories
         Task AddGameRequestTagsAsync(RequestTag requestTag);
         Task AddRequestImagesAsync(int reqId, string imgurl);
         Task<List<GameRequest>> GetPublisherRequestsById(string PublisherId);
+        Task<List<string>> GetRequestImagesAsync(int requestId);
     }
 }

@@ -49,7 +49,8 @@ namespace GameHive.DataAccess.Repository.Repositories
 
         public async Task<Game> GetByIdAsync(int id)
         {
-            return await _context.Games.FindAsync(id);
+            return await _context.Games
+                .FirstOrDefaultAsync(g => g.GameId == id);
         }
 
         public async Task UpdateAsync(Game game)
@@ -119,6 +120,7 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             await _context.GameImages.AddAsync(new GameImage { GameId = GameId, imageURL = ImageUrl });
         }
+
         public async Task DeleteByUrlAsync(string imageUrl)
         {
             var image = await _context.GameImages
@@ -129,6 +131,13 @@ namespace GameHive.DataAccess.Repository.Repositories
                 _context.GameImages.Remove(image);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task DeleteAllGameImagesAsync(int gameId)
+        {
+            var Images = await _context.GameImages.Where(gi => gi.GameId == gameId).ToListAsync();
+            _context.GameImages.RemoveRange(Images);
+            await _context.SaveChangesAsync();
         }
     }
 }

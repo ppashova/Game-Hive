@@ -4,6 +4,7 @@ using GameHive.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250403061455_requpdate")]
+    partial class requpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,7 +161,9 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId");
+                    b.HasIndex("GameId")
+                        .IsUnique()
+                        .HasFilter("[GameId] IS NOT NULL");
 
                     b.HasIndex("PublisherId");
 
@@ -591,8 +596,8 @@ namespace GameHive.DataAccess.Migrations
             modelBuilder.Entity("GameHive.Models.GameRequest", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
-                        .WithMany("GameRequest")
-                        .HasForeignKey("GameId")
+                        .WithOne("GameRequest")
+                        .HasForeignKey("GameHive.Models.GameRequest", "GameId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Publisher")
@@ -776,7 +781,8 @@ namespace GameHive.DataAccess.Migrations
 
             modelBuilder.Entity("GameHive.Models.Game", b =>
                 {
-                    b.Navigation("GameRequest");
+                    b.Navigation("GameRequest")
+                        .IsRequired();
 
                     b.Navigation("GameTags");
 

@@ -76,6 +76,7 @@
                         </div>
                     }
                     <input asp-for="IconFile" type="file" class="form-control" />
+                    <input type="hidden" name="ExistingIconUrl" value="@Model.ExistingIconUrl">
                     <span asp-validation-for="IconFile" class="text-danger"></span>
                 </div>
 
@@ -90,6 +91,7 @@
                         </div>
                     }
                     <input asp-for="GameHeader" type="file" class="form-control" />
+                    <input type="hidden" name="ExistingHeaderUrl" value="@Model.ExistingIconUrl">
                     <span asp-validation-for="GameHeader" class="text-danger"></span>
                 </div>
 

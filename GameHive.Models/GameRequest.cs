@@ -25,9 +25,9 @@ namespace GameHive.Models
         public string FullDescription { get; set; }
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
-        public string GameIconUrl { get; set; }
-        public string GameHeaderUrl { get; set; }
+        public string? GameIconUrl { get; set; }
+        public string? GameHeaderUrl { get; set; }
         public ICollection<RequestTag> Tags { get; set; }
-        public ICollection<RequestImage> Images { get; set; }
+        public ICollection<RequestImage>? Images { get; set; }
     }
 }

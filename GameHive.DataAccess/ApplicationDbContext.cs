@@ -107,9 +107,12 @@ namespace GameHive.DataAccess
 
             modelBuilder.Entity<GameRequest>()
                 .HasOne(gr => gr.Game)  // GameRequest has one Game
-                .WithOne(g => g.GameRequest)  // Game has one GameRequest
-                .HasForeignKey<GameRequest>(gr => gr.GameId)  // Foreign key in GameRequest
-                 .OnDelete(DeleteBehavior.Cascade);  // Delete GameRequest if Game is deleted
+                .WithMany(g => g.GameRequest); // Game has one GameRequest
+            modelBuilder.Entity<GameRequest>()
+                .HasOne(gr => gr.Game)  // GameRequest has one Game
+                .WithMany(g => g.GameRequest)  // Game has one GameRequest
+                .HasForeignKey(gr => gr.GameId)  // Foreign key in GameRequest
+                .OnDelete(DeleteBehavior.Cascade);  // Delete GameRequest if Game is deleted
 
             modelBuilder.Entity<RequestTag>()
                 .HasKey(rt => new { rt.RequestId, rt.TagId });  // Composite key

@@ -26,25 +26,24 @@ namespace GameHive.Models.Game_View_Models
         public string FullDescription { get; set; }
 
         [Display(Name = "Game Icon")]
-        public IFormFile IconFile { get; set; }
+        public IFormFile? IconFile { get; set; }
 
         [Display(Name = "Game Header")]
-        public IFormFile GameHeader { get; set; }
+        public IFormFile? GameHeader { get; set; }
 
         [Display(Name = "Game Images")]
-        public List<IFormFile> GameImages { get; set; } = new List<IFormFile>();
+        public List<IFormFile>? GameImages { get; set; } = new List<IFormFile>();
 
         [Display(Name = "Tags")]
         public List<int> SelectedTagIds { get; set; } = new List<int>();
 
         public IEnumerable<Tag> AvailableTags { get; set; } = new List<Tag>();
 
-        // Properties for existing content - using strings for image URLs
         public List<string> ExistingImageUrls { get; set; } = new List<string>();
         public string ExistingIconUrl { get; set; }
         public string ExistingHeaderUrl { get; set; }
 
-        // URLs of images to keep during edit
+
         public List<string> ImagesToKeep { get; set; } = new List<string>();
     }
 }

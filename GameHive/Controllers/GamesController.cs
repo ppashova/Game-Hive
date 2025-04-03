@@ -102,12 +102,6 @@ namespace GameHive.Controllers
         [Authorize(Roles = "Company")]
         public async Task<IActionResult> Add(GameViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                model.AvailableTags = await _tagService.GetAllAsync();
-                return View(model);
-            }
-
             var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (publisherId == null)
             {
@@ -201,41 +195,47 @@ namespace GameHive.Controllers
                 return RedirectToAction("Index");
             }
 
-            // First, handle image deletion - we're deleting images before creating the update request
-            var existingImageUrls = await _gameService.GetGameImagesAsync(model.GameId);
-            var imagesToDelete = existingImageUrls
-                .Where(url => !model.ImagesToKeep.Contains(url))
-                .ToList();
-
-            foreach (var imageUrlToDelete in imagesToDelete)
-            {
-                await _gameService.DeleteGameImageByUrlAsync(imageUrlToDelete);
-            }
-
-            // Then create update request using your existing service
             var updateRequest = new GameRequest
             {
                 GameId = model.GameId,
+                PublisherId = publisherId,
+                RequestType = RequestTypeEnums.Edit,
+                Status = RequestEnums.Pending,
                 Title = model.Name,
                 Price = model.Price,
                 BriefDescription = model.BriefDescription,
                 FullDescription = model.FullDescription,
-                PublisherId = publisherId,
-                Status = RequestEnums.Pending,
-                RequestType = RequestTypeEnums.Edit
             };
 
-            await _gameRequestService.AddGameRequestAsync(
-                updateRequest,
-                model.IconFile,
-                model.SelectedTagIds,
-                model.GameImages,
-                model.GameHeader,
-                publisherId);
+            await _gameRequestService.AddGameRequestAsync(updateRequest,model.IconFile,model.SelectedTagIds,model.GameImages ?? new List<IFormFile>(),model.GameHeader,publisherId);
+            if (model.IconFile != null)
+            {
+                updateRequest.GameIconUrl = await _cloudinaryService.UploadImageAsync(model.IconFile);
+            }
 
-            TempData["Success"] = "Your update request has been submitted for approval.";
+            if (model.GameHeader != null)
+            {
+                updateRequest.GameHeaderUrl = await _cloudinaryService.UploadHeaderAsync(model.GameHeader);
+            }
+
+            // Handle new images
+            if (model.GameImages != null && model.GameImages.Count > 0)
+            {
+                var newImageUrls = await _cloudinaryService.MultipleImageUploadAsync(model.GameImages);
+                foreach (var url in newImageUrls)
+                {
+                    await _gameRequestService.AddExistingImageToRequestAsync(game.GameId, url);
+                }
+            }
+
+
+            // Update the game with selected tags
+            await _gameService.UpdateGameAsync(game, model.SelectedTagIds, publisherId);
+
+            TempData["Success"] = "Game updated successfully.";
             return RedirectToAction("Index");
         }
+
         public async Task<IActionResult> PublisherGames(string publisherId)
         {
             var publisherGames = await _gameService.GetPublisherGamesAsync(publisherId);

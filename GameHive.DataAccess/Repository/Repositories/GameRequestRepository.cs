@@ -87,6 +87,11 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             return await _context.GameRequests.Where(rq => rq.PublisherId == PublisherId).ToListAsync();
         }
+
+        public async Task<List<string>> GetRequestImagesAsync(int requestId)
+        {
+            return await _context.RequestImages.Where(ri => ri.RequestId == requestId).Select(ri => ri.ImageUrl).ToListAsync();
+        }
     }
 
 }
