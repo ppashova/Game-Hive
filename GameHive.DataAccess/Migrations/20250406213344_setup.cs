@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GameHive.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Update : Migration
+    public partial class setup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -294,8 +294,8 @@ namespace GameHive.DataAccess.Migrations
                     BriefDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FullDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "money", nullable: false),
-                    GameIconUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GameHeaderUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    GameIconUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GameHeaderUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -503,9 +503,7 @@ namespace GameHive.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_GameRequests_GameId",
                 table: "GameRequests",
-                column: "GameId",
-                unique: true,
-                filter: "[GameId] IS NOT NULL");
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameRequests_PublisherId",

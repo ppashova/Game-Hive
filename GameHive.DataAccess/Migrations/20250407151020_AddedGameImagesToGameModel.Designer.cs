@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250403061455_requpdate")]
-    partial class requpdate
+    [Migration("20250407151020_AddedGameImagesToGameModel")]
+    partial class AddedGameImagesToGameModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,9 +161,7 @@ namespace GameHive.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId")
-                        .IsUnique()
-                        .HasFilter("[GameId] IS NOT NULL");
+                    b.HasIndex("GameId");
 
                     b.HasIndex("PublisherId");
 
@@ -585,7 +583,7 @@ namespace GameHive.DataAccess.Migrations
             modelBuilder.Entity("GameHive.Models.GameImage", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("GameImages")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -596,8 +594,8 @@ namespace GameHive.DataAccess.Migrations
             modelBuilder.Entity("GameHive.Models.GameRequest", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
-                        .WithOne("GameRequest")
-                        .HasForeignKey("GameHive.Models.GameRequest", "GameId")
+                        .WithMany("GameRequest")
+                        .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Publisher")
@@ -781,8 +779,9 @@ namespace GameHive.DataAccess.Migrations
 
             modelBuilder.Entity("GameHive.Models.Game", b =>
                 {
-                    b.Navigation("GameRequest")
-                        .IsRequired();
+                    b.Navigation("GameImages");
+
+                    b.Navigation("GameRequest");
 
                     b.Navigation("GameTags");
 

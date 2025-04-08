@@ -39,5 +39,6 @@ namespace GameHive.Models
         public ICollection<UserRating> UserRatings { get; set; }
         public IdentityUser Publisher { get; set; }
         public ICollection<GameRequest> GameRequest { get; set; }
+        public ICollection<GameImage> GameImages { get; set; }
     }
 }

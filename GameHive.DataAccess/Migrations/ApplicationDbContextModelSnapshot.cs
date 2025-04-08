@@ -580,7 +580,7 @@ namespace GameHive.DataAccess.Migrations
             modelBuilder.Entity("GameHive.Models.GameImage", b =>
                 {
                     b.HasOne("GameHive.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("GameImages")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -776,6 +776,8 @@ namespace GameHive.DataAccess.Migrations
 
             modelBuilder.Entity("GameHive.Models.Game", b =>
                 {
+                    b.Navigation("GameImages");
+
                     b.Navigation("GameRequest");
 
                     b.Navigation("GameTags");

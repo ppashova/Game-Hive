@@ -218,7 +218,11 @@ namespace GameHive.Controllers
                 updateRequest.GameHeaderUrl = await _cloudinaryService.UploadHeaderAsync(model.GameHeader);
             }
 
-            // Handle new images
+            if(model.ImagesToKeep != null)
+            {
+                foreach (var url in model.ImagesToKeep)
+                    await _gameRequestService.AddExistingImageToRequestAsync(game.GameId, url);
+            }
             if (model.GameImages != null && model.GameImages.Count > 0)
             {
                 var newImageUrls = await _cloudinaryService.MultipleImageUploadAsync(model.GameImages);
@@ -246,6 +250,43 @@ namespace GameHive.Controllers
             }
 
             return View(publisherGames);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RateGame(int gameId, int ratingValue)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                TempData["Error"] = "You must be logged in to rate a game.";
+                return RedirectToAction("Details", new { id = gameId });
+            }
+
+            if (ratingValue < 1 || ratingValue > 10)
+            {
+                TempData["Error"] = "Invalid rating. Please choose a valid rating.";
+                return RedirectToAction("Details", new { id = gameId });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                TempData["Error"] = "An error occurred. Please try again.";
+                return RedirectToAction("Details", new { id = gameId });
+            }
+
+
+
+            var success = await _gameService.RateGameAsync(userId, gameId, ratingValue);
+            if (!success)
+            {
+                TempData["Error"] = "Failed to save rating.";
+            }
+            else
+            {
+                TempData["Success"] = "Thank you for your rating!";
+            }
+            await _gameService.UpdateGameAverageRatingAsync(gameId);
+            return RedirectToAction("Details", new { id = gameId });
         }
     }
 }

@@ -125,3 +125,23 @@ body {
     text-align: center;
     color: #f8f9fa;
 }
+.gamehive-logo {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+    .gamehive-logo:hover {
+        transform: scale(1.05);
+    }
+
+.game-text {
+    color: #2c66a0; /* your blue accent */
+}
+
+.hive-text {
+    color: #e6c200; /* soft gold */
+}

@@ -19,6 +19,7 @@ html {
 
 body {
     background-color: #214c78 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* This ensures content has proper text color */
