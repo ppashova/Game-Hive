@@ -220,33 +220,32 @@ namespace GameHive.Areas.Company.Controllers
                 <head>
                     <meta charset='UTF-8'>
                     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <title>Order Approved</title>
+                    <title>Поръчката е одобрена</title>
                     <style>{styles}</style>
                 </head>
                 <body>
                     <div class='email-container'>
                         <div class='header'>
-                            <img src='https://placeholder.com/150x50' alt='GameHive Logo' class='logo'>
-                            <h1>🎮 Your Game Order is Approved! 🎮</h1>
+                            <img src='https://placeholder.com/150x50' alt='Лого на GameHive' class='logo'>
+                            <h1>🎮 Поръчката ти за игра е одобрена! 🎮</h1>
                         </div>
-                        
+        
                         <div class='content'>
-                            <p>Hello Gamer,</p>
-                            
+                            <p>Здравей!</p>
+            
                             <p class='message'>
-                                Great news! Your order <span class='order-id'>#{orderId}</span> for 
-                                <span class='game-title'>{gameTitle}</span> has been approved by the publisher!
+                                Страхотна новина! Поръчката ти с номер <span class='order-id'>#{orderId}</span> за 
+                                <span class='game-title'>{gameTitle}</span> беше одобрена от издателя!
                             </p>
-                            
-                            <p>Your digital adventure awaits - a publisher or a staff member will be in contact with you soon for further details regarding delivery.</p>
-                            
-                            
-                            <p>If you encounter any issues, our support team is ready to help!</p>
+            
+                            <p>Твоето дигитално приключение те очаква – издател или член на екипа ни скоро ще се свърже с теб за допълнителни детайли относно доставката.</p>
+            
+                            <p>Ако срещнеш някакви проблеми, нашият екип за поддръжка е винаги насреща!</p>
                         </div>
-                        
+        
                         <div class='footer'>
-                            <p>Thank you for choosing GameHive for your gaming needs!</p>
-                            <p>&copy; 2025 GameHive. All rights reserved.</p>
+                            <p>Благодарим ти, че избра GameHive за твоите гейминг нужди!</p>
+                            <p>&copy; 2025 GameHive. Всички права запазени.</p>
                         </div>
                     </div>
                 </body>
@@ -255,54 +254,48 @@ namespace GameHive.Areas.Company.Controllers
             else
             {
                 htmlMessage = $@"
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset='UTF-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <title>Order Status Update</title>
-                    <style>{styles}</style>
-                </head>
-                <body>
-                    <div class='email-container'>
-                        <div class='header'>
-                            <img src='https://placeholder.com/150x50' alt='GameHive Logo' class='logo'>
-                            <h1>Order Status Update</h1>
-                        </div>
-                        
-                        <div class='content'>
-                            <p>Hello Gamer,</p>
-                            
-                            <p class='message'>
-                                We regret to inform you that your order <span class='order-id'>#{orderId}</span> for 
-                                <span class='game-title'>{gameTitle}</span> has been rejected by the publisher.
-                            </p>
-                            
-                            <p>This could be due to various reasons including regional restrictions, inventory issues, or publisher policies.</p>
-                            
-                            <p>Don't worry - you have not been charged for this order. You can check your order details and available refund information in your account dashboard.</p>
-                            
-                            <p style='text-align: center;'>
-                                <a href='https://gamehive.com/my-orders' class='cta-button'>VIEW ORDER DETAILS</a>
-                            </p>
-                            
-                            <p>If you have any questions, please don't hesitate to contact our customer support team who will be happy to assist you.</p>
-                        </div>
-                        
-                        <div class='footer'>
-                            <p>Thank you for your understanding and continued support of GameHive!</p>
-                            <div class='social-links'>
-                                <a href='#' class='social-link'>Facebook</a> | 
-                                <a href='#' class='social-link'>Twitter</a> | 
-                                <a href='#' class='social-link'>Instagram</a>
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset='UTF-8'>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <title>Актуализация на статуса на поръчката</title>
+                        <style>{styles}</style>
+                    </head>
+                    <body>
+                        <div class='email-container'>
+                            <div class='header'>
+                                <img src='https://placeholder.com/150x50' alt='Лого на GameHive' class='logo'>
+                                <h1>Актуализация на статуса на поръчката</h1>
                             </div>
-                            <p>&copy; 2025 GameHive. All rights reserved.</p>
+        
+                            <div class='content'>
+                                <p>Здравей, геймър!</p>
+            
+                                <p class='message'>
+                                    За съжаление трябва да те уведомим, че поръчката ти с номер <span class='order-id'>#{orderId}</span> за 
+                                    <span class='game-title'>{gameTitle}</span> беше отхвърлена от издателя.
+                                </p>
+            
+                                <p>Това може да се дължи на различни причини, включително регионални ограничения, липса на наличност или политики на издателя.</p>
+            
+                                <p>Не се притеснявай – не си таксуван за тази поръчка. Можеш да провериш детайлите на поръчката и информация за възстановяване на средства в таблото си за управление.</p>
+            
+                                <p style='text-align: center;'>
+                                    <a href='https://gamehive.com/my-orders' class='cta-button'>ВИЖ ДЕТАЙЛИТЕ НА ПОРЪЧКАТА</a>
+                                </p>
+            
+                                <p>Ако имаш въпроси, не се колебай да се свържеш с нашия екип по поддръжка – с радост ще ти помогнем.</p>
+                            </div>
+        
+                            <div class='footer'>
+                                <p>Благодарим ти за разбирането и за това, че продължаваш да подкрепяш GameHive!</p>
+                                <p>&copy; 2025 GameHive. Всички права запазени.</p>
+                            </div>
                         </div>
-                    </div>
-                </body>
+                    </body>
                 </html>";
             }
-
             try
             {
                 await _emailSender.SendEmailAsync(email, subject, htmlMessage);

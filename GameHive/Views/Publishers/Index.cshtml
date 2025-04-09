@@ -1,29 +1,107 @@
-﻿@model GameHive.Models.PublisherRequest
+﻿<script>
+    // Set default max date for 18 years ago
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date();
+        var eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        var formattedDate = eighteenYearsAgo.toISOString().split('T')[0];
+        
+        // Set max date attribute
+        var birthdateField = document.querySelector('input[type="date"]');
+        birthdateField.setAttribute('max', formattedDate);
+        
+        // Optional: Set a reasonable min date (e.g., 100 years ago)
+        var hundredYearsAgo = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+        birthdateField.setAttribute('min', hundredYearsAgo.toISOString().split('T')[0]);
+    });
+</script>
+@model GameHive.Models.PublisherRequest
+<link rel="stylesheet" href="~/css/Registration.css" />
 
+<style>
+    /* Custom styling for date input to align with other inputs */
+    input[type="date"].form-control {
+        padding-right: 45px; /* Match the padding of input-with-icon */
+    }
+    
+    /* Handle the default calendar icon position */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.7;
+        margin-right: 0; /* Remove any default margin */
+    }
+    
+    /* Additional adjustment to fix position */
+    input[type="date"] {
+        position: relative;
+    }
+    
+    /* Force exact alignment with other icons */
+    -moz-document url-prefix() {
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            right: 10px; /* Firefox specific adjustment */
+        }
+    }
+    
+    /* Alternative solution if the above doesn't work */
+    input[type="date"]::-webkit-inner-spin-button {
+        display: none;
+    }
+</style>
 @{
     ViewData["Title"] = "Submit Publisher Request";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<form asp-action="Index" method="post">
-    <div class="mb-3">
-        <label asp-for="FirstName" class="form-label"></label>
-        <input asp-for="FirstName" class="form-control" required />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <h1 class="page-title">Publisher Request</h1>
+            <p class="subtitle">Join our network of game publishers</p>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Index" method="post">
+                        <div class="input-group">
+                            <label asp-for="FirstName" class="form-label">First Name</label>
+                            <input asp-for="FirstName" class="form-control input-with-icon" required placeholder="Enter your first name" />
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label asp-for="LastName" class="form-label">Last Name</label>
+                            <input asp-for="LastName" class="form-control input-with-icon" required placeholder="Enter your last name" />
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label asp-for="Birthdate" class="form-label"></label>
+                            <input asp-for="Birthdate" type="date" class="form-control input-with-icon" required max="@(DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd"))" value="" />
+                            <!-- Calendar icon removed but keeping alignment with CSS -->
+                            <span asp-validation-for="Birthdate" class="text-danger"></span>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Submit Request</button>
+                    </form>
+                    
+                    <div class="login-link">
+                        Already have an account? <a href="/Account/Login">Sign in</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label asp-for="LastName" class="form-label"></label>
-        <input asp-for="LastName" class="form-control" required />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Birthdate" class="form-label"></label>
-        <input asp-for="Birthdate" type="date" class="form-control" required />
-        <span asp-validation-for="Birthdate" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit Request</button>
-</form>
+<!-- Add this for the animated background -->
+<div class="bg-gradient"></div>
