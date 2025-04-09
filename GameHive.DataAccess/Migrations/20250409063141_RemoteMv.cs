@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GameHive.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class setup : Migration
+    public partial class RemoteMv : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -344,7 +344,9 @@ namespace GameHive.DataAccess.Migrations
                 {
                     GameId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    ApprovalStatus = table.Column<int>(type: "int", nullable: false),
+                    ApprovalDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

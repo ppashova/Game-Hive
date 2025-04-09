@@ -21,7 +21,6 @@ namespace GameHive.Tests.Services
         public void SetUp()
         {
             _orderRepoMock = new Mock<IOrderRepository>();
-            _orderService = new OrderService(_orderRepoMock.Object);
         }
 
         [Test]
