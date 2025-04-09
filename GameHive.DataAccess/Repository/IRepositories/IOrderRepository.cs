@@ -1,4 +1,5 @@
 ﻿using GameHive.Models;
+using GameHive.Models.enums;
 
 public interface IOrderRepository
 {
@@ -10,4 +11,7 @@ public interface IOrderRepository
     Task DeleteOrderAsync(Guid orderId);
     Task<decimal> GetTotalPriceAsync(Guid orderId);
     Task AddOrderDetailsAsync(List<OrderDetail> orderDetails);
+    Task<bool> UpdateOrderDetailApprovalStatusAsync(Guid orderId, int gameId, PublisherApprovalStatusEnums status);
+    Task<IEnumerable<OrderDetail>> GetOrderDetailsByPublisherAsync(string publisherId, PublisherApprovalStatusEnums? status = null);
+    Task<int> GetOrderDetailsCountByStatusAsync(string publisherId, PublisherApprovalStatusEnums status);
 }

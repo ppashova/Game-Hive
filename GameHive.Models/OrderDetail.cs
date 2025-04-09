@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameHive.Models.enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace GameHive.Models
         public int Quantity { get; set; }
         public Guid OrderId { get; set; }
         public Order Order { get; set; }
-        
+        public PublisherApprovalStatusEnums ApprovalStatus { get; set; } = PublisherApprovalStatusEnums.Pending;
+        public DateTime? ApprovalDate { get; set; }
     }
 }

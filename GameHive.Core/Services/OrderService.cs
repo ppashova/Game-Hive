@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using GameHive.Core.IServices;
 using GameHive.Models;
@@ -12,10 +11,12 @@ namespace GameHive.Core.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IGameService _gameService;
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository, IGameService gameService)
         {
             _orderRepository = orderRepository;
+            _gameService = gameService;
         }
 
         public async Task<Order> CreateOrderAsync(string userId, string firstName, string lastName, string email, decimal totalPrice, List<int> gameIds, List<int> quantities)
@@ -31,7 +32,6 @@ namespace GameHive.Core.Services
                 Status = OrderStatusEnums.Pending,
                 OrderDate = DateTime.Now
             };
-
             await _orderRepository.AddOrderAsync(newOrder);
 
             // Ensure gameIds and quantities are paired correctly
@@ -39,11 +39,11 @@ namespace GameHive.Core.Services
             {
                 OrderId = newOrder.Id,
                 GameId = gameId,
-                Quantity = quantities[index] // Assign the corresponding quantity
+                Quantity = quantities[index], // Assign the corresponding quantity
+                ApprovalStatus = PublisherApprovalStatusEnums.Pending // Set initial approval status
             }).ToList();
 
             await _orderRepository.AddOrderDetailsAsync(newOrderDetails);
-
             return newOrder;
         }
 
@@ -66,6 +66,29 @@ namespace GameHive.Core.Services
         {
             return await _orderRepository.GetTotalPriceAsync(orderId);
         }
-    }
 
+        // New methods for publisher approval system
+        public async Task<bool> UpdateOrderDetailApprovalStatusAsync(Guid orderId, int gameId, PublisherApprovalStatusEnums status, string publisherId)
+        {
+            // Verify the game belongs to the publisher
+            var game = await _gameService.GetGameByIdAsync(gameId);
+            if (game == null || game.PublisherId != publisherId)
+            {
+                return false;
+            }
+
+            // Update the order detail approval status
+            return await _orderRepository.UpdateOrderDetailApprovalStatusAsync(orderId, gameId, status);
+        }
+
+        public async Task<IEnumerable<OrderDetail>> GetOrderDetailsByPublisherAsync(string publisherId, PublisherApprovalStatusEnums? status = null)
+        {
+            return await _orderRepository.GetOrderDetailsByPublisherAsync(publisherId, status);
+        }
+
+        public async Task<int> GetOrderDetailsCountByStatusAsync(string publisherId, PublisherApprovalStatusEnums status)
+        {
+            return await _orderRepository.GetOrderDetailsCountByStatusAsync(publisherId, status);
+        }
+    }
 }

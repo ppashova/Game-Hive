@@ -9,5 +9,10 @@ namespace GameHive.Areas.Company.Models
         public decimal TotalSales { get; set; }
         public List<GameRequest> GameRequests { get; set; } = new List<GameRequest>();
         public List<Game> TopGames { get; set; } = new List<Game>();
+
+        public List<OrderDetail> PendingApprovals { get; set; }
+        public int TotalPendingApprovals => PendingApprovals?.Count ?? 0;
+        public int TotalApprovedOrders { get; set; }
+        public int TotalRejectedOrders { get; set; }
     }
 }

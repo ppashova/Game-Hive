@@ -1,4 +1,5 @@
 ﻿using GameHive.Models;
+using GameHive.Models.enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace GameHive.Core.IServices
         Task<IEnumerable<Order>> GetUserOrdersAsync(string userId);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
         Task<decimal> GetTotalPriceAsync(Guid orderId);
+        Task<bool> UpdateOrderDetailApprovalStatusAsync(Guid orderId, int gameId, PublisherApprovalStatusEnums status, string publisherId);
+        Task<IEnumerable<OrderDetail>> GetOrderDetailsByPublisherAsync(string publisherId, PublisherApprovalStatusEnums? status = null);
+        Task<int> GetOrderDetailsCountByStatusAsync(string publisherId, PublisherApprovalStatusEnums status);
     }
 
 }
