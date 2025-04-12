@@ -170,6 +170,11 @@ namespace GameHive.Core.Services
         {
             await _requestRepo.AddRequestImagesAsync(requestId, imageUrl);
         }
+
+        public async Task<List<string>> GetRequestImagesAsync(int requestId)
+        {
+            return await _requestRepo.GetRequestImagesAsync(requestId);
+        }
     }
 
 }

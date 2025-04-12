@@ -76,7 +76,7 @@ namespace GameHive.Areas.Admin.Controllers
             {
                 GameRequest = request,
                 Tags = tags,
-                ImageUrls = request.Images.Select(i => i.ImageUrl).ToList()
+                ImageUrls = await _gameRequestService.GetRequestImagesAsync(request.Id)
             };
 
             return View(viewModel);

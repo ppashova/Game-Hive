@@ -221,20 +221,16 @@ namespace GameHive.Controllers
             if(model.ImagesToKeep != null)
             {
                 foreach (var url in model.ImagesToKeep)
-                    await _gameRequestService.AddExistingImageToRequestAsync(game.GameId, url);
+                    await _gameRequestService.AddExistingImageToRequestAsync(updateRequest.Id, url);
             }
             if (model.GameImages != null && model.GameImages.Count > 0)
             {
                 var newImageUrls = await _cloudinaryService.MultipleImageUploadAsync(model.GameImages);
                 foreach (var url in newImageUrls)
                 {
-                    await _gameRequestService.AddExistingImageToRequestAsync(game.GameId, url);
+                    await _gameRequestService.AddExistingImageToRequestAsync(updateRequest.Id, url);
                 }
             }
-
-
-            // Update the game with selected tags
-            await _gameService.UpdateGameAsync(game, model.SelectedTagIds, publisherId);
 
             TempData["Success"] = "Game updated successfully.";
             return RedirectToAction("Index");

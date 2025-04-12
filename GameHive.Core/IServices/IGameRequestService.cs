@@ -17,6 +17,7 @@ namespace GameHive.Core.IServices
         Task<GameRequest> GetGameRequestByIdAsync(int id);
         Task<List<GameRequest>> GetPublisherRequestsById(string PublisherId);
         Task AddExistingImageToRequestAsync(int requestId, string imageUrl);
+        Task<List<string>> GetRequestImagesAsync(int requestId);
     }
 
 }

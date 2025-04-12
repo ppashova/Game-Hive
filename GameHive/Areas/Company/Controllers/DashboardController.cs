@@ -26,37 +26,37 @@ namespace GameHive.Areas.Company.Controllers
         private readonly IGameRequestService _gameRequestService;
         private readonly IOrderService _orderService;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly EmailSender _emailSender; // Using EmailSender directly
+        private readonly EmailSender _emailSender; 
 
         public DashboardController(
             IGameService gameService,
             IGameRequestService gameRequestService,
             IOrderService orderService,
             UserManager<IdentityUser> userManager,
-            IConfiguration configuration) // Inject IConfiguration for EmailSender
+            IConfiguration configuration) 
         {
             _gameService = gameService;
             _gameRequestService = gameRequestService;
             _orderService = orderService;
             _userManager = userManager;
-            _emailSender = new EmailSender(configuration); // Initialize EmailSender
+            _emailSender = new EmailSender(configuration);
         }
 
         public async Task<IActionResult> Index()
         {
             var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Get publisher's games
+
             var publisherGames = await _gameService.GetPublisherGamesAsync(publisherId);
 
-            // Get pending order approvals
+
             var pendingApprovals = await GetPendingOrderDetailsAsync(publisherId);
 
-            // Get counts of approved and rejected orders
+
             var approvedCount = await GetOrderDetailsCountByStatusAsync(publisherId, PublisherApprovalStatusEnums.Approved);
             var rejectedCount = await GetOrderDetailsCountByStatusAsync(publisherId, PublisherApprovalStatusEnums.Rejected);
 
-            // Create dashboard view model
+
             var dashboardVM = new PublisherDashboardViewModel
             {
                 PublishedGames = publisherGames,
@@ -85,7 +85,6 @@ namespace GameHive.Areas.Company.Controllers
         {
             var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Verify game belongs to publisher
             var game = await _gameService.GetGameByIdAsync(gameId);
             if (game == null || game.PublisherId != publisherId)
             {
@@ -101,13 +100,12 @@ namespace GameHive.Areas.Company.Controllers
             return View(analyticsVM);
         }
 
-        // Order approval actions
         [HttpPost]
         public async Task<IActionResult> ApproveOrder(Guid orderId, int gameId)
         {
             var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Verify game belongs to publisher
+
             var game = await _gameService.GetGameByIdAsync(gameId);
             if (game == null || game.PublisherId != publisherId)
             {
@@ -125,7 +123,6 @@ namespace GameHive.Areas.Company.Controllers
             {
                 TempData["SuccessMessage"] = "Order approved successfully.";
 
-                // Get order details to send email
                 var order = await _orderService.GetOrderByIdAsync(orderId);
                 if (order != null)
                 {
@@ -135,7 +132,7 @@ namespace GameHive.Areas.Company.Controllers
                         await SendOrderStatusEmail(
                             customer.Email,
                             game.Name,
-                            true, // approved
+                            true, 
                             orderId);
                     }
                 }
@@ -149,7 +146,7 @@ namespace GameHive.Areas.Company.Controllers
         {
             var publisherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Verify game belongs to publisher
+
             var game = await _gameService.GetGameByIdAsync(gameId);
             if (game == null || game.PublisherId != publisherId)
             {
@@ -167,7 +164,7 @@ namespace GameHive.Areas.Company.Controllers
             {
                 TempData["SuccessMessage"] = "Order rejected successfully.";
 
-                // Get order details to send email
+
                 var order = await _orderService.GetOrderByIdAsync(orderId);
                 if (order != null)
                 {
@@ -177,7 +174,7 @@ namespace GameHive.Areas.Company.Controllers
                         await SendOrderStatusEmail(
                             customer.Email,
                             game.Name,
-                            false, // rejected
+                            false, 
                             orderId);
                     }
                 }
@@ -186,14 +183,13 @@ namespace GameHive.Areas.Company.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // New method to send emails for order status changes
+
         private async Task SendOrderStatusEmail(string email, string gameTitle, bool isApproved, Guid orderId)
         {
             string subject = isApproved
                 ? $"Your order for {gameTitle} has been approved"
                 : $"Your order for {gameTitle} has been rejected";
 
-            // Common CSS styles for both email templates
             string styles = @"
                 body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
                 .email-container { background-color: #f9f9f9; border-radius: 8px; padding: 30px; border: 1px solid #ddd; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -302,8 +298,6 @@ namespace GameHive.Areas.Company.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error but don't let it break the approval/rejection flow
-                // Consider adding proper logging here
                 Console.WriteLine($"Failed to send email: {ex.Message}");
             }
         }
@@ -363,7 +357,6 @@ namespace GameHive.Areas.Company.Controllers
             return games.OrderByDescending(g => g.Rating).Take(5).ToList();
         }
 
-        // Helper methods for order approvals
         private async Task<List<OrderDetail>> GetPendingOrderDetailsAsync(string publisherId)
         {
             var result = new List<OrderDetail>();

@@ -56,9 +56,14 @@
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="price-tag">@game.Game.Price.ToString("f2") лв.</div>
-                                <button type="button" onclick="location.href='#'" class="navbar-button">
-                                    <i class="bi bi-cart-plus-fill me-2"></i> Добави в количката
+                                <button type="button" onclick="document.getElementById('addToCartForm-@game.Game.GameId').submit();" class="navbar-button">
+                                    <i class="bi bi-cart-plus-fill me-2">Добави към кошницата</i>
                                 </button>
+                                <form id="addToCartForm-@game.Game.GameId" method="post" asp-controller="ShoppingCart" asp-action="AddToCart" style="display: none;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@game.Game.GameId" />
+                                    <input type="hidden" name="quantity" value="1" />
+                                </form>
                             </div>
                         </div>
                     </div>
