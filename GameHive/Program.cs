@@ -30,6 +30,7 @@ namespace GameHive
             builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IGameRequestRepository, GameRequestRepository>();
+            builder.Services.AddScoped<ISupportRequestRepository, SupportRequestRepository>();
             builder.Services.AddScoped<IGameService, GameService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IGameTagService, GameTagService>();
@@ -37,6 +38,7 @@ namespace GameHive
             builder.Services.AddScoped<IPublisherRequestService, PublisherRequestService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IGameRequestService, GameRequestService>();
+            builder.Services.AddScoped<ISupportRequestService, SupportRequestService>();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();

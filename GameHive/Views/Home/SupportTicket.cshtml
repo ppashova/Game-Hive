@@ -1,0 +1,41 @@
+﻿@model SupportRequest
+<link rel="stylesheet" href="~/css/Registration.css"/>
+<div class="container py-5">
+    <h1 class="page-title">Заявка за поддръжка</h1>
+    <p class="subtitle">Разкажете ни за вашия проблем и ще се свържем с вас възможно най-скоро</p>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Подайте заявка за поддръжка</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateSupportTicket" method="post">
+                        <div class="input-group">
+                            <label asp-for="Subject" class="form-label">Тема</label>
+                            <input asp-for="Subject" class="form-control input-with-icon" placeholder="Въведете тема..." />
+                            <i class="fas fa-heading input-icon"></i>
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label asp-for="ProblemDescription" class="form-label">Описание на проблема</label>
+                            <textarea asp-for="ProblemDescription" class="form-control input-with-icon" rows="5" placeholder="Опишете вашия проблем..."></textarea>
+                            <i class="fas fa-comment-alt input-icon"></i>
+                            <span asp-validation-for="ProblemDescription" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Изпратете заявката <i class="fas fa-paper-plane ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

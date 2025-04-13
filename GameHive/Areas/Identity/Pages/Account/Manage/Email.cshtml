@@ -4,38 +4,80 @@
     ViewData["Title"] = "Manage Email";
     ViewData["ActivePage"] = ManageNavPages.Email;
 }
+<link rel="stylesheet" href="~/css/Registration.css"/>
+<div class="container py-5">
+    <h1 class="page-title">@ViewData["Title"]</h1>
+    <p class="subtitle">Update your email address and verification status</p>
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="email-form" method="post">
-            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
-            @if (Model.IsEmailConfirmed)
-            {
-                <div class="form-floating mb-3 input-group">
-                    <input asp-for="Email" class="form-control" placeholder="Please enter your email." disabled />
-                        <div class="input-group-append">
-                            <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
-                        </div>
-                    <label asp-for="Email" class="form-label"></label>
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">Navigation</h3>
                 </div>
-            }
-            else
-            {
-                <div class="form-floating mb-3">
-                    <input asp-for="Email" class="form-control" placeholder="Please enter your email." disabled />
-                    <label asp-for="Email" class="form-label"></label>
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                <div class="card-body">
+                    <partial name="_ManageNav" />
                 </div>
-            }
-            <div class="form-floating mb-3">
-                <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
-                <label asp-for="Input.NewEmail" class="form-label"></label>
-                <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
             </div>
-            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Change email</button>
-        </form>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Email Settings</h3>
+                </div>
+                <div class="card-body">
+                    <form id="email-form" method="post">
+                        <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+
+                        @if (Model.IsEmailConfirmed)
+                        {
+                            <div class="input-group">
+                                <label asp-for="Email" class="form-label"></label>
+                                <div class="d-flex w-100 mb-3">
+                                    <div class="flex-grow-1 position-relative">
+                                        <input asp-for="Email" class="form-control input-with-icon" placeholder="Please enter your email." disabled />
+                                        <i class="fas fa-envelope input-icon"></i>
+                                    </div>
+                                    <div class="d-flex align-items-center ms-3">
+                                        <span class="text-success" style="font-size: 1.5rem;">✓</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="input-group">
+                                <label asp-for="Email" class="form-label"></label>
+                                <div class="position-relative w-100 mb-3">
+                                    <input asp-for="Email" class="form-control input-with-icon" placeholder="Please enter your email." disabled />
+                                    <i class="fas fa-envelope input-icon"></i>
+                                </div>
+                                <div class="mb-4">
+                                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-primary">
+                                        <i class="fas fa-envelope-open-text me-2"></i> Send verification email
+                                    </button>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="input-group">
+                            <label asp-for="Input.NewEmail" class="form-label"></label>
+                            <div class="position-relative w-100 mb-3">
+                                <input asp-for="Input.NewEmail" class="form-control input-with-icon" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
+                                <i class="fas fa-envelope-open input-icon"></i>
+                            </div>
+                            <span asp-validation-for="Input.NewEmail" class="text-danger d-block mb-3"></span>
+                        </div>
+
+                        <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-primary">
+                            Change email <i class="fas fa-edit ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

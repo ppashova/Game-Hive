@@ -35,9 +35,9 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             return await _context.GameRequests
                 .Where(gr => gr.Status == RequestEnums.Pending)
-                .Include(gr => gr.Tags) // Include the navigation property
-                    .ThenInclude(gt => gt.Tag) // Include the related Tag entity
-                .Include(gr => gr.Images) // Just include the entire Images collection
+                .Include(gr => gr.Tags) 
+                    .ThenInclude(gt => gt.Tag) 
+                .Include(gr => gr.Images) 
                 .FirstOrDefaultAsync(gr => gr.Id == requestId);
         }
 
@@ -45,9 +45,9 @@ namespace GameHive.DataAccess.Repository.Repositories
         {
             return await _context.GameRequests
                 .Where(gr => gr.Status == RequestEnums.Pending)
-                .Include(gr => gr.Tags) // Include the navigation property
-                    .ThenInclude(gt => gt.Tag) // Include the related Tag entity
-                .Include(gr => gr.Images) // Just include the entire Images collection
+                .Include(gr => gr.Tags) 
+                    .ThenInclude(gt => gt.Tag) 
+                .Include(gr => gr.Images) 
                 .ToListAsync();
         }
 

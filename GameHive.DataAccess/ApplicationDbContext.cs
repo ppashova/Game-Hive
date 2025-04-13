@@ -25,12 +25,11 @@ namespace GameHive.DataAccess
         public DbSet<GameRequest> GameRequests { get; set; }
         public DbSet<RequestTag> RequestTags { get; set; }
         public DbSet<RequestImage> RequestImages { get; set; }
+        public DbSet <SupportRequest> SupportRequests { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Composite Key for GameTag
             modelBuilder.Entity<GameTag>()
                 .HasKey(gt => new { gt.GameId, gt.TagId });
 
@@ -38,7 +37,7 @@ namespace GameHive.DataAccess
                 .HasOne(gt => gt.Game)
                 .WithMany(g => g.GameTags)
                 .HasForeignKey(gt => gt.GameId)
-                .OnDelete(DeleteBehavior.Cascade); // Ensures tags get removed if game is deleted
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<GameTag>()
                 .HasOne(gt => gt.Tag)
@@ -46,7 +45,6 @@ namespace GameHive.DataAccess
                 .HasForeignKey(gt => gt.TagId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Composite Key for UserGame
             modelBuilder.Entity<UserGame>()
                 .HasKey(ug => new { ug.GameId, ug.UserId });
 
@@ -54,15 +52,14 @@ namespace GameHive.DataAccess
                 .HasOne(ug => ug.Game)
                 .WithMany(g => g.UserGames)
                 .HasForeignKey(ug => ug.GameId)
-                .OnDelete(DeleteBehavior.Cascade); // Ensures UserGame records are removed if game is deleted
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserGame>()
                 .HasOne(ug => ug.User)
                 .WithMany()
                 .HasForeignKey(ug => ug.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // Avoids cascade issues with IdentityUser
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Composite Key for OrderDetail
             modelBuilder.Entity<OrderDetail>()
                 .HasKey(od => new { od.GameId, od.OrderId });
 
@@ -70,7 +67,7 @@ namespace GameHive.DataAccess
                 .HasOne(od => od.Game)
                 .WithMany(g => g.OrderDetails)
                 .HasForeignKey(od => od.GameId)
-                .OnDelete(DeleteBehavior.Cascade); // Ensures OrderDetails are removed if game is deleted
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(od => od.Order)
@@ -78,11 +75,10 @@ namespace GameHive.DataAccess
                 .HasForeignKey(od => od.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Composite Key for GameImage
             modelBuilder.Entity<GameImage>()
-                .HasKey(gi => new { gi.GameId, gi.imageURL }); // Fixed property name casing
+                .HasKey(gi => new { gi.GameId, gi.imageURL }); 
 
-            // User Ratings Setup
+
             modelBuilder.Entity<UserRating>()
                 .HasKey(ur => ur.RatingId);
 
@@ -90,47 +86,47 @@ namespace GameHive.DataAccess
                 .HasOne(ur => ur.User)
                 .WithMany()
                 .HasForeignKey(ur => ur.UserId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevents issues with IdentityUser
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<UserRating>()
                 .HasOne(ur => ur.Game)
                 .WithMany(g => g.UserRatings)
                 .HasForeignKey(ur => ur.GameId)
-                .OnDelete(DeleteBehavior.Cascade); // Ensures ratings are deleted when game is deleted
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // 🔥 Fix for Publisher Cascade Delete Issue
+
             modelBuilder.Entity<Game>()
                 .HasOne(g => g.Publisher)
                 .WithMany()
                 .HasForeignKey(g => g.PublisherId)
-                .OnDelete(DeleteBehavior.Restrict); // Prevents cascade error on IdentityUser
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<GameRequest>()
-                .HasOne(gr => gr.Game)  // GameRequest has one Game
-                .WithMany(g => g.GameRequest); // Game has one GameRequest
+                .HasOne(gr => gr.Game)  
+                .WithMany(g => g.GameRequest); 
             modelBuilder.Entity<GameRequest>()
-                .HasOne(gr => gr.Game)  // GameRequest has one Game
-                .WithMany(g => g.GameRequest)  // Game has one GameRequest
-                .HasForeignKey(gr => gr.GameId)  // Foreign key in GameRequest
-                .OnDelete(DeleteBehavior.Cascade);  // Delete GameRequest if Game is deleted
+                .HasOne(gr => gr.Game)  
+                .WithMany(g => g.GameRequest)  
+                .HasForeignKey(gr => gr.GameId)  
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<RequestTag>()
-                .HasKey(rt => new { rt.RequestId, rt.TagId });  // Composite key
+                .HasKey(rt => new { rt.RequestId, rt.TagId });  
 
             modelBuilder.Entity<RequestTag>()
                 .HasOne(rt => rt.GameRequest)
                 .WithMany(gr => gr.Tags)
                 .HasForeignKey(rt => rt.RequestId)
-                .OnDelete(DeleteBehavior.Cascade);  // Delete RequestTag if GameRequest is deleted
+                .OnDelete(DeleteBehavior.Cascade);  
 
             modelBuilder.Entity<RequestTag>()
                 .HasOne(rt => rt.Tag)
                 .WithMany(t => t.RequestTags)
                 .HasForeignKey(rt => rt.TagId)
-                .OnDelete(DeleteBehavior.Cascade);  // Delete RequestTag if Tag is deleted
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<RequestImage>()
-                .HasKey(ri => new { ri.RequestId, ri.ImageUrl });  // Composite key
+                .HasKey(ri => new { ri.RequestId, ri.ImageUrl }); 
         }
 
     }

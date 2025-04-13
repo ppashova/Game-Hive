@@ -4,21 +4,65 @@
     ViewData["Title"] = "Personal Data";
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
+<link rel="stylesheet" href="~/css/Registration.css"/>
+<div class="container py-5">
+    <h1 class="page-title">@ViewData["Title"]</h1>
+    <p class="subtitle">Manage your personal information</p>
 
-<h3>@ViewData["Title"]</h3>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">Navigation</h3>
+                </div>
+                <div class="card-body">
+                    <partial name="_ManageNav" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Data Management</h3>
+                </div>
+                <div class="card-body">
+                    <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
 
-<div class="row">
-    <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
-        <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-        </p>
-        <form id="download-data" asp-page="DownloadPersonalData" method="post">
-            <button class="btn btn-primary" type="submit">Download</button>
-        </form>
-        <p>
-            <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger">Delete</a>
-        </p>
+                    <div class="alert alert-info" style="background-color: rgba(22, 51, 80, 0.6); border-color: #2c66a0;">
+                        <i class="fas fa-info-circle me-2" style="color: #5c7c7c; font-size: 1.2rem;"></i>
+                        <span style="color: #5c7c7c;">Download a copy of your data for your records.</span>
+                    </div>
+
+                    <div class="alert alert-warning mt-3" style="background-color: rgba(255, 193, 7, 0.2); border-color: #ffc107;">
+                        <i class="fas fa-exclamation-triangle me-2" style="color: #ffc107; font-size: 1.2rem;"></i>
+                        <strong style="color: #ffc107;">Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <form id="download-data" asp-page="DownloadPersonalData" method="post">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-download me-2"></i> Download Data
+                            </button>
+                        </form>
+
+                        <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger" style="
+                           background: linear-gradient(90deg, #a02c2c 0%, #6a4040 100%);
+                           border: none;
+                           padding: 15px;
+                           border-radius: 10px;
+                           font-weight: 600;
+                           letter-spacing: 1px;
+                           text-transform: uppercase;
+                           transition: all 0.3s ease;
+                           position: relative;
+                           overflow: hidden;
+                           box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);">
+                            <i class="fas fa-trash-alt me-2"></i> Delete Data
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
