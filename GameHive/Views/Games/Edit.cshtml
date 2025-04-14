@@ -1,12 +1,12 @@
 ﻿@model GameHive.Models.Game_View_Models.GameEditViewModel
 
 @{
-    ViewData["Title"] = "Edit Game";
+    ViewData["Title"] = "Редактиране на игра";
 }
-<link rel="stylesheet" href="~/css/GameEdit.css"/>
+<link rel="stylesheet" href="~/css/GameEdit.css" />
 <div class="container">
-    <h2>Edit Game</h2>
-    <h4>Submit changes for approval</h4>
+    <h2>Редактиране на игра</h2>
+    <h4>Изпратете промените за одобрение</h4>
     <hr />
 
     <form asp-action="Edit" enctype="multipart/form-data">
@@ -16,37 +16,37 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
+                    <label asp-for="Name" class="control-label">Име</label>
                     <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Price" class="control-label"></label>
-                    <input asp-for="Price" class="form-control" type="number" step="0.01 />q
+                    <label asp-for="Price" class="control-label">Цена</label>
+                    <input asp-for="Price" class="form-control" type="number" step="0.01" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="BriefDescription" class="control-label"></label>
+                    <label asp-for="BriefDescription" class="control-label">Кратко описание</label>
                     <textarea asp-for="BriefDescription" class="form-control" rows="3"
                               oninput="textCounter(this, 'briefDescCounter', 300);"></textarea>
-                    <small class="text-muted">Remaining characters: <span id="briefDescCounter">300</span></small>
+                    <small class="text-muted">Оставащи символи: <span id="briefDescCounter">300</span></small>
                     <span asp-validation-for="BriefDescription" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="FullDescription" class="control-label"></label>
+                    <label asp-for="FullDescription" class="control-label">Пълно описание</label>
                     <textarea asp-for="FullDescription" class="form-control" rows="6"
                               oninput="textCounter(this, 'fullDescCounter', 6000);"></textarea>
-                    <small class="text-muted">Remaining characters: <span id="fullDescCounter">6000</span></small>
+                    <small class="text-muted">Оставащи символи: <span id="fullDescCounter">6000</span></small>
                     <span asp-validation-for="FullDescription" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="SelectedTagIds" class="control-label">Tags</label>
+                    <label asp-for="SelectedTagIds" class="control-label">Етикети</label>
                     <div class="tag-search-container">
-                        <input type="text" id="tagSearch" class="tag-search" placeholder="Search tags...">
+                        <input type="text" id="tagSearch" class="tag-search" placeholder="Търси етикети...">
                     </div>
                     <div class="tags-container">
                         @foreach (var tag in Model.AvailableTags)
@@ -65,14 +65,13 @@
             </div>
 
             <div class="col-md-6">
-                <!-- Game Icon -->
                 <div class="form-group">
-                    <label asp-for="IconFile" class="control-label"></label>
+                    <label asp-for="IconFile" class="control-label">Иконка на играта</label>
                     @if (!string.IsNullOrEmpty(Model.ExistingIconUrl))
                     {
                         <div class="mb-2">
-                            <img src="@Model.ExistingIconUrl" alt="Game Icon" class="img-thumbnail" style="max-width: 150px;" />
-                            <p>Current icon (will be replaced if you upload a new one)</p>
+                            <img src="@Model.ExistingIconUrl" alt="Иконка на играта" class="img-thumbnail" style="max-width: 150px;" />
+                            <p>Текуща иконка (ще бъде заменена, ако качите нова)</p>
                         </div>
                     }
                     <input asp-for="IconFile" type="file" class="form-control" />
@@ -80,14 +79,13 @@
                     <span asp-validation-for="IconFile" class="text-danger"></span>
                 </div>
 
-                <!-- Game Header -->
                 <div class="form-group">
-                    <label asp-for="GameHeader" class="control-label"></label>
+                    <label asp-for="GameHeader" class="control-label">Заглавна снимка на играта</label>
                     @if (!string.IsNullOrEmpty(Model.ExistingHeaderUrl))
                     {
                         <div class="mb-2">
-                            <img src="@Model.ExistingHeaderUrl" alt="Game Header" class="img-thumbnail" style="max-width: 250px;" />
-                            <p>Current header (will be replaced if you upload a new one)</p>
+                            <img src="@Model.ExistingHeaderUrl" alt="Заглавна снимка на играта" class="img-thumbnail" style="max-width: 250px;" />
+                            <p>Текуща заглавна снимка (ще бъде заменена, ако качите нова)</p>
                         </div>
                     }
                     <input asp-for="GameHeader" type="file" class="form-control" />
@@ -95,45 +93,43 @@
                     <span asp-validation-for="GameHeader" class="text-danger"></span>
                 </div>
 
-                <!-- Game Images -->
                 <div class="form-group">
-                    <label asp-for="GameImages" class="control-label"></label>
+                    <label asp-for="GameImages" class="control-label">Снимки на играта</label>
                     <input asp-for="GameImages" type="file" multiple class="form-control" />
                     <span asp-validation-for="GameImages" class="text-danger"></span>
-                    <small class="form-text text-muted">You can select multiple files to upload new images.</small>
+                    <small class="form-text text-muted">Можете да изберете няколко файла, за да качите нови снимки.</small>
                 </div>
 
-                <!-- Existing Images -->
                 @if (Model.ExistingImageUrls != null && Model.ExistingImageUrls.Any())
                 {
                     <div class="form-group">
-                        <label class="control-label">Existing Game Images</label>
+                        <label class="control-label">Съществуващи снимки на играта</label>
                         <div class="row">
                             @for (int i = 0; i < Model.ExistingImageUrls.Count; i++)
                             {
                                 var url = Model.ExistingImageUrls[i];
                                 <div class="col-md-4 mb-3">
                                     <div class="card">
-                                        <img src="@url" class="card-img-top" alt="Game Image">
+                                        <img src="@url" class="card-img-top" alt="Снимка на играта">
                                         <div class="card-body">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" name="ImagesToKeep" value="@url" id="image-@i" checked>
-                                                <label class="form-check-label" for="image-@i">Keep this image</label>
+                                                <label class="form-check-label" for="image-@i">Запази тази снимка</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             }
                         </div>
-                        <small class="form-text text-muted">Uncheck images you want to remove.</small>
+                        <small class="form-text text-muted">Махнете отметката от снимките, които искате да премахнете.</small>
                     </div>
                 }
             </div>
         </div>
 
         <div class="form-group mt-4">
-            <input type="submit" value="Submit for Approval" class="btn btn-primary" />
-            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <input type="submit" value="Изпрати за одобрение" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-secondary">Обратно към списъка</a>
         </div>
     </form>
 </div>
@@ -143,14 +139,11 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    // Add this to your Scripts section
     <script>
         $(document).ready(function() {
-            // Character counters for description fields
             textCounter(document.getElementById('BriefDescription'), 'briefDescCounter', 300);
             textCounter(document.getElementById('FullDescription'), 'fullDescCounter', 6000);
 
-            // Tag search functionality
             $("#tagSearch").on("keyup", function() {
                 var value = $(this).val().toLowerCase();
                 $(".tag-item").filter(function() {
@@ -160,7 +153,6 @@
                 });
             });
 
-            // Show selected tags at the top
             function sortTags() {
                 var container = $(".tags-container");
                 var items = container.find(".tag-item").get();
@@ -172,7 +164,6 @@
                     if (aChecked && !bChecked) return -1;
                     if (!aChecked && bChecked) return 1;
 
-                    // If both are checked or both are unchecked, sort alphabetically
                     var aText = $(a).find(".tag-name").text().toLowerCase();
                     var bText = $(b).find(".tag-name").text().toLowerCase();
                     return aText.localeCompare(bText);
@@ -183,16 +174,13 @@
                 });
             }
 
-            // Sort tags initially
             sortTags();
 
-            // Re-sort when a tag is selected
             $(".tag-radio").on("change", function() {
                 sortTags();
             });
         });
 
-        // Character counter function
         function textCounter(field, counterField, maxLimit) {
             if (field) {
                 document.getElementById(counterField).textContent = maxLimit - field.value.length;
@@ -200,7 +188,6 @@
                     var remaining = maxLimit - field.value.length;
                     document.getElementById(counterField).textContent = remaining;
 
-                    // Adding visual feedback
                     if (remaining < 10) {
                         document.getElementById(counterField).style.color = '#ff8a8a';
                     } else if (remaining < 30) {

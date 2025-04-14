@@ -1,0 +1,77 @@
+﻿@model GameHive.Models.Tag
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Add Tag";
+}
+
+<div class="dashboard-header d-flex justify-content-between align-items-center mb-4">
+    <h2>Add New Tag</h2>
+    <div>
+        <a asp-controller="Tags" asp-action="Index" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left me-1"></i> Back to Tags
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-tag me-2"></i>Tag Details
+    </div>
+    <div class="card-body">
+        <form asp-controller="Tags" asp-action="Add" method="post">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Tag Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter tag name" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tag Color (Preview)</label>
+                <div class="d-flex align-items-center">
+                    <div class="tag-preview me-3" id="tagPreview">
+                        <span id="tagPreviewText">@(string.IsNullOrEmpty(Model?.Name) ? "Tag Name" : Model.Name)</span>
+                    </div>
+                    <input type="color" id="tagColor" class="form-control form-control-color" value="#2c66a0" title="Choose tag color">
+                </div>
+                <small class="text-muted">Choose a color for visual preview only. All tags will use system default color when displayed.</small>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Save Tag
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameInput = document.querySelector('input[name="Name"]');
+            const tagPreviewText = document.getElementById('tagPreviewText');
+            const tagColor = document.getElementById('tagColor');
+            const tagPreview = document.getElementById('tagPreview');
+
+            nameInput.addEventListener('input', function() {
+                tagPreviewText.textContent = this.value || 'Tag Name';
+            });
+
+            tagColor.addEventListener('input', function() {
+                tagPreview.style.backgroundColor = this.value;
+
+                // Calculate contrast color for text (simple version)
+                const hex = this.value.replace('#', '');
+                const r = parseInt(hex.substr(0, 2), 16);
+                const g = parseInt(hex.substr(2, 2), 16);
+                const b = parseInt(hex.substr(4, 2), 16);
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+                tagPreview.style.color = brightness > 128 ? '#000000' : '#FFFFFF';
+            });
+
+            // Initialize with default color
+            tagPreview.style.backgroundColor = tagColor.value;
+        });
+    </script>
+}

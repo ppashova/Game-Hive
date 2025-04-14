@@ -1,13 +1,13 @@
 ﻿@page
 @model EmailModel
 @{
-    ViewData["Title"] = "Manage Email";
+    ViewData["Title"] = "Управление на имейл";
     ViewData["ActivePage"] = ManageNavPages.Email;
 }
-<link rel="stylesheet" href="~/css/Registration.css"/>
+<link rel="stylesheet" href="~/css/Registration.css" />
 <div class="container py-5">
     <h1 class="page-title">@ViewData["Title"]</h1>
-    <p class="subtitle">Update your email address and verification status</p>
+    <p class="subtitle">Актуализирайте вашия имейл адрес и статуса на потвърждение</p>
 
     <partial name="_StatusMessage" for="StatusMessage" />
 
@@ -15,7 +15,7 @@
         <div class="col-md-3">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="mb-0">Navigation</h3>
+                    <h3 class="mb-0">Навигация</h3>
                 </div>
                 <div class="card-body">
                     <partial name="_ManageNav" />
@@ -25,54 +25,47 @@
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="mb-0">Email Settings</h3>
+                    <h3 class="mb-0">Настройки на имейла</h3>
                 </div>
                 <div class="card-body">
                     <form id="email-form" method="post">
                         <div asp-validation-summary="All" class="text-danger" role="alert"></div>
 
-                        @if (Model.IsEmailConfirmed)
-                        {
-                            <div class="input-group">
-                                <label asp-for="Email" class="form-label"></label>
-                                <div class="d-flex w-100 mb-3">
-                                    <div class="flex-grow-1 position-relative">
-                                        <input asp-for="Email" class="form-control input-with-icon" placeholder="Please enter your email." disabled />
-                                        <i class="fas fa-envelope input-icon"></i>
-                                    </div>
-                                    <div class="d-flex align-items-center ms-3">
-                                        <span class="text-success" style="font-size: 1.5rem;">✓</span>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="input-group">
-                                <label asp-for="Email" class="form-label"></label>
-                                <div class="position-relative w-100 mb-3">
-                                    <input asp-for="Email" class="form-control input-with-icon" placeholder="Please enter your email." disabled />
+                        <div class="input-group">
+                            <label asp-for="Email" class="form-label">Имейл</label>
+                            <div class="d-flex align-items-center w-100 mb-3">
+                                <div class="position-relative flex-grow-1">
+                                    <input asp-for="Email" class="form-control input-with-icon @(Model.IsEmailConfirmed ? "border-success" : "")" placeholder="Моля, въведете вашия имейл." disabled />
                                     <i class="fas fa-envelope input-icon"></i>
                                 </div>
+                                @if (Model.IsEmailConfirmed)
+                                {
+                                    <span class="text-success ms-3" style="font-size: 1.5rem;">✓</span>
+                                }
+                            </div>
+                            @if (!Model.IsEmailConfirmed)
+                            {
                                 <div class="mb-4">
                                     <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-primary">
-                                        <i class="fas fa-envelope-open-text me-2"></i> Send verification email
+                                        <i class="fas fa-envelope-open-text me-2"></i> Изпрати имейл за потвърждение
                                     </button>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
 
                         <div class="input-group">
-                            <label asp-for="Input.NewEmail" class="form-label"></label>
-                            <div class="position-relative w-100 mb-3">
-                                <input asp-for="Input.NewEmail" class="form-control input-with-icon" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
-                                <i class="fas fa-envelope-open input-icon"></i>
+                            <label asp-for="Input.NewEmail" class="form-label">Нов имейл</label>
+                            <div class="d-flex align-items-center w-100 mb-3">
+                                <div class="position-relative flex-grow-1">
+                                    <input asp-for="Input.NewEmail" class="form-control input-with-icon" autocomplete="email" aria-required="true" placeholder="Моля, въведете нов имейл." />
+                                    <i class="fas fa-envelope-open input-icon"></i>
+                                </div>
                             </div>
                             <span asp-validation-for="Input.NewEmail" class="text-danger d-block mb-3"></span>
                         </div>
 
                         <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-primary">
-                            Change email <i class="fas fa-edit ms-2"></i>
+                            Смени имейла <i class="fas fa-edit ms-2"></i>
                         </button>
                     </form>
                 </div>

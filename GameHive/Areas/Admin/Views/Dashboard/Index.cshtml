@@ -1,51 +1,286 @@
 ﻿@model GameHive.Areas.Admin.Models.DashboardViewModel
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
 }
 
-<h2 class="mb-4">Dashboard</h2>
-<div class="row">
-    <!-- Game Upload Requests Card -->
+<div class="dashboard-header d-flex justify-content-between align-items-center mb-4">
+    <h2>Dashboard</h2>
+    <div>
+        <button class="btn btn-outline-light me-2" id="refreshData">
+            <i class="fas fa-sync-alt me-1"></i> Refresh
+        </button>
+    </div>
+</div>
+
+<div class="row mb-4">
     <div class="col-md-3">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-header">Game Upload Requests</div>
+        <div class="card stats-card primary">
             <div class="card-body">
-                <h5 class="card-title">@Model.GameUploadRequestsCount</h5>
-                <p class="card-text">Pending uploads waiting for approval.</p>
+                <div class="stats-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <div class="stats-number">@Model.GameUploadRequestsCount</div>
+                <div class="stats-label">Game Upload Requests</div>
             </div>
         </div>
     </div>
 
-    <!-- Publisher Requests Card -->
     <div class="col-md-3">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-header">Publisher Requests</div>
+        <div class="card stats-card success">
             <div class="card-body">
-                <h5 class="card-title">@Model.PublisherRequestsCount</h5>
-                <p class="card-text">New publisher applications to review.</p>
+                <div class="stats-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="stats-number">@Model.PublisherRequestsCount</div>
+                <div class="stats-label">Publisher Requests</div>
             </div>
         </div>
     </div>
 
-    <!-- Other Requests Card -->
     <div class="col-md-3">
-        <div class="card text-white bg-warning mb-3">
-            <div class="card-header">Other Requests</div>
+        <div class="card stats-card warning">
             <div class="card-body">
-                <h5 class="card-title">@Model.OtherRequestsCount</h5>
-                <p class="card-text">Miscellaneous items that need attention.</p>
+                <div class="stats-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stats-number">@Model.OtherRequestsCount</div>
+                <div class="stats-label">Pending Orders</div>
             </div>
         </div>
     </div>
 
-    <!-- Total Requests Card -->
     <div class="col-md-3">
-        <div class="card text-white bg-danger mb-3">
-            <div class="card-header">Total Requests</div>
+        <div class="card stats-card danger">
             <div class="card-body">
-                <h5 class="card-title">@Model.TotalRequests</h5>
-                <p class="card-text">Overall count of pending requests.</p>
+                <div class="stats-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stats-number">@Model.TotalRequests</div>
+                <div class="stats-label">Total Requests</div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Upload & Sales Activity</span>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Last 7 Months
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+                        <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                        <li><a class="dropdown-item" href="#">Last 7 Months</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="activityChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <span>Request Types</span>
+            </div>
+            <div class="card-body">
+                <canvas id="requestsChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Recent Orders</span>
+                <a href="#" class="btn btn-sm btn-outline-light">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RecentOrders != null && Model.RecentOrders.Any())
+                            {
+                                @foreach (var order in Model.RecentOrders)
+                                {
+                                    <tr>
+                                        <td>@order.Id.ToString().Substring(0, 8)...</td>
+                                        <td>
+                                            <div>
+                                                <div class="fw-bold">@order.UserName</div>
+                                                <small>@order.UserEmail</small>
+                                            </div>
+                                        </td>
+                                        <td>$@order.Amount.ToString("0.00")</td>
+                                        <td>@order.Date.ToString("MMM dd, yyyy")</td>
+                                        <td>
+                                            <a href="/Admin/Orders/Details/@order.Id" class="btn btn-sm btn-outline-primary me-1">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center">No recent orders found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            loadChartData();
+
+            document.getElementById('refreshData').addEventListener('click', function() {
+                loadChartData();
+            });
+        });
+
+        function loadChartData() {
+            fetch('/Admin/Dashboard/GetDashboardData')
+                .then(response => response.json())
+                .then(data => {
+                    renderActivityChart(data);
+                    renderRequestsChart();
+                })
+                .catch(error => console.error('Error loading dashboard data:', error));
+        }
+
+        function renderActivityChart(data) {
+            const ctx = document.getElementById('activityChart').getContext('2d');
+
+            // Extract labels and data from the API response
+            const labels = Object.keys(data.uploads);
+            const uploadValues = Object.values(data.uploads);
+            const salesValues = Object.values(data.sales);
+
+            // Clear any existing chart
+            if (window.activityChart) {
+                window.activityChart.destroy();
+            }
+
+            window.activityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Game Uploads',
+                            data: uploadValues,
+                            borderColor: '#2c66a0',
+                            backgroundColor: 'rgba(44, 102, 160, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Sales',
+                            data: salesValues,
+                            borderColor: '#2c8d46',
+                            backgroundColor: 'rgba(44, 141, 70, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderRequestsChart() {
+            const requestsCtx = document.getElementById('requestsChart').getContext('2d');
+
+            // Clear any existing chart
+            if (window.requestsChart) {
+                window.requestsChart.destroy();
+            }
+
+            window.requestsChart = new Chart(requestsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Game Uploads', 'Publisher Requests', 'Pending Orders'],
+                    datasets: [{
+                        data: [@Model.GameUploadRequestsCount, @Model.PublisherRequestsCount, @Model.OtherRequestsCount],
+                        backgroundColor: [
+                            '#2c66a0',
+                            '#2c8d46',
+                            '#d68000'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                padding: 15
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+    </script>
+}

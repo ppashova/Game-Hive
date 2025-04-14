@@ -1,0 +1,64 @@
+﻿@model GameHive.Models.Tag
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Edit Tag";
+}
+
+<div class="dashboard-header d-flex justify-content-between align-items-center mb-4">
+    <h2>Edit Tag</h2>
+    <div>
+        <a asp-controller="Tags" asp-action="Index" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left me-1"></i> Back to Tags
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-tag me-2"></i>Tag Details
+    </div>
+    <div class="card-body">
+        <form asp-controller="Tags" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Tag Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter tag name" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            @if (Model.GameTags != null && Model.GameTags.Any())
+            {
+                <div class="mb-4">
+                    <div class="card bg-light">
+                        <div class="card-header text-dark">
+                            <i class="fas fa-gamepad me-2"></i>Games using this tag
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush">
+                                @foreach (var gameTag in Model.GameTags.Take(5))
+                                {
+                                    <li class="list-group-item text-dark">
+                                        @gameTag.Game.Name
+                                    </li>
+                                }
+                                @if (Model.GameTags.Count() > 5)
+                                {
+                                    <li class="list-group-item text-dark text-center">
+                                        And @(Model.GameTags.Count() - 5) more games...
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Update Tag
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

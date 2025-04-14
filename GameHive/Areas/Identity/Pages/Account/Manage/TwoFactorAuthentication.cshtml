@@ -2,13 +2,13 @@
 @using Microsoft.AspNetCore.Http.Features
 @model TwoFactorAuthenticationModel
 @{
-    ViewData["Title"] = "Two-factor authentication (2FA)";
+    ViewData["Title"] = "Двуфакторна автентикация (2FA)";
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
-<link rel="stylesheet" href="~/css/Registration.css"/>
+<link rel="stylesheet" href="~/css/Registration.css" />
 <div class="container py-5">
     <h1 class="page-title">@ViewData["Title"]</h1>
-    <p class="subtitle">Manage your account's security settings</p>
+    <p class="subtitle">Управление на настройките за сигурност на вашия акаунт</p>
 
     <partial name="_StatusMessage" for="StatusMessage" />
 
@@ -16,7 +16,7 @@
         <div class="col-md-3">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="mb-0">Navigation</h3>
+                    <h3 class="mb-0">Навигация</h3>
                 </div>
                 <div class="card-body">
                     <partial name="_ManageNav" />
@@ -26,7 +26,7 @@
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="mb-0">Security Settings</h3>
+                    <h3 class="mb-0">Настройки за сигурност</h3>
                 </div>
                 <div class="card-body">
                     @{
@@ -37,31 +37,31 @@
                             {
                                 <div class="card mb-4" style="background: rgba(22, 51, 80, 0.6); border-color: #2c66a0;">
                                     <div class="card-header">
-                                        <h4 class="mb-0">2FA Status: <span class="text-success">Enabled</span></h4>
+                                        <h4 class="mb-0">Статус на 2FA: <span class="text-success">Активирана</span></h4>
                                     </div>
                                     <div class="card-body">
                                         @if (Model.RecoveryCodesLeft == 0)
                                         {
                                             <div class="alert alert-danger">
                                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                                <strong>You have no recovery codes left.</strong>
-                                                <p>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</p>
+                                                <strong>Нямате останали кодове за възстановяване.</strong>
+                                                <p>Трябва да <a asp-page="./GenerateRecoveryCodes">генерирате нов набор от кодове за възстановяване</a>, преди да можете да влезете с код за възстановяване.</p>
                                             </div>
                                         }
                                         else if (Model.RecoveryCodesLeft == 1)
                                         {
                                             <div class="alert alert-danger">
                                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                                <strong>You have 1 recovery code left.</strong>
-                                                <p>You can <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+                                                <strong>Имате 1 останал код за възстановяване.</strong>
+                                                <p>Можете да <a asp-page="./GenerateRecoveryCodes">генерирате нов набор от кодове за възстановяване</a>.</p>
                                             </div>
                                         }
                                         else if (Model.RecoveryCodesLeft <= 3)
                                         {
                                             <div class="alert alert-warning">
                                                 <i class="fas fa-exclamation-circle me-2"></i>
-                                                <strong>You have @Model.RecoveryCodesLeft recovery codes left.</strong>
-                                                <p>You should <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+                                                <strong>Имате @Model.RecoveryCodesLeft останали кода за възстановяване.</strong>
+                                                <p>Препоръчително е да <a asp-page="./GenerateRecoveryCodes">генерирате нов набор от кодове за възстановяване</a>.</p>
                                             </div>
                                         }
 
@@ -70,15 +70,15 @@
                                             {
                                                 <form method="post">
                                                     <button type="submit" class="btn btn-primary">
-                                                        <i class="fas fa-laptop me-2"></i> Forget this browser
+                                                        <i class="fas fa-laptop me-2"></i> Забрави този браузър
                                                     </button>
                                                 </form>
                                             }
                                             <a asp-page="./Disable2fa" class="btn btn-primary">
-                                                <i class="fas fa-shield-alt me-2"></i> Disable 2FA
+                                                <i class="fas fa-shield-alt me-2"></i> Деактивирай 2FA
                                             </a>
                                             <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">
-                                                <i class="fas fa-key me-2"></i> Reset recovery codes
+                                                <i class="fas fa-key me-2"></i> Нулирай кодовете за възстановяване
                                             </a>
                                         </div>
                                     </div>
@@ -87,25 +87,25 @@
 
                             <div class="card" style="background: rgba(22, 51, 80, 0.6); border-color: #2c66a0;">
                                 <div class="card-header">
-                                    <h4 class="mb-0">Authenticator App</h4>
+                                    <h4 class="mb-0">Приложение за автентикация</h4>
                                 </div>
                                 <div class="card-body">
-                                    <p class="mb-3">Use an authenticator app to add an extra layer of security when signing in.</p>
+                                    <p class="mb-3">Използвайте приложение за автентикация, за да добавите допълнителен слой сигурност при влизане.</p>
 
                                     @if (!Model.HasAuthenticator)
                                     {
                                         <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">
-                                            <i class="fas fa-mobile-alt me-2"></i> Add authenticator app
+                                            <i class="fas fa-mobile-alt me-2"></i> Добави приложение за автентикация
                                         </a>
                                     }
                                     else
                                     {
                                         <div class="d-flex flex-wrap gap-2">
                                             <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">
-                                                <i class="fas fa-cog me-2"></i> Set up authenticator app
+                                                <i class="fas fa-cog me-2"></i> Настрой приложение за автентикация
                                             </a>
                                             <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">
-                                                <i class="fas fa-redo-alt me-2"></i> Reset authenticator app
+                                                <i class="fas fa-redo-alt me-2"></i> Нулирай приложение за автентикация
                                             </a>
                                         </div>
                                     }
@@ -116,8 +116,8 @@
                         {
                             <div class="alert alert-danger">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Privacy and cookie policy have not been accepted.</strong>
-                                <p>You must accept the policy before you can enable two factor authentication.</p>
+                                <strong>Политиката за поверителност и бисквитките не е приета.</strong>
+                                <p>Трябва да приемете политиката, преди да можете да активирате двуфакторна автентикация.</p>
                             </div>
                         }
                     }

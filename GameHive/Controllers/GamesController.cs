@@ -284,5 +284,21 @@ namespace GameHive.Controllers
             await _gameService.UpdateGameAverageRatingAsync(gameId);
             return RedirectToAction("Details", new { id = gameId });
         }
+        public async Task<IActionResult> Delete(int gameId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var game = await _gameService.GetGameByIdAsync(gameId);
+            if(game == null)
+            {
+                TempData["Error"] = "Game not found";
+            }
+            else if(user.Id != game.PublisherId)
+            {
+                TempData["Error"] = "You can only delete your own game";
+            }
+            else
+                await _gameService.DeleteGameAsync(gameId, game.PublisherId);
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 //using GameHive.Core.IServices;
 //using GameHive.Core.Services;
 
-namespace GameHive.Controllers
+namespace GameHive.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "Admin")]
     public class TagsController : Controller
     {

@@ -1,20 +1,20 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Регистрация";
 }
 
 <link rel="stylesheet" href="~/css/Registration.css">
 
 <div class="container">
-    <h1 class="page-title text-center">Join the Experience</h1>
-    <p class="subtitle text-center">Create your account and start your journey</p>
+    <h1 class="page-title text-center">Присъединете се към приключението</h1>
+    <p class="subtitle text-center">Създайте своя акаунт и започнете пътешествието си</p>
 
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center mb-4">Create a new account</h3>
+                    <h3 class="text-center mb-4">Създайте нов акаунт</h3>
                 </div>
                 <div class="card-body">
                     <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
@@ -27,8 +27,8 @@
                                 </svg>
                             </span>
                             <div class="form-floating w-100">
-                                <input asp-for="Input.Username" class="form-control input-with-icon w-100" autocomplete="username" aria-required="true" placeholder="Username" />
-                                <label asp-for="Input.Username">Username</label>
+                                <input asp-for="Input.Username" class="form-control input-with-icon w-100" autocomplete="username" aria-required="true" placeholder="Потребителско име" />
+                                <label asp-for="Input.Username">Потребителско име</label>
                             </div>
                             <span asp-validation-for="Input.Username" class="text-danger"></span>
                         </div>
@@ -40,8 +40,8 @@
                                 </svg>
                             </span>
                             <div class="form-floating w-100">
-                                <input asp-for="Input.Email" class="form-control input-with-icon w-100" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                                <label asp-for="Input.Email">Email</label>
+                                <input asp-for="Input.Email" class="form-control input-with-icon w-100" autocomplete="username" aria-required="true" placeholder="ime@primer.com" />
+                                <label asp-for="Input.Email">Имейл</label>
                             </div>
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
                         </div>
@@ -53,8 +53,8 @@
                                 </svg>
                             </span>
                             <div class="form-floating w-100">
-                                <input asp-for="Input.Password" class="form-control input-with-icon w-100" autocomplete="new-password" aria-required="true" placeholder="password" />
-                                <label asp-for="Input.Password">Password</label>
+                                <input asp-for="Input.Password" class="form-control input-with-icon w-100" autocomplete="new-password" aria-required="true" placeholder="Парола" />
+                                <label asp-for="Input.Password">Парола</label>
                             </div>
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
                         </div>
@@ -68,18 +68,18 @@
                                 </svg>
                             </span>
                             <div class="form-floating w-100">
-                                <input asp-for="Input.ConfirmPassword" class="form-control input-with-icon w-100" autocomplete="new-password" aria-required="true" placeholder="password" />
-                                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                                <input asp-for="Input.ConfirmPassword" class="form-control input-with-icon w-100" autocomplete="new-password" aria-required="true" placeholder="Потвърди парола" />
+                                <label asp-for="Input.ConfirmPassword">Потвърди парола</label>
                             </div>
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
 
                         <button id="registerSubmit" type="submit" class="btn btn-lg btn-primary">
-                            Register Now
+                            Регистрирай се сега
                         </button>
 
                         <div class="login-link">
-                            Already have an account? <a asp-page="./Login">Log in</a>
+                            Вече имате акаунт? <a asp-page="./Login">Влезте</a>
                         </div>
                     </form>
                 </div>

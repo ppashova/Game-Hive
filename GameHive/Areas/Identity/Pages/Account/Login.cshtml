@@ -2,20 +2,20 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Вход";
 }
 
 <link rel="stylesheet" href="~/css/Registration.css">
 
 <div class="container">
-    <h1 class="page-title text-center">Welcome Back</h1>
-    <p class="subtitle text-center">Log in to continue your journey</p>
+    <h1 class="page-title text-center">Добре дошли отново</h1>
+    <p class="subtitle text-center">Влезте, за да продължите пътешествието си</p>
 
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center mb-4">Sign in to your account</h3>
+                    <h3 class="text-center mb-4">Влезте в акаунта си</h3>
                 </div>
                 <div class="card-body">
                     <form id="account" method="post">
@@ -28,8 +28,8 @@
                                 </svg>
                             </span>
                             <div class="form-floating w-100">
-                                <input asp-for="Input.Email" class="form-control input-with-icon w-100" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                                <label asp-for="Input.Email">Email</label>
+                                <input asp-for="Input.Email" class="form-control input-with-icon w-100" autocomplete="username" aria-required="true" placeholder="ime@primer.com" />
+                                <label asp-for="Input.Email">Имейл</label>
                             </div>
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
                         </div>
@@ -41,8 +41,8 @@
                                 </svg>
                             </span>
                             <div class="form-floating w-100">
-                                <input asp-for="Input.Password" class="form-control input-with-icon w-100" autocomplete="current-password" aria-required="true" placeholder="password" />
-                                <label asp-for="Input.Password">Password</label>
+                                <input asp-for="Input.Password" class="form-control input-with-icon w-100" autocomplete="current-password" aria-required="true" placeholder="Парола" />
+                                <label asp-for="Input.Password">Парола</label>
                             </div>
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
                         </div>
@@ -50,23 +50,23 @@
                         <div class="checkbox mb-4">
                             <label asp-for="Input.RememberMe" class="form-label text-white">
                                 <input class="form-check-input" asp-for="Input.RememberMe" />
-                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                Запомни ме
                             </label>
                         </div>
 
                         <button id="login-submit" type="submit" class="btn btn-lg btn-primary">
-                            Sign In
+                            Влез в акаунта
                         </button>
 
                         <div class="login-link">
                             <p>
-                                <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                                <a id="forgot-password" asp-page="./ForgotPassword">Забравихте паролата си?</a>
                             </p>
                             <p>
-                                Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register now</a>
+                                Нямате акаунт? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Регистрирайте се сега</a>
                             </p>
                             <p>
-                                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Изпрати отново имейл за потвърждение</a>
                             </p>
                         </div>
                     </form>
@@ -79,15 +79,15 @@
             <div class="col-md-6 mt-4 mt-md-0">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="text-center mb-4">Use another service</h3>
+                        <h3 class="text-center mb-4">Използвайте друга услуга</h3>
                     </div>
                     <div class="card-body">
                         <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                             <div class="d-grid gap-2">
                                 @foreach (var provider in Model.ExternalLogins!)
                                 {
-                                    <button type="submit" class="btn btn-lg btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
-                                        Sign in with @provider.DisplayName
+                                    <button type="submit" class="btn btn-lg btn-primary" name="provider" value="@provider.Name" title="Влезте с вашия акаунт в @provider.DisplayName">
+                                        Влез с @provider.DisplayName
                                     </button>
                                 }
                             </div>

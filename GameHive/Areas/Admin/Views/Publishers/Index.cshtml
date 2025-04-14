@@ -1,56 +1,568 @@
-﻿@model IEnumerable<GameHive.Models.PublisherRequest>
-
+﻿@model GameHive.Areas.Admin.Models.UsersIndexViewModel
 @{
-    ViewData["Title"] = "Publisher Requests";
+    ViewData["Title"] = "Manage Users";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="dashboard-header d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Users</h2>
+    <div>
+        <div class="btn-group">
+            <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-filter me-1"></i> Filter
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" data-tab="all">All</a></li>
+                <li><a class="dropdown-item" href="#" data-tab="users">Users</a></li>
+                <li><a class="dropdown-item" href="#" data-tab="requests">Publisher Requests</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Request ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Birthdate</th>
-            <th>Date Created</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var request in Model)
+<ul class="nav nav-tabs mb-4" id="usersTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab">
+            <i class="fas fa-th-list me-1"></i> All
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users-tab-pane" type="button" role="tab">
+            <i class="fas fa-users me-1"></i> Users 
+            <span class="badge bg-primary ms-1">@Model.Users.Count</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests-tab-pane" type="button" role="tab">
+            <i class="fas fa-building me-1"></i> Publisher Requests 
+            <span class="badge bg-warning ms-1">@Model.PublisherRequests.Count(r => r.RequestEnums == GameHive.Models.enums.RequestEnums.Pending)</span>
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="usersTabsContent">
+    <!-- All Tab -->
+    <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab">
+        <!-- Publisher Requests Section -->
+        @if (Model.PublisherRequests.Any(r => r.RequestEnums == GameHive.Models.enums.RequestEnums.Pending))
         {
-            <tr>
-                <td>@request.RequestId</td>
-                <td>@request.FirstName</td>
-                <td>@request.LastName</td>
-                <td>@request.Birthdate</td>
-                <td>@request.DateCreated</td>
-                <td>@request.RequestEnums</td>
-                @if(request.RequestEnums == GameHive.Models.enums.RequestEnums.Pending)
-                {
-                    <td>
-                        <form asp-area="Admin" asp-controller="Publishers" asp-action="Approve" method="post">
-                            <input type="hidden" name="userId" value="@request.UserId" />
-                            <button type="submit" class="btn btn-success">Approve</button>
-                        </form>
-                        <form asp-area="Admin" asp-controller="Publishers" asp-action="Reject" method="post">
-                            <input type="hidden" name="userId" value="@request.UserId" />
-                            <button type="submit" class="btn btn-success">Reject</button>
-                        </form>
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        <form asp-area="Admin" asp-controller="Publishers" asp-action="Delete" method="post">
-                            <input type="hidden" name="userId" value="@request.UserId"/>
-                            <button type="submit" class="btn btn-success">Delete</button>
-                        </form>
-                    </td>
-                }
-            </tr>
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-building me-2"></i>Pending Publisher Requests</span>
+                    <span class="badge bg-warning">@Model.PublisherRequests.Count(r => r.RequestEnums == GameHive.Models.enums.RequestEnums.Pending)</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>Submitted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var request in Model.PublisherRequests.Where(r => r.RequestEnums == GameHive.Models.enums.RequestEnums.Pending))
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar me-3">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">@request.FirstName @request.LastName</div>
+                                                    <small class="text-muted">@request.UserId</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @{
+                                                var age = DateTime.Now.Year - request.Birthdate.Year;
+                                                if (DateTime.Now.DayOfYear < request.Birthdate.DayOfYear)
+                                                    age--;
+                                            }
+                                            @age years
+                                        </td>
+                                        <td>@request.DateCreated.ToString("MMM dd, yyyy")</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <form asp-area="Admin" asp-controller="Publishers" asp-action="ApprovePublisher" method="post" class="d-inline">
+                                                    <input type="hidden" name="userId" value="@request.UserId" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-success me-1">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </form>
+                                                <form asp-area="Admin" asp-controller="Publishers" asp-action="RejectPublisher" method="post" class="d-inline">
+                                                    <input type="hidden" name="userId" value="@request.UserId" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </form>
+                                                <button type="button" class="btn btn-sm btn-outline-primary ms-1" data-bs-toggle="modal" data-bs-target="#requestDetails@(request.RequestId)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Details Modal -->
+                                            <div class="modal fade" id="requestDetails@(request.RequestId)" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-dark">Publisher Request Details</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body text-dark">
+                                                            <div class="mb-3">
+                                                                <h6>Personal Information</h6>
+                                                                <p><strong>Name:</strong> @request.FirstName @request.LastName</p>
+                                                                <p><strong>Date of Birth:</strong> @request.Birthdate.ToString("MMM dd, yyyy")</p>
+                                                                <p><strong>Age:</strong> @age years</p>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <h6>Request Information</h6>
+                                                                <p><strong>Submitted On:</strong> @request.DateCreated.ToString("MMM dd, yyyy HH:mm")</p>
+                                                                <p><strong>Status:</strong> <span class="badge bg-warning">Pending</span></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <form asp-area="Admin" asp-controller="Publishers" asp-action="ApprovePublisher" method="post">
+                                                                <input type="hidden" name="userId" value="@request.UserId" />
+                                                                <button type="submit" class="btn btn-success">Approve</button>
+                                                            </form>
+                                                            <form asp-area="Admin" asp-controller="Publishers" asp-action="RejectPublisher" method="post">
+                                                                <input type="hidden" name="userId" value="@request.UserId" />
+                                                                <button type="submit" class="btn btn-danger">Reject</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+
+        <!-- Users List -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-users me-2"></i>All Users</span>
+                <div class="d-flex align-items-center">
+                    <div class="input-group input-group-sm me-2" style="width: 250px;">
+                        <input type="text" class="form-control" placeholder="Search users..." id="searchInput">
+                        <button class="btn btn-outline-light" type="button" id="searchButton">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <span class="badge bg-primary">@Model.Users.Count Total</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Roles</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr data-roles="@string.Join(" ", user.Roles)">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar me-3">
+                                                @if (!string.IsNullOrEmpty(user.UserName))
+                                                {
+                                                    @user.UserName.Substring(0, 1).ToUpper()
+                                                }
+                                                else
+                                                {
+                                                    <i class="fas fa-user"></i>
+                                                }
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">@user.UserName</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        @foreach (var role in user.Roles)
+                                        {
+                                            <span class="role-badge @role.ToLower()">@role</span>
+                                        }
+                                        @if (!user.Roles.Any())
+                                        {
+                                            <span class="role-badge user">User</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.EmailConfirmed)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Pending</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a asp-area="Admin" asp-controller="Publishers" asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Tab -->
+    <div class="tab-pane fade" id="users-tab-pane" role="tabpanel" aria-labelledby="users-tab">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-users me-2"></i>Users</span>
+                <div class="d-flex align-items-center">
+                    <div class="input-group input-group-sm me-2" style="width: 250px;">
+                        <input type="text" class="form-control" placeholder="Search users..." id="searchUsersInput">
+                        <button class="btn btn-outline-light" type="button" id="searchUsersButton">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <span class="badge bg-primary">@Model.Users.Count Total</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="allUsersTable">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Roles</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr data-roles="@string.Join(" ", user.Roles)">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar me-3">
+                                                @if (!string.IsNullOrEmpty(user.UserName))
+                                                {
+                                                    @user.UserName.Substring(0, 1).ToUpper()
+                                                }
+                                                else
+                                                {
+                                                    <i class="fas fa-user"></i>
+                                                }
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">@user.UserName</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        @foreach (var role in user.Roles)
+                                        {
+                                            <span class="role-badge @role.ToLower()">@role</span>
+                                        }
+                                        @if (!user.Roles.Any())
+                                        {
+                                            <span class="role-badge user">User</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.EmailConfirmed)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Pending</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a asp-area="Admin" asp-controller="Publishers" asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publisher Requests Tab -->
+    <div class="tab-pane fade" id="requests-tab-pane" role="tabpanel" aria-labelledby="requests-tab">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-building me-2"></i>Publisher Requests</span>
+                <div class="d-flex align-items-center">
+                    <div class="btn-group btn-group-sm me-2">
+                        <button type="button" class="btn btn-outline-light active" data-filter="all">All</button>
+                        <button type="button" class="btn btn-outline-light" data-filter="pending">Pending</button>
+                        <button type="button" class="btn btn-outline-light" data-filter="approved">Approved</button>
+                        <button type="button" class="btn btn-outline-light" data-filter="rejected">Rejected</button>
+                    </div>
+                    <span class="badge bg-primary">@Model.PublisherRequests.Count() Total</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="requestsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var request in Model.PublisherRequests)
+                            {
+                                <tr data-status="@request.RequestEnums.ToString().ToLower()">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar me-3">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">@request.FirstName @request.LastName</div>
+                                                <small class="text-muted">@request.UserId</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var age = DateTime.Now.Year - request.Birthdate.Year;
+                                            if (DateTime.Now.DayOfYear < request.Birthdate.DayOfYear)
+                                                age--;
+                                        }
+                                        @age years
+                                    </td>
+                                    <td>@request.DateCreated.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        @if (request.RequestEnums == GameHive.Models.enums.RequestEnums.Pending)
+                                        {
+                                            <span class="badge bg-warning">Pending</span>
+                                        }
+                                        else if (request.RequestEnums == GameHive.Models.enums.RequestEnums.Approved)
+                                        {
+                                            <span class="badge bg-success">Approved</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Rejected</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (request.RequestEnums == GameHive.Models.enums.RequestEnums.Pending)
+                                        {
+                                            <div class="btn-group">
+                                                <form asp-area="Admin" asp-controller="Publishers" asp-action="ApprovePublisher" method="post" class="d-inline">
+                                                    <input type="hidden" name="userId" value="@request.UserId" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-success me-1">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </form>
+                                                <form asp-area="Admin" asp-controller="Publishers" asp-action="RejectPublisher" method="post" class="d-inline">
+                                                    <input type="hidden" name="userId" value="@request.UserId" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <form asp-area="Admin" asp-controller="Publishers" asp-action="DeletePublisherRequest" method="post" class="d-inline">
+                                                <input type="hidden" name="userId" value="@request.UserId" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality for main users table
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const usersTable = document.getElementById('usersTable');
+            const usersRows = usersTable.querySelectorAll('tbody tr');
+
+            // Search functionality for users tab
+            const searchUsersInput = document.getElementById('searchUsersInput');
+            const searchUsersButton = document.getElementById('searchUsersButton');
+            const allUsersTable = document.getElementById('allUsersTable');
+            const allUsersRows = allUsersTable.querySelectorAll('tbody tr');
+
+            // Filter buttons in the requests tab
+            const filterButtons = document.querySelectorAll('[data-filter]');
+            const requestsTable = document.getElementById('requestsTable');
+            const requestRows = requestsTable.querySelectorAll('tbody tr');
+
+            // Tab navigation
+            const tabLinks = document.querySelectorAll('[data-tab]');
+            const tabs = document.querySelectorAll('#usersTabs .nav-link');
+
+            // Function to search users
+            function performSearch(input, tableRows) {
+                const searchTerm = input.value.toLowerCase();
+
+                tableRows.forEach(row => {
+                    const username = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                    const email = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+
+                    if (username.includes(searchTerm) || email.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            // Search in main users table
+            if (searchInput && searchButton && usersRows) {
+                searchInput.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch(searchInput, usersRows);
+                    }
+                });
+
+                searchButton.addEventListener('click', function() {
+                    performSearch(searchInput, usersRows);
+                });
+            }
+
+            // Search in all users tab
+            if (searchUsersInput && searchUsersButton && allUsersRows) {
+                searchUsersInput.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch(searchUsersInput, allUsersRows);
+                    }
+                });
+
+                searchUsersButton.addEventListener('click', function() {
+                    performSearch(searchUsersInput, allUsersRows);
+                });
+            }
+
+            // Filter publisher requests
+            if (filterButtons && requestRows) {
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Update active state
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+
+                        const filter = this.getAttribute('data-filter');
+
+                        requestRows.forEach(row => {
+                            const status = row.getAttribute('data-status');
+
+                            if (filter === 'all' || status === filter) {
+                                row.style.display = '';
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Tab navigation from filter dropdown
+            if (tabLinks && tabs) {
+                tabLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const targetTab = this.getAttribute('data-tab');
+
+                        // Find and click the corresponding tab
+                        tabs.forEach(tab => {
+                            if (tab.id === `${targetTab}-tab`) {
+                                tab.click();
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Role filtering
+            const roleFilters = document.querySelectorAll('.dropdown-item[data-role]');
+            if (roleFilters) {
+                roleFilters.forEach(filter => {
+                    filter.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const role = this.getAttribute('data-role');
+
+                        usersRows.forEach(row => {
+                            if (role === 'all') {
+                                row.style.display = '';
+                            } else {
+                                const rowRoles = row.getAttribute('data-roles');
+                                if (rowRoles && rowRoles.includes(role)) {
+                                    row.style.display = '';
+                                } else {
+                                    row.style.display = 'none';
+                                }
+                            }
+                        });
+
+                        allUsersRows.forEach(row => {
+                            if (role === 'all') {
+                                row.style.display = '';
+                            } else {
+                                const rowRoles = row.getAttribute('data-roles');
+                                if (rowRoles && rowRoles.includes(role)) {
+                                    row.style.display = '';
+                                } else {
+                                    row.style.display = 'none';
+                                }
+                            }
+                        });
+                    });
+                });
+            }
+        });
+    </script>
+}

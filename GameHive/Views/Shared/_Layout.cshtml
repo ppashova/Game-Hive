@@ -22,14 +22,14 @@
                     <ul class="navbar-nav d-flex flex-row">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                                <button class="navbar-button">Home</button>
+                                <button class="navbar-button">Начало</button>
                             </a>
                         </li>
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="SupportTicket">
-                                    <button class="navbar-button">Support</button>
+                                    <button class="navbar-button">Поддръжка</button>
                                 </a>
                             </li>
                         }
@@ -37,7 +37,7 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="Company" asp-controller="Dashboard" asp-action="Index">
-                                    <button class="navbar-button">Dashboard</button>
+                                    <button class="navbar-button">Управление</button>
                                 </a>
                             </li>
                         }
@@ -45,7 +45,7 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                                    <button class="navbar-button">Admin</button>
+                                    <button class="navbar-button">Админ</button>
                                 </a>
                             </li>
                         }
@@ -53,7 +53,7 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Publishers" asp-action="Index">
-                                    <button class="navbar-button">Become a publisher</button>
+                                    <button class="navbar-button">Стани разработчик</button>
                                 </a>
                             </li>
                         }
@@ -61,14 +61,14 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Add">
-                                    <button class="navbar-button">Upload a game</button>
+                                    <button class="navbar-button">Качи игра</button>
                                 </a>
                             </li>
                         }
 
                         <li>
                             <a class="nav-link" asp-area="" asp-controller="Games" asp-action="Index">
-                                <button class="navbar-button">Games</button>
+                                <button class="navbar-button">Игри</button>
                             </a>
                         </li>
                     </ul>
@@ -98,13 +98,11 @@
 
     <footer class="footer text-muted">
         <div class="container">
-            &copy; 2025 - GameHive - <a asp-area="" asp-controller="Home" asp-action="SupportTicket">Support</a>
+            &copy; 2025 - GameHive - <a asp-area="" asp-controller="Home" asp-action="SupportTicket">Поддръжка</a>
         </div>
     </footer>
-    <!-- Add padding to the body/content area so it’s not covered by the fixed footer -->
     <div style="padding-bottom: 60px;">
-        <!-- Adjust padding according to footer height -->
-        <!-- Your page content here -->
+
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
