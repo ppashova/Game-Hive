@@ -1,0 +1,52 @@
+﻿@using GameHive.Areas.Admin.Models
+@model List<SupportRequestViewModel>
+@{
+    ViewData["Title"] = "Заявки за поддръжка";
+}
+
+<div class="dashboard-header d-flex justify-content-between align-items-center mb-4">
+    <h2>Заявки за поддръжка</h2>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-headset me-2"></i>Заявки за поддръжка
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Тема</th>
+                        <th>Описание на проблема</th>
+                        <th>Имейл на потребителя</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var request in Model)
+                        {
+                            <tr>
+                                <td>@request.Subject</td>
+                                <td>@request.ProblemDescription</td>
+                                <td>@(request.UserEmail ?? "Н/Д")</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center py-4">
+                                <div class="empty-state-icon mb-3">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                                <h5>Няма намерени заявки за поддръжка</h5>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

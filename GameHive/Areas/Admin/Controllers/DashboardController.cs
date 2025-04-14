@@ -17,34 +17,43 @@ namespace GameHive.Areas.Admin.Controllers
         private readonly IGameService _gameService;
         private readonly IOrderService _orderService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IGameRequestService _gameRequestService;
+        private readonly IPublisherRequestService _publisherRequestService;
+        private readonly ISupportRequestService _SupportRequestService;
 
         public DashboardController(
             IGameService gameService,
             IOrderService orderService,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager,
+            IGameRequestService gameRequestService,
+            IPublisherRequestService publisherRequestService,
+            ISupportRequestService supportRequestService)
         {
             _gameService = gameService;
             _orderService = orderService;
             _userManager = userManager;
+            _gameRequestService = gameRequestService;
+            _publisherRequestService = publisherRequestService;
+            _SupportRequestService = supportRequestService;
         }
 
         public async Task<IActionResult> Index()
         {
             var games = await _gameService.GetAllGamesAsync();
-            var pendingGames = games.Count(g => g.GameRequest != null && g.GameRequest.Any(gr => gr.Status == RequestEnums.Pending));
+            var pendingGames = await _gameRequestService.GetPendingRequestsAsync();
 
             var companyUsers = await _userManager.GetUsersInRoleAsync("Company");
-            var pendingPublishers = companyUsers.Where(u => !u.EmailConfirmed).Count();
+            var pendingPublishers = await _publisherRequestService.GetAllAsync();
 
             var orders = await _orderService.GetAllOrdersAsync();
             var otherRequests = orders.Count(o => o.Status == OrderStatusEnums.Pending);
 
             var model = new DashboardViewModel
             {
-                GameUploadRequestsCount = pendingGames,
-                PublisherRequestsCount = pendingPublishers,
+                GameUploadRequestsCount = pendingGames.Count,
+                PublisherRequestsCount = pendingPublishers.Count,
                 OtherRequestsCount = otherRequests,
-                TotalRequests = pendingGames + pendingPublishers + otherRequests,
+                TotalRequests = pendingGames.Count + pendingPublishers.Count + otherRequests,
                 RecentOrders = orders
                     .OrderByDescending(o => o.OrderDate)
                     .Take(5)
@@ -88,6 +97,24 @@ namespace GameHive.Areas.Admin.Controllers
                 uploads = monthlyUploads,
                 sales = monthlySales
             });
+        }
+        public async Task<IActionResult> SupportTickets()
+        {
+            List<SupportRequestViewModel> supportRequestViewModels = new List<SupportRequestViewModel>();
+            var supportRequests = await _SupportRequestService.GetAllRequestsAsync();
+            foreach (var request in supportRequests)
+            {
+                var user = await _userManager.FindByIdAsync(request.UserId);
+                supportRequestViewModels.Add(new SupportRequestViewModel
+                {
+                    RequestId = request.RequestId.ToString(),
+                    UserEmail = user?.Email,
+                    Subject = request.Subject,
+                    ProblemDescription = request.ProblemDescription
+                });
+            }
+
+            return View(supportRequestViewModels);
         }
     }
 }

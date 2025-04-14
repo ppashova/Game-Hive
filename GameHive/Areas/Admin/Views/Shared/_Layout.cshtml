@@ -78,6 +78,11 @@
                         <i class="fas fa-users sidebar-icon"></i> Manage Users
                     </a>
                 </li>
+                <li>
+                    <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Dashboard" ? "active" : "")"
+                       asp-area="Admin" asp-controller="Dashboard" asp-action="SupportTickets">
+                        <i class="fas fa-cogs sidebar-icon"></i> Manage Support Tickets </a>
+                </li>
             </ul>
         </div>
 

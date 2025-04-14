@@ -9,7 +9,7 @@ namespace GameHive.Core.IServices
 {
     public interface ISupportRequestService
     {
-        Task<IEnumerable<SupportRequest>> GetAllRequestsAsync();
+        Task<List<SupportRequest>> GetAllRequestsAsync();
         Task<SupportRequest> GetRequestById(string id);
         Task CreateRequestAsync(SupportRequest request);
     }

@@ -22,7 +22,7 @@ namespace GameHive.Core.Services
             await _repo.AddAsync(request);
         }
 
-        public async Task<IEnumerable<SupportRequest>> GetAllRequestsAsync()
+        public async Task<List<SupportRequest>> GetAllRequestsAsync()
         {
             return await _repo.GetAllAsync();
         }

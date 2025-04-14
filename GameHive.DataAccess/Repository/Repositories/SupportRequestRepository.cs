@@ -2,7 +2,7 @@
 using GameHive.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ namespace GameHive.DataAccess.Repository.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<SupportRequest>> GetAllAsync()
+        public async Task<List<SupportRequest>> GetAllAsync()
         {
             return await _context.SupportRequests.Include(r => r.User).ToListAsync();
         }

@@ -9,7 +9,7 @@ namespace GameHive.DataAccess.Repository.IRepositories
 {
     public interface ISupportRequestRepository
     {
-        Task<IEnumerable<SupportRequest>> GetAllAsync();
+        Task<List<SupportRequest>> GetAllAsync();
         Task<SupportRequest> GetByIdAsync(string id);
         Task AddAsync(SupportRequest request);
         Task DeleteAsync(SupportRequest request);
