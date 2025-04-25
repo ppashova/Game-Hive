@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHive.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250412015814_Remotemv")]
-    partial class Remotemv
+    [Migration("20250414062746_RemoteMv")]
+    partial class RemoteMv
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -305,6 +305,31 @@ namespace GameHive.DataAccess.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("RequestTags");
+                });
+
+            modelBuilder.Entity("GameHive.Models.SupportRequest", b =>
+                {
+                    b.Property<Guid>("RequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProblemDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("RequestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SupportRequests");
                 });
 
             modelBuilder.Entity("GameHive.Models.Tag", b =>
@@ -692,6 +717,17 @@ namespace GameHive.DataAccess.Migrations
                     b.Navigation("GameRequest");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("GameHive.Models.SupportRequest", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GameHive.Models.UserGame", b =>

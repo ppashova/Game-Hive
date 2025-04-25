@@ -1,4 +1,5 @@
 ﻿using GameHive.Core.IServices;
+using GameHive.DataAccess.Repository; // Make sure this is added if not already
 using GameHive.Core.Services;
 using GameHive.Models;
 using GameHive.Models.enums;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GameHive.DataAccess.Repository.IRepositories;
 
 namespace GameHive.Tests.Services
 {
@@ -16,11 +18,13 @@ namespace GameHive.Tests.Services
     {
         private Mock<IOrderRepository> _orderRepoMock;
         private IOrderService _orderService;
+        private IGameService _gameService;
 
         [SetUp]
         public void SetUp()
         {
             _orderRepoMock = new Mock<IOrderRepository>();
+            _orderService = new OrderService(_orderRepoMock.Object, _gameService); // 
         }
 
         [Test]
@@ -35,7 +39,6 @@ namespace GameHive.Tests.Services
             List<int> gameIds = new List<int> { 1, 2, 3 };
             List<int> quantities = new List<int> { 1, 2, 1 };
 
-            // Store captured Order and OrderDetails for verification
             Order capturedOrder = null;
             List<OrderDetail> capturedOrderDetails = null;
 
@@ -61,15 +64,12 @@ namespace GameHive.Tests.Services
             Assert.That(result.TotalPrice, Is.EqualTo(totalPrice));
             Assert.That(result.Status, Is.EqualTo(OrderStatusEnums.Pending));
 
-            // Verify repository calls
             _orderRepoMock.Verify(r => r.AddOrderAsync(It.IsAny<Order>()), Times.Once);
             _orderRepoMock.Verify(r => r.AddOrderDetailsAsync(It.IsAny<List<OrderDetail>>()), Times.Once);
 
-            // Verify order details were created correctly
             Assert.That(capturedOrderDetails, Is.Not.Null);
             Assert.That(capturedOrderDetails.Count, Is.EqualTo(3));
 
-            // Check each order detail has the correct game ID and quantity
             for (int i = 0; i < gameIds.Count; i++)
             {
                 var detail = capturedOrderDetails.FirstOrDefault(d => d.GameId == gameIds[i]);
@@ -82,17 +82,14 @@ namespace GameHive.Tests.Services
         [Test]
         public async Task GetOrderByIdAsync_ReturnsOrder()
         {
-            // Arrange
             var orderId = Guid.NewGuid();
             var expectedOrder = new Order { Id = orderId, UserId = "user1" };
 
             _orderRepoMock.Setup(r => r.GetOrderByIdAsync(orderId))
                 .ReturnsAsync(expectedOrder);
 
-            // Act
             var result = await _orderService.GetOrderByIdAsync(orderId);
 
-            // Assert
             Assert.That(result, Is.EqualTo(expectedOrder));
             _orderRepoMock.Verify(r => r.GetOrderByIdAsync(orderId), Times.Once);
         }
@@ -100,7 +97,6 @@ namespace GameHive.Tests.Services
         [Test]
         public async Task GetUserOrdersAsync_ReturnsUserOrders()
         {
-            // Arrange
             string userId = "user123";
             var expectedOrders = new List<Order>
             {
@@ -111,10 +107,8 @@ namespace GameHive.Tests.Services
             _orderRepoMock.Setup(r => r.GetUserOrdersAsync(userId))
                 .ReturnsAsync(expectedOrders);
 
-            // Act
             var result = await _orderService.GetUserOrdersAsync(userId);
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count(), Is.EqualTo(2));
             Assert.That(result, Is.EquivalentTo(expectedOrders));
@@ -124,7 +118,6 @@ namespace GameHive.Tests.Services
         [Test]
         public async Task GetAllOrdersAsync_ReturnsAllOrders()
         {
-            // Arrange
             var expectedOrders = new List<Order>
             {
                 new Order { Id = Guid.NewGuid(), UserId = "user1" },
@@ -135,10 +128,8 @@ namespace GameHive.Tests.Services
             _orderRepoMock.Setup(r => r.GetAllOrdersAsync())
                 .ReturnsAsync(expectedOrders);
 
-            // Act
             var result = await _orderService.GetAllOrdersAsync();
 
-            // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count(), Is.EqualTo(3));
             Assert.That(result, Is.EquivalentTo(expectedOrders));
@@ -148,17 +139,14 @@ namespace GameHive.Tests.Services
         [Test]
         public async Task GetTotalPriceAsync_ReturnsTotalPrice()
         {
-            // Arrange
             var orderId = Guid.NewGuid();
             decimal expectedPrice = 149.99m;
 
             _orderRepoMock.Setup(r => r.GetTotalPriceAsync(orderId))
                 .ReturnsAsync(expectedPrice);
 
-            // Act
             var result = await _orderService.GetTotalPriceAsync(orderId);
 
-            // Assert
             Assert.That(result, Is.EqualTo(expectedPrice));
             _orderRepoMock.Verify(r => r.GetTotalPriceAsync(orderId), Times.Once);
         }

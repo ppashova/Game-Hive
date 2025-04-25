@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GameHive.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Remotemv : Migration
+    public partial class RemoteMv : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -233,6 +233,26 @@ namespace GameHive.DataAccess.Migrations
                     table.PrimaryKey("PK_PublisherRequests", x => x.RequestId);
                     table.ForeignKey(
                         name: "FK_PublisherRequests_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SupportRequests",
+                columns: table => new
+                {
+                    RequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProblemDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupportRequests", x => x.RequestId);
+                    table.ForeignKey(
+                        name: "FK_SupportRequests_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -538,6 +558,11 @@ namespace GameHive.DataAccess.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SupportRequests_UserId",
+                table: "SupportRequests",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserGames_UserId",
                 table: "UserGames",
                 column: "UserId");
@@ -591,6 +616,9 @@ namespace GameHive.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "RequestTags");
+
+            migrationBuilder.DropTable(
+                name: "SupportRequests");
 
             migrationBuilder.DropTable(
                 name: "UserGames");
